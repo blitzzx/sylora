@@ -5,10 +5,10 @@
 <br/>
 
 ```
-  ██████  ██    ██ ██       ██████  ██████   █████
+  █████  ██    ██ ██       ██████  ██████   █████
  ██       ██    ██ ██      ██    ██ ██   ██ ██   ██
-  █████    ██  ██  ██      ██    ██ ██████  ███████
-      ██    ████   ██      ██    ██ ██   ██ ██   ██
+  █████    ██████  ██      ██    ██ ██████  ███████
+      ██     ██    ██      ██    ██ ██   ██ ██   ██
  ██████      ██    ███████  ██████  ██   ██ ██   ██
 ```
 
@@ -21,8 +21,12 @@
 [![PHP](https://img.shields.io/badge/PHP-8.3-7C3AED?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
 [![MySQL](https://img.shields.io/badge/MySQL-8.0-4F46E5?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
 [![Apache](https://img.shields.io/badge/Apache-2.4-6D28D9?style=for-the-badge&logo=apache&logoColor=white)](https://httpd.apache.org)
-[![Docker](https://img.shields.io/badge/Docker-Ready-7C3AED?style=for-the-badge&logo=docker&logoColor=white)](https://docker.com)
 [![Railway](https://img.shields.io/badge/Deploy-Railway-4F46E5?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app)
+[![Status](https://img.shields.io/badge/Estado-Alpha%20Aberto-e8c46a?style=for-the-badge)](https://www.sylora.lol)
+
+<br/>
+
+**[🌊 Jogar Agora](https://www.sylora.lol)**
 
 <br/>
 
@@ -36,7 +40,7 @@
 
 </div>
 
-**Sylora** é um RPG de aventura narrativa baseado na web, ambientado numa Grécia Antiga sombria e corrompida. Exploras um arquipélago de ilhas perdidas, cada uma guardando segredos, monstros e memórias esquecidas. Avanças por capítulos, ganhas poder, forjas amizades — e descobres o que os deuses esconderam.
+**Sylora** é um RPG de aventura narrativa baseado na web, ambientado numa Grécia Antiga sombria e corrompida. Exploras um arquipélago de ilhas perdidas, cada uma guardando segredos, monstros e memórias esquecidas. Avanças por capítulos, ganhas poder, forjas amizades e descobres o que os deuses esconderam.
 
 > *"Os mapas mostram terras. Sylora mostra destinos."*
 
@@ -60,6 +64,27 @@ Cada herói parte da mesma costa. Nenhum chega ao fim igual ao que partiu.
 | 💬 | **Muralha** | Comentários nos perfis de outros aventureiros |
 | 🔐 | **Autenticação** | Login seguro com "lembrar-me", OTP de verificação e reset de password |
 | 🔍 | **Pesquisa** | Encontra outros aventureiros pelo nome |
+
+---
+
+<div align="center">
+
+## 🔥 &nbsp; Junta-te à Aventura &nbsp; 🔥
+
+</div>
+
+Sylora está nos seus **primeiros passos** — e isso significa que a tua voz tem peso real.
+
+O jogo está vivo em **[sylora.lol](https://www.sylora.lol)**. Cria uma conta, explora o mundo, joga os capítulos disponíveis e diz-nos o que sentiste. Cada bug que encontras, cada sugestão que partilhas, cada momento que te surpreendeu — tudo isso molda o que Sylora vai ser.
+
+**Como podes ajudar:**
+
+- 🎮 **Joga** — explora tudo o que está disponível
+- 🐛 **Reporta bugs** — abre uma [Issue](../../issues) com o que encontraste
+- 💡 **Sugere** — tens uma ideia para o mundo ou para o jogo? Partilha nas Issues
+- ⭐ **Dá uma estrela** — ajuda outros aventureiros a encontrar Sylora
+
+> *Este é o início. O que construímos a seguir depende de quem aparece.*
 
 ---
 
@@ -122,86 +147,6 @@ docker compose up -d
 ```
 
 Aventura disponível em **http://localhost:8080** ✦
-
----
-
-<div align="center">
-
-## ☁ &nbsp; Deploy no Railway &nbsp; ☁
-
-</div>
-
-1. Faz fork e push para o teu GitHub
-2. Cria um novo projeto no [Railway](https://railway.app) → *Deploy from GitHub*
-3. Adiciona o plugin **MySQL**
-4. Em **Variables**, define:
-
-```env
-DB_HOST=         # Internal Host do plugin MySQL
-DB_USER=         # MYSQLUSER
-DB_PASS=         # MYSQLPASSWORD
-DB_NAME=         # MYSQLDATABASE
-SITE_URL=        # https://o-teu-dominio.com
-APP_ENV=         production
-RESEND_API_KEY=  # (opcional) chave Resend para emails
-```
-
-5. No plugin MySQL → **Query**, importa o ficheiro `sylora.sql`
-
-O Railway faz o build automaticamente com o `Dockerfile` incluído.
-
----
-
-<div align="center">
-
-## 📜 &nbsp; Estrutura do Reino &nbsp; 📜
-
-</div>
-
-```
-sylora/
-├── api/                  # Endpoints JSON (amizades, comentários, saves)
-├── assets/               # Imagens, ícones, áudio e vídeo
-├── css/                  # Estilos
-├── js/                   # Scripts do lado do cliente
-├── includes/
-│   ├── config.php        # Sessões, constantes, ambiente
-│   ├── db.php            # Ligação à base de dados
-│   ├── auth.php          # Autenticação e tokens
-│   ├── functions.php     # Helpers (sanitize, validação, redirect)
-│   ├── mailer.php        # Envio de email (Resend / SMTP)
-│   ├── header.php        # Navegação e UI
-│   └── footer.php        # Footer e scripts globais
-├── index.php             # Homepage
-├── jogar.php             # Motor de jogo
-├── historia.php          # Narrativa
-├── u.php                 # Perfil público do jogador
-├── profile.php           # Edição de perfil
-├── login.php             # Autenticação
-├── register.php          # Registo
-├── verify.php            # Verificação OTP
-├── forgot.php            # Recuperação de password
-├── reset.php             # Reset de password
-├── search.php            # Pesquisa de aventureiros
-├── avatar.php            # Servidor de avatares
-├── sylora.sql            # Schema da base de dados
-└── Dockerfile            # Imagem PHP 8.3 + Apache
-```
-
----
-
-<div align="center">
-
-## 🔮 &nbsp; Roadmap &nbsp; 🔮
-
-</div>
-
-- [ ] Sistema de combate em tempo real
-- [ ] Inventário, itens e equipamentos
-- [ ] Guilds e Clãs de aventureiros
-- [ ] Conquistas e troféus
-- [ ] Modo história cooperativo
-- [ ] Loja e economia do reino
 
 ---
 
