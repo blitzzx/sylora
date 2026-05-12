@@ -1,0 +1,24 @@
+# Secrets — nunca commitar
+.env
+
+# Docker local (apenas para desenvolvimento)
+compose.yml
+
+# Logs e caches
+*.log
+*.cache
+
+# Claude Code
+.claude/
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-project
+*.sublime-workspace
+
+# OS
+.DS_Store
+Thumbs.db
+
+.claude

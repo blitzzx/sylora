@@ -1,0 +1,9 @@
+.env
+.git
+.claude
+compose.yml
+*.log
+*.cache
+.vscode
+.idea
+vendor/

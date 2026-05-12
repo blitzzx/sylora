@@ -1,0 +1,152 @@
+# =========================================
+# Configuração Apache para sylora
+# =========================================
+
+# Ativar rewrite engine
+RewriteEngine On
+RewriteBase /
+
+# =========================================
+# Segurança
+# =========================================
+
+# Proteger ficheiros sensíveis (includes)
+<FilesMatch "^(config|db|auth|functions)\.php$">
+    Require all denied
+</FilesMatch>
+
+# Proteger ficheiros de configuração e backups
+<FilesMatch "\.(env|log|sql|bak|backup|gitignore|htaccess)$">
+    Require all denied
+</FilesMatch>
+
+# Desativar listagem de diretórios
+Options -Indexes
+
+# Bloquear acesso direto à pasta includes
+<IfModule mod_rewrite.c>
+    RewriteRule ^includes/.*$ - [F,L]
+</IfModule>
+
+# Proteção contra injection de scripts
+<IfModule mod_headers.c>
+    # Prevenir clickjacking
+    Header always set X-Frame-Options "SAMEORIGIN"
+    
+    # Prevenir MIME-sniffing
+    Header always set X-Content-Type-Options "nosniff"
+    
+    # Ativar XSS protection
+    Header always set X-XSS-Protection "1; mode=block"
+    
+    # Referrer policy
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+
+    # HSTS — forçar HTTPS sempre (1 ano)
+    Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains"
+    
+    # Content Security Policy
+    Header always set Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' https://*.clarity.ms https://www.clarity.ms; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https:; font-src 'self' data: https://fonts.gstatic.com; media-src 'self'; connect-src 'self' https://*.clarity.ms https://m.clarity.ms; worker-src 'self' blob:;"
+</IfModule>
+
+# =========================================
+# Performance
+# =========================================
+
+# Compressão Gzip
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/json
+</IfModule>
+
+# Cache de ficheiros estáticos
+<IfModule mod_expires.c>
+    ExpiresActive On
+    
+    # Imagens
+    ExpiresByType image/jpg "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/gif "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    
+    # CSS e JavaScript
+    ExpiresByType text/css "access plus 1 month"
+    ExpiresByType application/javascript "access plus 1 month"
+    ExpiresByType text/javascript "access plus 1 month"
+    
+    # Fonts
+    ExpiresByType font/woff "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+    ExpiresByType application/font-woff "access plus 1 year"
+    ExpiresByType application/font-woff2 "access plus 1 year"
+    
+    # HTML
+    ExpiresByType text/html "access plus 0 seconds"
+</IfModule>
+
+# =========================================
+# Redirecionar apex → www
+# =========================================
+
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP_HOST} ^sylora\.lol$ [NC]
+    RewriteRule ^ https://www.sylora.lol%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# =========================================
+# URLs amigáveis (sem extensão .php)
+# =========================================
+
+<IfModule mod_rewrite.c>
+    # 1. Redirect /page.php → /page (exceto avatar.php)
+    RewriteCond %{THE_REQUEST} \s/([^?\s]+)\.php[\s?]
+    RewriteCond %1 !^avatar$
+    RewriteRule ^ /%1 [R=301,L,NE]
+
+    # 2. Internamente reescrever /page → page.php
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME}\.php -f
+    RewriteRule ^([^.]+?)/?$ $1.php [L]
+</IfModule>
+
+# =========================================
+# Forçar HTTPS (Railway usa proxy reverso)
+# =========================================
+
+<IfModule mod_rewrite.c>
+    RewriteCond %{HTTP:X-Forwarded-Proto} =http
+    RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+</IfModule>
+
+# =========================================
+# Páginas de erro personalizadas
+# =========================================
+
+# ErrorDocument 400 /sylora/error.php?code=400
+# ErrorDocument 401 /sylora/error.php?code=401
+# ErrorDocument 403 /sylora/error.php?code=403
+# ErrorDocument 404 /sylora/error.php?code=404
+# ErrorDocument 500 /sylora/error.php?code=500
+
+# =========================================
+# Charset e configurações gerais
+# =========================================
+
+# UTF-8 encoding
+AddDefaultCharset UTF-8
+<IfModule mod_mime.c>
+    AddCharset utf-8 .html .css .js .xml .json .rss .atom
+</IfModule>
+
+# Limitar tamanho de upload (ajusta conforme necessário)
+php_value upload_max_filesize 10M
+php_value post_max_size 10M
+
+# Session timeout (30 minutos)
+php_value session.gc_maxlifetime 1800
+
+# Desativar display de erros em produção (ativa em desenvolvimento)
+# php_flag display_errors off
+# php_value error_reporting 0
