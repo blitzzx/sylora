@@ -14,12 +14,15 @@ if (!$rawToken || !$resetData) {
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $csrf     = $_POST['_csrf'] ?? '';
+    $csrf      = $_POST['_csrf'] ?? '';
     $postToken = sanitize($_POST['_reset_token'] ?? '');
     $password  = $_POST['password'] ?? '';
     $confirm   = $_POST['confirm_password'] ?? '';
 
-    if (!verifyCSRFToken($csrf)) {
+    // CSRF derivado do reset token (não depende de sessão — a sessão pode não persistir entre requests vindos de email)
+    $expectedCsrf = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
+
+    if (!hash_equals($expectedCsrf, $csrf)) {
         $errors[] = 'Pedido inválido. Tenta novamente.';
     } elseif (!isValidPassword($password)) {
         $errors[] = 'A password deve ter pelo menos 8 caracteres.';
@@ -44,7 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 }
 
-$csrfToken = generateCSRFToken();
+$csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
 ?>
 <!DOCTYPE html>
 <html lang="pt" data-theme="">
