@@ -72,6 +72,10 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <rect x="1" y="1" width="24" height="38" rx="12"/>
         <rect class="hero-scroll-wheel" x="10" y="9" width="6" height="10" rx="3" fill="#c9993a" stroke="none"/>
       </svg>
+      <svg class="hero-swipe-svg" width="28" height="28" viewBox="0 0 28 28" fill="none" stroke="white" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M14 6 L14 22"/>
+        <path d="M7 15 L14 22 L21 15"/>
+      </svg>
     </div>
   </section>
 
@@ -378,7 +382,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
       <div class="char-card">
         <div class="char-icon char-clio">
-          <svg viewBox="0 0 60 60" fill="none"><path d="M30 8 C20 8 14 16 14 26 C14 38 22 50 30 52 C38 50 46 38 46 26 C46 16 40 8 30 8Z" stroke="rgba(180,220,255,0.5)" stroke-width="1.5" fill="none"/><path d="M20 28 L30 16 L40 28 L35 28 L35 44 L25 44 L25 28 Z" fill="rgba(150,190,240,0.6)"/><circle cx="30" cy="20" r="4" fill="rgba(180,210,255,0.8)"/></svg>
+          <svg viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="20" stroke="rgba(180,210,255,0.4)" stroke-width="1.5"/><path d="M44 10 C44 10 18 24 20 44 L24 49" stroke="rgba(180,210,255,0.85)" stroke-width="1.6" stroke-linecap="round" fill="none"/><path d="M24 49 C22 53 14 51 14 51 C14 51 21 47 20 44" stroke="rgba(180,210,255,0.65)" stroke-width="1.4" stroke-linecap="round" fill="none"/><path d="M36 18 L24 40" stroke="rgba(180,210,255,0.35)" stroke-width="1" stroke-linecap="round" stroke-dasharray="2 4"/><circle cx="30" cy="30" r="3" fill="rgba(180,210,255,0.8)"/></svg>
         </div>
         <h4>Clio</h4>
         <p>Inspirada na Musa da História. Guia do herói, ponte entre o mundo mortal e o divino.</p>
@@ -387,7 +391,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
       <div class="char-card">
         <div class="char-icon char-hero">
-          <svg viewBox="0 0 60 60" fill="none"><path d="M30 10 L34 25 L50 25 L37 34 L42 49 L30 40 L18 49 L23 34 L10 25 L26 25 Z" stroke="rgba(232,196,106,0.6)" stroke-width="1.5" fill="rgba(201,153,58,0.15)"/><circle cx="30" cy="18" r="6" stroke="rgba(232,196,106,0.7)" stroke-width="1.5" fill="none"/></svg>
+          <svg viewBox="0 0 60 60" fill="none"><circle cx="30" cy="30" r="20" stroke="rgba(232,196,106,0.4)" stroke-width="1.5"/><line x1="30" y1="11" x2="30" y2="47" stroke="rgba(232,196,106,0.85)" stroke-width="1.8" stroke-linecap="round"/><line x1="20" y1="30" x2="40" y2="30" stroke="rgba(232,196,106,0.75)" stroke-width="1.8" stroke-linecap="round"/><line x1="23" y1="26" x2="37" y2="26" stroke="rgba(232,196,106,0.45)" stroke-width="1.2" stroke-linecap="round"/><circle cx="30" cy="47" r="3" fill="rgba(201,153,58,0.5)" stroke="rgba(232,196,106,0.6)" stroke-width="1.2"/><circle cx="30" cy="11" r="1.8" fill="rgba(232,196,106,0.9)"/></svg>
         </div>
         <h4>O Herói</h4>
         <p>Sem memória, sem nome. Um guerreiro lendário escolhido e revivido. O teu destino está escrito nas estrelas.</p>

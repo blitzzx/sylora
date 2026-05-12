@@ -89,18 +89,30 @@ switch ($action) {
             redirect($profileUrl, 'Não foi possível processar a imagem.', 'error');
         }
 
-        // Corrigir orientação EXIF (fotos de telemóvel giradas)
-        if ($mimeType === 'image/jpeg' && function_exists('exif_read_data')) {
+        // Corrigir orientação EXIF (fotos de telemóvel giradas ou espelhadas)
+        if (function_exists('exif_read_data') && in_array($mimeType, ['image/jpeg', 'image/png'])) {
             $exif        = @exif_read_data($file['tmp_name']);
             $orientation = $exif['Orientation'] ?? 1;
             if ($orientation !== 1) {
                 $rotated = match($orientation) {
+                    2 => imageflip($src, IMG_FLIP_HORIZONTAL) ? $src : null,
                     3 => imagerotate($src, 180, 0),
+                    4 => imageflip($src, IMG_FLIP_VERTICAL) ? $src : null,
+                    5 => (function() use ($src) {
+                            $r = imagerotate($src, -90, 0);
+                            if ($r) imageflip($r, IMG_FLIP_HORIZONTAL);
+                            return $r;
+                         })(),
                     6 => imagerotate($src, -90, 0),
+                    7 => (function() use ($src) {
+                            $r = imagerotate($src, 90, 0);
+                            if ($r) imageflip($r, IMG_FLIP_HORIZONTAL);
+                            return $r;
+                         })(),
                     8 => imagerotate($src, 90, 0),
                     default => null,
                 };
-                if ($rotated) {
+                if ($rotated && $rotated !== $src) {
                     imagedestroy($src);
                     $src = $rotated;
                 }

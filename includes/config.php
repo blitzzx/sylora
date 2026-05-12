@@ -37,3 +37,9 @@ date_default_timezone_set('Europe/Lisbon');
 require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/auth.php';
+
+// Auto-login via cookie "remember me" em todas as páginas, não só nas protegidas.
+// Garante que a navbar mostra sempre o estado correto independentemente da página.
+if (!isLoggedIn() && isset($_COOKIE['remember_selector'], $_COOKIE['remember_token'])) {
+    tryRememberMeLogin();
+}

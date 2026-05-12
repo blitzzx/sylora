@@ -228,7 +228,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!audio) return;
     audio.volume = vol;
     if (volSlider) volSlider.value = Math.round(vol * 100);
-    if (volPct) volPct.textContent = Math.round(vol * 100) + "%";
+    if (volPct) volPct.textContent = Math.round(vol * 100);
     updateVolSliderTrack(Math.round(vol * 100));
   }
 

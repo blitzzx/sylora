@@ -226,9 +226,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <div class="music-vol-popup" id="music-vol-popup" role="tooltip">
           <div class="music-vol-row">
             <svg class="music-vol-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
-            <input type="range" class="music-vol-slider" id="music-vol-slider" min="0" max="100" step="1" value="70" aria-label="Volume da música">
+            <input type="range" class="music-vol-slider" id="music-vol-slider" min="0" max="100" step="1" value="50" aria-label="Volume da música">
             <svg class="music-vol-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/><path d="M19.07 4.93a10 10 0 010 14.14"/></svg>
-            <span class="music-vol-pct" id="music-vol-pct">70%</span>
+            <span class="music-vol-pct" id="music-vol-pct">50</span>
           </div>
         </div>
       </div>
@@ -260,8 +260,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
       <?php else: ?>
         <!-- Guest -->
-        <a href="/login"    class="btn btn-ghost btn-sm">Entrar</a>
-        <a href="/register" class="btn btn-primary btn-sm">Criar conta</a>
+        <a href="/login"    class="btn btn-ghost btn-sm nav-guest-btn">Log in</a>
+        <a href="/register" class="btn btn-primary btn-sm nav-guest-btn">Sign in</a>
       <?php endif; ?>
 
       <!-- Hamburger mobile -->
@@ -281,8 +281,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>">Perfil</a>
       <a href="/logout" style="color:rgba(201,107,90,0.85);">Sair</a>
     <?php else: ?>
-      <a href="/login">Entrar</a>
-      <a href="/register">Criar conta</a>
+      <a href="/login">Log in</a>
+      <a href="/register">Sign in</a>
     <?php endif; ?>
     <?php if ($isLoggedIn): ?>
     <div class="mobile-theme-row">

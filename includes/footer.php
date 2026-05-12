@@ -1,5 +1,5 @@
 </div><!-- /#pjax-root -->
-<?php if (empty($_SERVER['HTTP_X_PJAX'])): ?>
+<?php if (empty($_SERVER['HTTP_X_PJAX']) && empty($noFooter)): ?>
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="footer-brand">
