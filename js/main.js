@@ -362,7 +362,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   // ===== 8) PJAX: navegação sem recarregar a página (música contínua)
   (function () {
-    const PJAX_SKIP = new Set(["logout.php", "profile.php"]);
+    const PJAX_SKIP = new Set(["logout.php", "logout", "profile.php"]);
 
     function reExecScripts(root) {
       root.querySelectorAll("script").forEach((oldScript) => {
@@ -395,6 +395,11 @@ document.addEventListener("DOMContentLoaded", () => {
           const doc     = new DOMParser().parseFromString(html, "text/html");
           const newRoot = doc.getElementById("pjax-root");
           if (!newRoot) { window.location.assign(url); return; }
+
+          if (root.dataset.auth !== newRoot.dataset.auth) {
+            window.location.assign(url);
+            return;
+          }
 
           root.innerHTML = newRoot.innerHTML;
           root.classList.remove("pjax-loading");

@@ -348,4 +348,4 @@ function showConfirm(msg, onOk) {
 }
 </script>
 
-<div id="pjax-root">
+<div id="pjax-root" data-auth="<?= $isLoggedIn ? '1' : '0' ?>">
