@@ -8,6 +8,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
 
 <div class="sx-outer">
+<div data-no-footer aria-hidden="true" style="display:none"></div>
 <div class="sx-wrap" id="sxWrap">
 
   <div class="sx-bg" aria-hidden="true">

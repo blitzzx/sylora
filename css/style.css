@@ -6618,12 +6618,19 @@ footer {
   .auth-form-panel {
     padding-bottom: 80px;
   }
+
+  /* Scroll indicator clicável em mobile */
+  .hero-scroll-indicator { cursor: pointer; }
 }
 
-/* Centralizar botões CTA também em 560px */
+/* Centralizar botões CTA também em 560px + ocultar painel deco nas páginas auth */
 @media (max-width: 560px) {
   .hero-actions,
   .cta-actions {
     align-items: center;
   }
+
+  .auth-split { flex-direction: column; }
+  .auth-deco  { display: none; }
+  .auth-form-panel { width: 100%; }
 }

@@ -91,6 +91,12 @@ document.addEventListener("DOMContentLoaded", () => {
         navBtn.setAttribute("aria-expanded", "false");
       }
     });
+    navMenu.addEventListener("click", (e) => {
+      if (e.target.closest("a")) {
+        navMenu.classList.remove("open");
+        navBtn.setAttribute("aria-expanded", "false");
+      }
+    });
   }
 
   // ===== 2) User Drawer
@@ -392,6 +398,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
           root.innerHTML = newRoot.innerHTML;
           root.classList.remove("pjax-loading");
+          const siteFooter = document.querySelector(".site-footer");
+          if (siteFooter) siteFooter.style.display = root.querySelector("[data-no-footer]") ? "none" : "";
           closeDrawer();
 
           history.pushState({ pjax: true, url }, "", url);

@@ -132,6 +132,9 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     document.getElementById('hero-explore')?.addEventListener('click', () => {
       window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
     });
+    document.querySelector('.hero-scroll-indicator')?.addEventListener('click', () => {
+      window.scrollTo({ top: window.innerHeight, behavior: 'smooth' });
+    });
 
     document.getElementById('hero-download')?.addEventListener('click', () => {
       if (typeof showToast === 'function') showToast('Download brevemente disponível.', 'info');
@@ -214,7 +217,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
           <p>O Véu dos Ventos</p>
           <div class="island-meta">
             <span class="level-badge">Nív. 31–40</span>
-            <span class="boss-badge">Boss: Ecos de Astraeus</span>
+            <span class="boss-badge">Boss: Astraeus</span>
           </div>
         </div>
         <span class="island-cta island-cta-soon">Em breve</span>

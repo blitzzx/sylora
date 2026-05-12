@@ -1,5 +1,6 @@
 </div><!-- /#pjax-root -->
-<?php if (empty($_SERVER['HTTP_X_PJAX']) && empty($noFooter)): ?>
+<?php if (empty($_SERVER['HTTP_X_PJAX'])): ?>
+<?php if (empty($noFooter)): ?>
 <footer class="site-footer">
   <div class="container footer-inner">
     <div class="footer-brand">
@@ -12,7 +13,7 @@
     </div>
   </div>
 </footer>
-
+<?php endif; ?>
 <script src="js/main.js?v=<?php echo filemtime('js/main.js'); ?>"></script>
 </body>
 </html>
