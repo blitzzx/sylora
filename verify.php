@@ -228,7 +228,7 @@ $csrfToken = generateCSRFToken();
 
       <?php else: ?>
 
-        <!-- ── Estado: sem email pendente — pedir email para reenvio ── -->
+        <!-- ── Estado: sem email pendente: pedir email para reenvio ── -->
         <div class="auth-form-header">
           <h1>Verificar E-mail</h1>
           <p>Insere o teu e-mail para receber um novo código de verificação.</p>

@@ -56,7 +56,7 @@ function _sendMailResend(string $to, string $toName, string $subject, string $ht
 
     $data = json_decode($response, true);
     if (!empty($data['id'])) {
-        error_log('[Sylora Mailer] Resend OK — id=' . $data['id'] . ' to=' . $to);
+        error_log('[Sylora Mailer] Resend OK: id=' . $data['id'] . ' to=' . $to);
         return true;
     }
 
@@ -111,7 +111,7 @@ function mailVerification(string $email, string $username, string $code): bool {
   <p style="color:#4a3a2a;font-size:12px;margin:0;">Se não criaste esta conta, podes ignorar este e-mail. Nenhuma conta será criada sem o código.</p>
 </div>
 HTML;
-    return sendMail($email, $username, 'O teu código de verificação — Sylora', $html);
+    return sendMail($email, $username, 'O teu código de verificação: Sylora', $html);
 }
 
 function mailPasswordReset(string $email, string $username, string $token): bool {
@@ -131,5 +131,5 @@ function mailPasswordReset(string $email, string $username, string $token): bool
   <p style="color:#4a3a2a;font-size:12px;margin:0;">Se não pediste a reposição da password, ignora este e-mail. A tua password não será alterada.</p>
 </div>
 HTML;
-    return sendMail($email, $username, 'Repor password — Sylora', $html);
+    return sendMail($email, $username, 'Repor password: Sylora', $html);
 }

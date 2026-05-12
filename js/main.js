@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const prefersReducedMotion = () =>
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // ===== initPageContent — executado em cada navegação PJAX
+  // ===== initPageContent: executado em cada navegação PJAX
   function initPageContent(root) {
     // Auto-dismiss de alerts
     $$(".alert", root).forEach((a) => {
@@ -201,7 +201,7 @@ document.addEventListener("DOMContentLoaded", () => {
     b.addEventListener("click", () => applyTheme(b.dataset.themeSet));
   });
 
-  // ===== 6) Música ambiente — persiste sem pause via PJAX
+  // ===== 6) Música ambiente: persiste sem pause via PJAX
   const audio        = document.getElementById("bg-music");
   const musicToggle  = document.getElementById("music-toggle");
   const iconOn       = document.getElementById("music-icon-on");
@@ -354,7 +354,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   })();
 
-  // ===== 8) PJAX — navegação sem recarregar a página (música contínua)
+  // ===== 8) PJAX: navegação sem recarregar a página (música contínua)
   (function () {
     const PJAX_SKIP = new Set(["logout.php", "profile.php"]);
 
@@ -456,7 +456,7 @@ document.addEventListener("DOMContentLoaded", () => {
     URL.revokeObjectURL(url);
   }
 
-  // ===== 9) Navbar transparente no hero — scroll reveal
+  // ===== 9) Navbar transparente no hero: scroll reveal
   (function () {
     const nav = document.querySelector(".navbar");
     if (!nav) return;

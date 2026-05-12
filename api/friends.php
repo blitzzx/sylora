@@ -13,7 +13,7 @@ if (!isLoggedIn()) jsonErr(401, 'Precisas de estar autenticado.');
 $method = $_SERVER['REQUEST_METHOD'];
 $myId   = (int) $_SESSION['user_id'];
 
-// ── GET — listar amigos ou estado de amizade
+// ── GET: listar amigos ou estado de amizade
 // ?list=1 → lista de amigos aceites do utilizador autenticado
 // ?user_id=X → estado da relação entre o utilizador autenticado e X
 if ($method === 'GET') {
@@ -68,7 +68,7 @@ if ($method === 'GET') {
     exit;
 }
 
-// ── POST — enviar pedido de amizade
+// ── POST: enviar pedido de amizade
 if ($method === 'POST') {
     $body      = json_decode(file_get_contents('php://input'), true) ?? $_POST;
     $targetId  = (int) ($body['user_id'] ?? 0);
@@ -104,7 +104,7 @@ if ($method === 'POST') {
     exit;
 }
 
-// ── PUT — aceitar/recusar pedido
+// ── PUT: aceitar/recusar pedido
 if ($method === 'PUT') {
     $body     = json_decode(file_get_contents('php://input'), true) ?? [];
     $action   = $body['action']  ?? ''; // 'accept' | 'decline'
@@ -131,7 +131,7 @@ if ($method === 'PUT') {
     exit;
 }
 
-// ── DELETE — remover amizade
+// ── DELETE: remover amizade
 if ($method === 'DELETE') {
     $body     = json_decode(file_get_contents('php://input'), true) ?? [];
     $targetId = (int) ($body['user_id'] ?? 0);

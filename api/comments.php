@@ -69,7 +69,7 @@ if ($method === 'GET') {
     exit;
 }
 
-// ── POST — criar comentário
+// ── POST: criar comentário
 if ($method === 'POST') {
     if (!isLoggedIn()) jsonErr(401, 'Precisas de estar autenticado.');
 
@@ -126,7 +126,7 @@ if ($method === 'POST') {
     exit;
 }
 
-// ── DELETE — apagar comentário (próprio ou admin)
+// ── DELETE: apagar comentário (próprio ou admin)
 if ($method === 'DELETE') {
     if (!isLoggedIn()) jsonErr(401, 'Precisas de estar autenticado.');
     parse_str(file_get_contents('php://input'), $body);

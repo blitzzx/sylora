@@ -17,7 +17,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sylora — Ecos dos Deuses</title>
+  <title>Sylora: Ecos dos Deuses</title>
   <meta name="description" content="Sylora é um jogo de aventura narrativa na Grécia Antiga. Explora ilhas corrompidas, derrota titãs e descobre o teu passado esquecido.">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -192,7 +192,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <nav class="navbar" role="navigation" aria-label="Navegação principal">
   <div class="container">
 
-    <a href="/" class="logo" aria-label="Sylora — Início">
+    <a href="/" class="logo" aria-label="Sylora: Início">
       <img src="assets/img/Logo-Sylora.png" alt="Sylora" height="44" loading="eager">
     </a>
 

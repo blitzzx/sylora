@@ -18,7 +18,7 @@ if (!$row || empty($row['avatar'])) {
     http_response_code(404); exit;
 }
 
-// Sem cache — força sempre imagem fresca após upload
+// Sem cache: força sempre imagem fresca após upload
 header('Content-Type: ' . $row['avatar_mime']);
 header('Cache-Control: no-cache, no-store, must-revalidate');
 header('Pragma: no-cache');

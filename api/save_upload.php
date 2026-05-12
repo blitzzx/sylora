@@ -54,12 +54,12 @@ $story_progress = (int)   ($s['story_progress'] ?? 0);
 $room           = preg_replace('/[^a-zA-Z0-9_]/', '', $s['save_rm'] ?? 'Thalassos');
 
 $chapter_map = [
-    'Thalassos'      => 'Ato I — Ilha de Thalassos',
-    'Thalassos_Cave' => 'Ato I — Gruta de Thalassos',
-    'Helion'         => 'Ato II — As Cinzas de Helion',
-    'Zephyria'       => 'Ato III — O Véu dos Ventos',
+    'Thalassos'      => 'Ato I: Ilha de Thalassos',
+    'Thalassos_Cave' => 'Ato I: Gruta de Thalassos',
+    'Helion'         => 'Ato II: As Cinzas de Helion',
+    'Zephyria'       => 'Ato III: O Véu dos Ventos',
 ];
-$chapter = $chapter_map[$room] ?? 'Ato I — Ilha de Thalassos';
+$chapter = $chapter_map[$room] ?? 'Ato I: Ilha de Thalassos';
 
 $stmt = $conn->prepare("
     INSERT INTO saves

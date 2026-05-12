@@ -419,7 +419,7 @@ $csrfToken = generateCSRFToken();
       </ul>
 
       <h3>5. Propriedade Intelectual</h3>
-      <p>Todo o conteúdo do Sylora — arte, música, texto, código e marca — é propriedade exclusiva da equipa Sylora e está protegido por direitos de autor. Não podes reproduzir, distribuir ou criar trabalhos derivados sem autorização escrita prévia.</p>
+      <p>Todo o conteúdo do Sylora (arte, música, texto, código e marca) é propriedade exclusiva da equipa Sylora e está protegido por direitos de autor. Não podes reproduzir, distribuir ou criar trabalhos derivados sem autorização escrita prévia.</p>
 
       <h3>6. Privacidade</h3>
       <p>O teu endereço de email é utilizado apenas para autenticação e comunicações essenciais relacionadas com a tua conta. Não vendemos nem partilhamos os teus dados com terceiros para fins comerciais.</p>

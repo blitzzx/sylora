@@ -73,16 +73,16 @@ Cada herói parte da mesma costa. Nenhum chega ao fim igual ao que partiu.
 
 </div>
 
-Sylora está nos seus **primeiros passos** — e isso significa que a tua voz tem peso real.
+Sylora está nos seus **primeiros passos** e isso significa que a tua voz tem peso real.
 
-O jogo está vivo em **[sylora.lol](https://www.sylora.lol)**. Cria uma conta, explora o mundo, joga os capítulos disponíveis e diz-nos o que sentiste. Cada bug que encontras, cada sugestão que partilhas, cada momento que te surpreendeu — tudo isso molda o que Sylora vai ser.
+O jogo está vivo em **[sylora.lol](https://www.sylora.lol)**. Cria uma conta, explora o mundo, joga os capítulos disponíveis e diz-nos o que sentiste. Cada bug que encontras, cada sugestão que partilhas, cada momento que te surpreendeu: tudo isso molda o que Sylora vai ser.
 
 **Como podes ajudar:**
 
-- 🎮 **Joga** — explora tudo o que está disponível
-- 🐛 **Reporta bugs** — abre uma [Issue](../../issues) com o que encontraste
-- 💡 **Sugere** — tens uma ideia para o mundo ou para o jogo? Partilha nas Issues
-- ⭐ **Dá uma estrela** — ajuda outros aventureiros a encontrar Sylora
+- 🎮 **Joga**: explora tudo o que está disponível
+- 🐛 **Reporta bugs**: abre uma [Issue](../../issues) com o que encontraste
+- 💡 **Sugere**: tens uma ideia para o mundo ou para o jogo? Partilha nas Issues
+- ⭐ **Dá uma estrela**: ajuda outros aventureiros a encontrar Sylora
 
 > *Este é o início. O que construímos a seguir depende de quem aparece.*
 
@@ -96,13 +96,13 @@ O jogo está vivo em **[sylora.lol](https://www.sylora.lol)**. Cria uma conta, e
 
 A fortaleza que protege o reino:
 
-- **SQL Injection** — prepared statements em todas as queries
-- **Passwords** — bcrypt com `PASSWORD_DEFAULT`
-- **Sessões** — tokens com rotação, revogação e cookies `HttpOnly + SameSite`
-- **CSRF** — tokens validados em todos os formulários POST
-- **Rate Limiting** — máx. 5 tentativas de login por 15 minutos
-- **Headers** — CSP, X-Frame-Options, HSTS via `.htaccess`
-- **Credenciais** — exclusivamente via variáveis de ambiente, nenhum segredo no código
+- **SQL Injection**: prepared statements em todas as queries
+- **Passwords**: bcrypt com `PASSWORD_DEFAULT`
+- **Sessões**: tokens com rotação, revogação e cookies `HttpOnly + SameSite`
+- **CSRF**: tokens validados em todos os formulários POST
+- **Rate Limiting**: máx. 5 tentativas de login por 15 minutos
+- **Headers**: CSP, X-Frame-Options, HSTS via `.htaccess`
+- **Credenciais**: exclusivamente via variáveis de ambiente, nenhum segredo no código
 
 ---
 
