@@ -2857,7 +2857,24 @@ footer {
 .auth-terms {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   margin: 6px 0;
+}
+
+.auth-forgot-link {
+  font-size: 11.5px;
+  color: var(--muted);
+  text-decoration: none;
+  letter-spacing: 0.01em;
+  font-family: var(--font-body);
+  opacity: 0.75;
+  transition: color 0.2s ease, opacity 0.2s ease;
+}
+
+.auth-forgot-link:hover {
+  color: var(--gold-light);
+  opacity: 1;
+  text-decoration: none;
 }
 
 .auth-checkbox-label {
