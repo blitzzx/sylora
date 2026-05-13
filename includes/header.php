@@ -169,9 +169,13 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <canvas id="avatar-crop-canvas" width="280" height="280"></canvas>
     </div>
     <div class="avatar-crop-zoom-row">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
-      <input type="range" id="avatar-crop-zoom" min="0.1" max="4" step="0.01" value="1" style="flex:1;">
-      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      <div class="crop-zoom-track">
+        <div class="crop-zoom-fill" id="crop-zoom-fill"></div>
+        <div class="crop-zoom-thumb" id="crop-zoom-thumb"></div>
+        <input type="range" id="avatar-crop-zoom" min="0.1" max="4" step="0.01" value="1">
+      </div>
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>
     </div>
     <p class="avatar-crop-hint">Arrasta para reposicionar · Desliza para fazer zoom</p>
     <div class="avatar-crop-actions">

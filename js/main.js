@@ -161,6 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const cancelBtn  = document.getElementById("avatar-crop-cancel");
     const confirmBtn = document.getElementById("avatar-crop-confirm");
     const csrfInput  = document.getElementById("avatar-csrf-token");
+    const zoomFill   = document.getElementById("crop-zoom-fill");
+    const zoomThumb  = document.getElementById("crop-zoom-thumb");
 
     if (!trigger || !fileInput || !modal || !canvas) return;
 
@@ -199,9 +201,9 @@ document.addEventListener("DOMContentLoaded", () => {
       const min = parseFloat(zoomSlider.min);
       const max = parseFloat(zoomSlider.max);
       const val = parseFloat(zoomSlider.value);
-      const pct = Math.round(((val - min) / (max - min)) * 100);
-      zoomSlider.style.background =
-        `linear-gradient(to right, var(--gold) 0%, var(--gold) ${pct}%, var(--surface-offset) ${pct}%, var(--surface-offset) 100%)`;
+      const pct = ((val - min) / (max - min)) * 100;
+      if (zoomFill)  zoomFill.style.width = pct + "%";
+      if (zoomThumb) zoomThumb.style.left  = pct + "%";
     }
 
     function resetView() {
