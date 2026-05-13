@@ -164,7 +164,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const zoomFill   = document.getElementById("crop-zoom-fill");
     const zoomThumb  = document.getElementById("crop-zoom-thumb");
 
-    if (!trigger || !fileInput || !modal || !canvas) return;
+    if (!fileInput || !modal || !canvas) return;
 
     const ctx = canvas.getContext("2d");
     let SIZE = 280;
@@ -178,7 +178,7 @@ document.addEventListener("DOMContentLoaded", () => {
       canvas.height = SIZE;
     }
 
-    trigger.addEventListener("click", () => fileInput.click());
+    if (trigger) trigger.addEventListener("click", () => fileInput.click());
 
     fileInput.addEventListener("change", () => {
       const file = fileInput.files[0];
@@ -523,6 +523,10 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!musicOn) { setMusicState(true); return; }
     musicMuted = !musicMuted;
     audio.muted = musicMuted;
+    if (!musicMuted && audio.volume === 0) {
+      applyVolume(0.5);
+      localStorage.setItem(VOL_KEY, "0.5");
+    }
     localStorage.setItem(MUTE_KEY, musicMuted ? "true" : "false");
     updateMusicIcon();
   }

@@ -280,30 +280,28 @@ async function deleteSave(slot, btn) {
 /* ══════════════════════════════════════════════
    DRAG & DROP em slots vazios
 ══════════════════════════════════════════════ */
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelectorAll('.save-card-empty').forEach(card => {
-        const slot = card.closest('[data-slot]')?.dataset?.slot
-            || card.id?.replace('slot-card-', '');
+document.querySelectorAll('.save-card-empty').forEach(card => {
+    const slot = card.closest('[data-slot]')?.dataset?.slot
+        || card.id?.replace('slot-card-', '');
 
-        card.addEventListener('dragover', e => {
-            e.preventDefault();
-            card.classList.add('drag-over');
-        });
-        card.addEventListener('dragleave', e => {
-            if (!card.contains(e.relatedTarget)) card.classList.remove('drag-over');
-        });
-        card.addEventListener('drop', e => {
-            e.preventDefault();
-            card.classList.remove('drag-over');
-            const file = e.dataTransfer.files[0];
-            if (!file) return;
-            if (!file.name.endsWith('.sav')) {
-                showToast('Apenas ficheiros .sav são aceites.', 'error');
-                return;
-            }
-            const fakeInput = { files: [file], closest: () => null, value: '' };
-            uploadSave(fakeInput, parseInt(slot, 10));
-        });
+    card.addEventListener('dragover', e => {
+        e.preventDefault();
+        card.classList.add('drag-over');
+    });
+    card.addEventListener('dragleave', e => {
+        if (!card.contains(e.relatedTarget)) card.classList.remove('drag-over');
+    });
+    card.addEventListener('drop', e => {
+        e.preventDefault();
+        card.classList.remove('drag-over');
+        const file = e.dataTransfer.files[0];
+        if (!file) return;
+        if (!file.name.endsWith('.sav')) {
+            showToast('Apenas ficheiros .sav são aceites.', 'error');
+            return;
+        }
+        const fakeInput = { files: [file], closest: () => null, value: '' };
+        uploadSave(fakeInput, parseInt(slot, 10));
     });
 });
 </script>

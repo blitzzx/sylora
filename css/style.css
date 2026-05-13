@@ -5820,35 +5820,39 @@ footer {
 
 @media (hover: none) {
   .music-vol-popup {
-    width: min(240px, calc(100vw - 24px));
-    padding: 14px 16px;
+    position: fixed;
+    top: calc(env(safe-area-inset-top, 0px) + 88px);
+    right: 12px;
     left: auto;
-    right: 0;
-    transform: translateY(-4px);
+    width: min(280px, calc(100vw - 24px));
+    padding: 16px;
+    transform: translateY(-6px);
   }
-  .music-ctrl .music-vol-popup.music-vol-open {
-    transform: translateY(0);
-  }
+  .music-ctrl:hover .music-vol-popup { opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(-6px); }
+  .music-ctrl .music-vol-popup.music-vol-open { transform: translateY(0); opacity: 1; visibility: visible; pointer-events: auto; }
+  .music-vol-popup::before { display: none; }
   .music-mute-btn {
     display: flex;
     align-items: center;
-    gap: 8px;
+    justify-content: center;
+    gap: 10px;
     width: 100%;
-    background: none;
-    border: none;
-    border-bottom: 1px solid var(--gold-border);
-    color: var(--muted);
+    background: rgba(201, 153, 58, 0.08);
+    border: 1px solid var(--gold-border);
+    border-radius: 10px;
+    color: var(--text);
     font-family: var(--font-display);
-    font-size: 11px;
+    font-size: 12px;
     font-weight: 700;
     text-transform: uppercase;
     letter-spacing: 0.8px;
-    padding: 0 0 12px;
-    margin-bottom: 12px;
+    padding: 10px 12px;
+    margin-bottom: 14px;
     cursor: pointer;
-    transition: color 150ms ease;
+    transition: background 150ms ease, color 150ms ease, border-color 150ms ease;
   }
-  .music-mute-btn.is-muted { color: var(--gold); }
+  .music-mute-btn:active { background: rgba(201, 153, 58, 0.18); }
+  .music-mute-btn.is-muted { background: rgba(201, 107, 90, 0.10); border-color: rgba(201, 107, 90, 0.35); color: #e8a090; }
   .music-vol-row { gap: 10px; }
   .music-vol-slider {
     height: 6px;
