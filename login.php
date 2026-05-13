@@ -187,7 +187,7 @@ $csrfToken = generateCSRFToken();
           <label class="auth-checkbox-label">
             <input type="checkbox" name="remember" id="remember">
             <span class="auth-checkbox-custom"></span>
-            Lembrar-me durante 30 dias
+            Lembrar-me
           </label>
           <a href="/forgot" class="auth-forgot-link">Esqueceste a password?</a>
         </div>
