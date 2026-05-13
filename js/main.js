@@ -532,15 +532,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   if (audio) {
-    const savedOn   = localStorage.getItem(MUSIC_KEY) === "true";
-    const savedTime = parseFloat(localStorage.getItem(TIME_KEY) || "0");
-    const savedVol  = parseFloat(localStorage.getItem(VOL_KEY) || "0.5");
-    const rawVol    = isFinite(savedVol) ? Math.max(0, Math.min(1, savedVol)) : 0.5;
-    const safeVol   = rawVol === 0 ? 0.5 : rawVol;
+    const savedOn    = localStorage.getItem(MUSIC_KEY) === "true";
+    const savedTime  = parseFloat(localStorage.getItem(TIME_KEY) || "0");
+    const savedVol   = parseFloat(localStorage.getItem(VOL_KEY) || "0.5");
+    const savedMuted = localStorage.getItem(MUTE_KEY) === "true";
+    const rawVol     = isFinite(savedVol) ? Math.max(0, Math.min(1, savedVol)) : 0.5;
+    const safeVol    = rawVol === 0 ? 0.5 : rawVol;
 
-    musicMuted  = false;
-    audio.muted = false;
-    localStorage.removeItem(MUTE_KEY);
+    musicMuted  = savedMuted;
+    audio.muted = savedMuted;
 
     if (savedOn && savedTime > 0 && isFinite(savedTime)) {
       audio.addEventListener("canplay", function restorePos() {
@@ -566,62 +566,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setMusicState(savedOn);
 
-    const musicCtrl   = document.getElementById("music-ctrl");
-    const volPopup    = document.getElementById("music-vol-popup");
-    const isTouchOnly = window.matchMedia("(hover: none)").matches;
-    let volPopupOpen  = false;
-
-    function closeVolPopup() {
-      volPopupOpen = false;
-      if (volPopup) volPopup.classList.remove("music-vol-open");
-    }
-
-    const muteBtnEl = document.getElementById("music-mute-btn");
-    const muteLblEl = document.getElementById("music-mute-label");
-    const muteIcoEl = document.getElementById("music-mute-icon");
-    const SVG_SPK_ON  = `<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><path d="M15.54 8.46a5 5 0 010 7.07"/>`;
-    const SVG_SPK_OFF = `<polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/><line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>`;
-
-    function updateMuteBtn() {
-      if (!muteBtnEl) return;
-      const muted = musicMuted || audio.volume === 0;
-      if (muteLblEl) muteLblEl.textContent = muted ? "Ativar som" : "Silenciar";
-      if (muteIcoEl) muteIcoEl.innerHTML   = muted ? SVG_SPK_OFF : SVG_SPK_ON;
-      muteBtnEl.classList.toggle("is-muted", muted);
-    }
-
-    if (muteBtnEl) {
-      muteBtnEl.addEventListener("click", (e) => {
-        e.stopPropagation();
-        toggleMute();
-        updateMuteBtn();
-      });
-    }
-
-    updateMuteBtn();
-
     if (musicToggle) {
-      musicToggle.addEventListener("click", (e) => {
-        if (isTouchOnly) {
-          if (!musicOn) {
-            setMusicState(true);
-            return;
-          }
-          e.stopPropagation();
-          volPopupOpen = !volPopupOpen;
-          if (volPopup) volPopup.classList.toggle("music-vol-open", volPopupOpen);
-        } else {
-          toggleMute();
-        }
-      });
-    }
-
-    if (isTouchOnly) {
-      document.addEventListener("click", (e) => {
-        if (volPopupOpen && musicCtrl && !musicCtrl.contains(e.target)) {
-          closeVolPopup();
-        }
-      });
+      musicToggle.addEventListener("click", () => toggleMute());
     }
 
     if (volSlider) {
@@ -631,8 +577,8 @@ document.addEventListener("DOMContentLoaded", () => {
         audio.muted = musicMuted;
         applyVolume(vol);
         localStorage.setItem(VOL_KEY, String(vol));
+        localStorage.setItem(MUTE_KEY, musicMuted ? "true" : "false");
         updateMusicIcon();
-        updateMuteBtn();
       });
     }
   }

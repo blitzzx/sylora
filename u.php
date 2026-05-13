@@ -738,15 +738,21 @@ include 'includes/header.php';
   })();
 
   // ── Content tabs
+  function activateTab(panelId) {
+    const tab = document.querySelector('.up-content-tab[data-panel="' + panelId + '"]');
+    const panel = document.getElementById(panelId);
+    if (!tab || !panel) return;
+    document.querySelectorAll('.up-content-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.up-content-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    panel.classList.add('active');
+  }
   document.querySelectorAll('.up-content-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.up-content-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.up-content-panel').forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      const target = document.getElementById(tab.dataset.panel);
-      if (target) target.classList.add('active');
-    });
+    tab.addEventListener('click', () => activateTab(tab.dataset.panel));
   });
+  const initialTab = new URLSearchParams(window.location.search).get('tab');
+  if (initialTab === 'friends') activateTab('panel-friends');
+  else if (initialTab === 'comments') activateTab('panel-comments');
 
   // ── Avatar upload → abre o modal de crop global (header.php)
   const avatarInput = document.getElementById('avatar-upload-input');
