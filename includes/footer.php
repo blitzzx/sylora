@@ -10,6 +10,7 @@
     <div class="footer-links">
       <a href="historia.php">História</a>
       <a href="jogar.php">Jogar</a>
+      <a href="sobre.php#contacto">Contacto</a>
     </div>
   </div>
 </footer>

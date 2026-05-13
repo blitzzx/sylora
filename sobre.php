@@ -342,7 +342,7 @@ include 'includes/header.php';
     </div>
     <div class="about-credential-body">
       <div class="about-credential-label">Escola Secundária de Mem Martins · PAP 2025/2026</div>
-      <p>Sylora: Ecos dos Deuses foi desenvolvido como Prova de Aptidão Profissional no Curso Profissional de Gestão e Programação de Sistemas Informáticos. Todo o conteúdo, jogo, site, narrativa e arte, foi criado integralmente pelos elementos da equipa.</p>
+      <p>Sylora: Ecos dos Deuses foi desenvolvido como Prova de Aptidão Profissional no Curso Profissional de Gestão e Programação de Sistemas Informáticos. O jogo, o site e a narrativa foram trabalhados pelos elementos da equipa ao longo do ano letivo.</p>
     </div>
   </div>
 

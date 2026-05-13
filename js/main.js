@@ -691,7 +691,20 @@ document.addEventListener("DOMContentLoaded", () => {
           if (url !== location.href) {
             history.pushState({ pjax: true, url }, "", url);
           }
-          window.scrollTo({ top: 0, behavior: "instant" });
+
+          // Se o URL tem hash, faz scroll ao elemento; caso contrário, vai ao topo
+          let targetHash = "";
+          try { targetHash = new URL(url, location.origin).hash; } catch { /* ignore */ }
+          if (targetHash) {
+            const el = document.getElementById(targetHash.slice(1));
+            if (el) {
+              requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" }));
+            } else {
+              window.scrollTo({ top: 0, behavior: "instant" });
+            }
+          } else {
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }
 
           updateNavActive(url);
           reExecScripts(root);
@@ -723,6 +736,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
       e.preventDefault();
       if (link.href === location.href) return;
+
+      // Mesma página, só hash diferente: scroll suave sem refetch
+      const curr = new URL(location.href);
+      if (url.pathname === curr.pathname && url.search === curr.search && url.hash) {
+        const el = document.getElementById(url.hash.slice(1));
+        if (el) {
+          history.pushState({ pjax: true, url: url.href }, "", url.href);
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+      }
+
       pjaxGo(link.href);
     });
 
