@@ -175,6 +175,13 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     </div>
     <p class="avatar-crop-hint">Arrasta para reposicionar · Desliza para fazer zoom</p>
     <div class="avatar-crop-actions">
+      <button class="btn btn-secondary btn-sm" id="avatar-rotate-l" title="Rodar para a esquerda">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"/><path d="M3 3v5h5"/></svg>
+      </button>
+      <button class="btn btn-secondary btn-sm" id="avatar-rotate-r" title="Rodar para a direita">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M21 12a9 9 0 1 1-9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"/><path d="M21 3v5h-5"/></svg>
+      </button>
+      <div style="flex:1;"></div>
       <button class="btn btn-secondary btn-sm" id="avatar-crop-cancel">Cancelar</button>
       <button class="btn btn-primary btn-sm" id="avatar-crop-confirm">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>

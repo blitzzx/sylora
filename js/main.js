@@ -161,6 +161,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const cancelBtn  = document.getElementById("avatar-crop-cancel");
     const confirmBtn = document.getElementById("avatar-crop-confirm");
     const csrfInput  = document.getElementById("avatar-csrf-token");
+    const rotateLBtn = document.getElementById("avatar-rotate-l");
+    const rotateRBtn = document.getElementById("avatar-rotate-r");
 
     if (!trigger || !fileInput || !modal || !canvas) return;
 
@@ -183,17 +185,8 @@ document.addEventListener("DOMContentLoaded", () => {
       reader.onload = (ev) => {
         const image = new Image();
         image.onload = () => {
-          img  = image;
-          zoom = Math.max(SIZE / img.width, SIZE / img.height);
-          if (zoomSlider) {
-            zoomSlider.min   = zoom;
-            zoomSlider.max   = zoom * 4;
-            zoomSlider.step  = zoom / 100;
-            zoomSlider.value = zoom;
-          }
-          offsetX = (SIZE - img.width  * zoom) / 2;
-          offsetY = (SIZE - img.height * zoom) / 2;
-          drawCrop();
+          img = image;
+          resetView();
           modal.setAttribute("aria-hidden", "false");
           modal.classList.add("open");
         };
@@ -202,6 +195,38 @@ document.addEventListener("DOMContentLoaded", () => {
       reader.readAsDataURL(file);
       fileInput.value = "";
     });
+
+    function resetView() {
+      zoom = Math.max(SIZE / img.width, SIZE / img.height);
+      if (zoomSlider) {
+        zoomSlider.min   = zoom;
+        zoomSlider.max   = zoom * 4;
+        zoomSlider.step  = zoom / 100;
+        zoomSlider.value = zoom;
+      }
+      offsetX = (SIZE - img.width  * zoom) / 2;
+      offsetY = (SIZE - img.height * zoom) / 2;
+      drawCrop();
+    }
+
+    function doRotate(deg) {
+      if (!img) return;
+      const rad  = (deg * Math.PI) / 180;
+      const srcW = img.width;
+      const srcH = img.height;
+      const off  = document.createElement("canvas");
+      off.width  = srcH;
+      off.height = srcW;
+      const offCtx = off.getContext("2d");
+      offCtx.translate(srcH / 2, srcW / 2);
+      offCtx.rotate(rad);
+      offCtx.drawImage(img, -srcW / 2, -srcH / 2);
+      img = off;
+      resetView();
+    }
+
+    if (rotateLBtn) rotateLBtn.addEventListener("click", () => doRotate(-90));
+    if (rotateRBtn) rotateRBtn.addEventListener("click", () => doRotate(90));
 
     function clampOffset() {
       if (!img) return;
@@ -213,17 +238,20 @@ document.addEventListener("DOMContentLoaded", () => {
       if (!img) return;
       ctx.clearRect(0, 0, SIZE, SIZE);
       ctx.drawImage(img, offsetX, offsetY, img.width * zoom, img.height * zoom);
+
+      // Dark overlay only outside the preview circle (nonzero winding: CW rect + CCW arc)
       ctx.save();
-      ctx.fillStyle = "rgba(0,0,0,0.52)";
-      ctx.fillRect(0, 0, SIZE, SIZE);
-      ctx.globalCompositeOperation = "destination-out";
       ctx.beginPath();
-      ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 4, 0, Math.PI * 2);
+      ctx.rect(0, 0, SIZE, SIZE);
+      ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 4, 0, Math.PI * 2, true);
+      ctx.fillStyle = "rgba(0,0,0,0.55)";
       ctx.fill();
       ctx.restore();
+
+      // Gold ring
       ctx.save();
       ctx.strokeStyle = "rgba(201,153,58,0.85)";
-      ctx.lineWidth = 2;
+      ctx.lineWidth   = 2;
       ctx.beginPath();
       ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 4, 0, Math.PI * 2);
       ctx.stroke();
@@ -295,7 +323,7 @@ document.addEventListener("DOMContentLoaded", () => {
         outCtx.drawImage(img, offsetX, offsetY, img.width * zoom, img.height * zoom);
 
         const origLabel = confirmBtn.innerHTML;
-        confirmBtn.disabled   = true;
+        confirmBtn.disabled    = true;
         confirmBtn.textContent = "A guardar…";
 
         out.toBlob(async (blob) => {
@@ -320,7 +348,7 @@ document.addEventListener("DOMContentLoaded", () => {
           } catch {
             showToast("Erro de ligação.", "error");
           } finally {
-            confirmBtn.disabled = false;
+            confirmBtn.disabled  = false;
             confirmBtn.innerHTML = origLabel;
           }
         }, "image/jpeg", 0.92);

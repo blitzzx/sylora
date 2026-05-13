@@ -444,10 +444,10 @@ h1, h2, h3 {
 }
 
 #avatar-crop-canvas {
-  border-radius: 50%;
   cursor: grab;
   display: block;
   max-width: 100%;
+  border-radius: 8px;
 }
 
 .avatar-crop-zoom-row {
