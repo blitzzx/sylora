@@ -166,10 +166,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!trigger || !fileInput || !modal || !canvas) return;
 
-    const ctx  = canvas.getContext("2d");
-    const SIZE = 280;
+    const ctx = canvas.getContext("2d");
+    let SIZE = 280;
 
-    let img = null, zoom = 1, offsetX = 0, offsetY = 0, dragStart = null;
+    let img = null, zoom = 1, offsetX = 0, offsetY = 0;
+    let dragStart = null, pinchStart = null, pinchZoomStart = 1;
+
+    function computeSize() {
+      SIZE = Math.min(380, Math.max(200, window.innerWidth - 76));
+      canvas.width  = SIZE;
+      canvas.height = SIZE;
+    }
 
     trigger.addEventListener("click", () => fileInput.click());
 
@@ -186,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const image = new Image();
         image.onload = () => {
           img = image;
+          computeSize();
           resetView();
           modal.setAttribute("aria-hidden", "false");
           modal.classList.add("open");
@@ -250,19 +258,27 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.restore();
     }
 
+    function applyZoom(newZoom, pivotCanvasX, pivotCanvasY) {
+      const min = zoomSlider ? parseFloat(zoomSlider.min) : zoom;
+      const max = zoomSlider ? parseFloat(zoomSlider.max) : zoom * 4;
+      newZoom = Math.min(max, Math.max(min, newZoom));
+      const ratio = newZoom / zoom;
+      offsetX = pivotCanvasX - (pivotCanvasX - offsetX) * ratio;
+      offsetY = pivotCanvasY - (pivotCanvasY - offsetY) * ratio;
+      zoom = newZoom;
+      if (zoomSlider) { zoomSlider.value = zoom; updateZoomTrack(); }
+      clampOffset();
+      drawCrop();
+    }
+
     if (zoomSlider) {
       zoomSlider.addEventListener("input", () => {
         const newZoom = parseFloat(zoomSlider.value);
-        const ratio   = newZoom / zoom;
-        offsetX = SIZE / 2 - (SIZE / 2 - offsetX) * ratio;
-        offsetY = SIZE / 2 - (SIZE / 2 - offsetY) * ratio;
-        zoom = newZoom;
-        clampOffset();
-        drawCrop();
-        updateZoomTrack();
+        applyZoom(newZoom, SIZE / 2, SIZE / 2);
       });
     }
 
+    // Mouse drag
     canvas.addEventListener("mousedown", (e) => {
       dragStart = { x: e.clientX - offsetX, y: e.clientY - offsetY };
       canvas.style.cursor = "grabbing";
@@ -279,20 +295,61 @@ document.addEventListener("DOMContentLoaded", () => {
       canvas.style.cursor = "grab";
     });
 
-    canvas.addEventListener("touchstart", (e) => {
-      const t = e.touches[0];
-      dragStart = { x: t.clientX - offsetX, y: t.clientY - offsetY };
-    }, { passive: true });
-    canvas.addEventListener("touchmove", (e) => {
-      if (!dragStart) return;
-      const t = e.touches[0];
-      offsetX = t.clientX - dragStart.x;
-      offsetY = t.clientY - dragStart.y;
-      clampOffset();
-      drawCrop();
+    // Mouse wheel zoom
+    canvas.addEventListener("wheel", (e) => {
       e.preventDefault();
+      const rect      = canvas.getBoundingClientRect();
+      const scaleX    = SIZE / rect.width;
+      const scaleY    = SIZE / rect.height;
+      const pivotX    = (e.clientX - rect.left) * scaleX;
+      const pivotY    = (e.clientY - rect.top)  * scaleY;
+      const delta     = e.deltaY > 0 ? -0.08 : 0.08;
+      applyZoom(zoom * (1 + delta), pivotX, pivotY);
     }, { passive: false });
-    canvas.addEventListener("touchend", () => { dragStart = null; });
+
+    // Touch: single-finger drag + two-finger pinch
+    canvas.addEventListener("touchstart", (e) => {
+      if (e.touches.length === 2) {
+        const t1 = e.touches[0], t2 = e.touches[1];
+        pinchStart     = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        pinchZoomStart = zoom;
+        dragStart      = null;
+      } else {
+        const t = e.touches[0];
+        dragStart  = { x: t.clientX - offsetX, y: t.clientY - offsetY };
+        pinchStart = null;
+      }
+    }, { passive: true });
+
+    canvas.addEventListener("touchmove", (e) => {
+      if (e.touches.length === 2 && pinchStart !== null) {
+        const t1   = e.touches[0], t2 = e.touches[1];
+        const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = SIZE / rect.width;
+        const scaleY = SIZE / rect.height;
+        const midX   = ((t1.clientX + t2.clientX) / 2 - rect.left) * scaleX;
+        const midY   = ((t1.clientY + t2.clientY) / 2 - rect.top)  * scaleY;
+        applyZoom(pinchZoomStart * (dist / pinchStart), midX, midY);
+        e.preventDefault();
+      } else if (e.touches.length === 1 && dragStart !== null) {
+        const t = e.touches[0];
+        offsetX = t.clientX - dragStart.x;
+        offsetY = t.clientY - dragStart.y;
+        clampOffset();
+        drawCrop();
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    canvas.addEventListener("touchend", (e) => {
+      if (e.touches.length < 2) pinchStart = null;
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        dragStart = { x: t.clientX - offsetX, y: t.clientY - offsetY };
+      }
+      if (e.touches.length === 0) dragStart = null;
+    });
 
     function closeModal() {
       modal.setAttribute("aria-hidden", "true");
@@ -616,20 +673,41 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    let pjaxController = null;
+
     function pjaxGo(url) {
       const root = document.getElementById("pjax-root");
       if (!root) { window.location.assign(url); return; }
 
+      // Abort any in-flight request
+      if (pjaxController) pjaxController.abort();
+      pjaxController = new AbortController();
+
       root.classList.add("pjax-loading");
 
-      fetch(url, { headers: { "X-PJAX": "1" }, credentials: "same-origin" })
+      // Safety net: remove loading state if navigation gets stuck
+      const safetyTimer = setTimeout(() => root.classList.remove("pjax-loading"), 8000);
+
+      fetch(url, {
+        headers: { "X-PJAX": "1" },
+        credentials: "same-origin",
+        signal: pjaxController.signal,
+      })
         .then((r) => r.text())
         .then((html) => {
+          clearTimeout(safetyTimer);
+          pjaxController = null;
+
           const doc     = new DOMParser().parseFromString(html, "text/html");
           const newRoot = doc.getElementById("pjax-root");
-          if (!newRoot) { window.location.assign(url); return; }
+          if (!newRoot) {
+            root.classList.remove("pjax-loading");
+            window.location.assign(url);
+            return;
+          }
 
           if (root.dataset.auth !== newRoot.dataset.auth) {
+            root.classList.remove("pjax-loading");
             window.location.assign(url);
             return;
           }
@@ -640,14 +718,23 @@ document.addEventListener("DOMContentLoaded", () => {
           if (siteFooter) siteFooter.style.display = root.querySelector("[data-no-footer]") ? "none" : "";
           closeDrawer();
 
-          history.pushState({ pjax: true, url }, "", url);
+          // Only push state when navigating to a new URL (not on popstate)
+          if (url !== location.href) {
+            history.pushState({ pjax: true, url }, "", url);
+          }
           window.scrollTo({ top: 0, behavior: "instant" });
 
           updateNavActive(url);
           reExecScripts(root);
           window.dispatchEvent(new Event("pjax:loaded"));
         })
-        .catch(() => window.location.assign(url));
+        .catch((err) => {
+          clearTimeout(safetyTimer);
+          pjaxController = null;
+          if (err.name === "AbortError") return;
+          root.classList.remove("pjax-loading");
+          window.location.assign(url);
+        });
     }
 
     document.addEventListener("click", (e) => {
