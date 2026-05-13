@@ -291,7 +291,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <p>Guarda o teu progresso na cloud e continua a aventura em qualquer dispositivo.</p>
         <span class="feature-card-arrow">→</span>
       </a>
-      <a href="sobrenos.php" class="feature-card">
+      <a href="sobre.php" class="feature-card">
         <div class="feature-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>

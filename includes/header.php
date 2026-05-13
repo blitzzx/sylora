@@ -103,7 +103,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
             <a href="/jogar" class="drawer-nav-link <?php echo $currentPage==='jogar.php'?'active':''; ?>">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Jogar
             </a>
-            <a href="/sobrenos" class="drawer-nav-link <?php echo $currentPage==='sobrenos.php'?'active':''; ?>">
+            <a href="/sobre" class="drawer-nav-link <?php echo $currentPage==='sobre.php'?'active':''; ?>">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Sobre Nós
             </a>
             <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" class="drawer-nav-link <?php echo $currentPage==='u.php'?'active':''; ?>">
@@ -200,7 +200,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         Jogar
       </a></li>
       <?php if ($isLoggedIn): ?>
-      <li><a href="/sobrenos" class="<?php echo $currentPage==='sobrenos.php'?'active':''; ?>">
+      <li><a href="/sobre" class="<?php echo $currentPage==='sobre.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         Sobre Nós
       </a></li>
@@ -271,7 +271,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <a href="/historia">História</a>
     <a href="/jogar">Jogar</a>
     <?php if ($isLoggedIn): ?>
-      <a href="/sobrenos">Sobre Nós</a>
+      <a href="/sobre">Sobre Nós</a>
       <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>">Perfil</a>
       <a href="/logout" style="color:rgba(201,107,90,0.85);">Sair</a>
     <?php else: ?>
