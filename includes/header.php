@@ -54,34 +54,27 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <?php if ($isLoggedIn): ?>
 <aside class="user-drawer" id="user-drawer" aria-hidden="true" role="dialog" aria-label="Menu do utilizador">
 
-  <div class="drawer-header-wrap">
-    <button class="drawer-avatar-btn" id="drawer-avatar-trigger" title="Mudar avatar" aria-label="Mudar avatar">
-      <div class="drawer-avatar">
-        <?php if (!empty($_SESSION['avatar'])): ?>
-          <img
-            src="avatar.php?id=<?php echo (int)$_SESSION['user_id']; ?>&t=<?php echo time(); ?>"
-            alt="Avatar de <?php echo $username; ?>"
-            width="52" height="52"
-            class="drawer-avatar-img"
-            data-initial="<?php echo e($userInitial); ?>"
-            style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">
-        <?php else: ?>
-          <?php echo $userInitial; ?>
-        <?php endif; ?>
-      </div>
-      <div class="drawer-avatar-edit">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
-      </div>
-    </button>
-    <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" class="drawer-header-link">
-      <div class="drawer-user-info">
-        <strong><?php echo $username; ?></strong>
-        <span><?php echo e($_SESSION['email'] ?? ''); ?></span>
-        <span class="drawer-role">Aventureiro</span>
-      </div>
-      <svg class="drawer-header-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-    </a>
-  </div>
+  <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" class="drawer-header-wrap">
+    <div class="drawer-avatar">
+      <?php if (!empty($_SESSION['avatar'])): ?>
+        <img
+          src="avatar.php?id=<?php echo (int)$_SESSION['user_id']; ?>&t=<?php echo time(); ?>"
+          alt="Avatar de <?php echo $username; ?>"
+          width="52" height="52"
+          class="drawer-avatar-img"
+          data-initial="<?php echo e($userInitial); ?>"
+          style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">
+      <?php else: ?>
+        <?php echo $userInitial; ?>
+      <?php endif; ?>
+    </div>
+    <div class="drawer-user-info">
+      <strong><?php echo $username; ?></strong>
+      <span><?php echo e($_SESSION['email'] ?? ''); ?></span>
+      <span class="drawer-role">Aventureiro</span>
+    </div>
+    <svg class="drawer-header-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+  </a>
 
   <button class="drawer-close" id="drawer-close" aria-label="Fechar menu">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
