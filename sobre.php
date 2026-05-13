@@ -34,7 +34,7 @@ include 'includes/header.php';
   <section class="about-section">
     <div class="about-section-header">
       <span class="about-badge">Projeto</span>
-      <h2>Em números</h2>
+      <h2>O projeto até hoje</h2>
     </div>
 
     <div class="about-stats-grid">
@@ -160,7 +160,10 @@ include 'includes/header.php';
       <h2>A nossa jornada</h2>
     </div>
 
-    <ol class="about-timeline">
+    <ol class="about-timeline" id="about-timeline">
+      <span class="about-timeline-rail" aria-hidden="true"></span>
+      <span class="about-timeline-progress" id="about-timeline-progress" aria-hidden="true"></span>
+
       <li class="about-timeline-item">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
@@ -347,6 +350,48 @@ include 'includes/header.php';
 
 <script>
 (function () {
+  // ── Timeline animada com scroll ──
+  const timeline = document.getElementById('about-timeline');
+  const progress = document.getElementById('about-timeline-progress');
+
+  if (timeline && progress) {
+    const items = timeline.querySelectorAll('.about-timeline-item');
+    let rafPending = false;
+
+    function updateTimeline() {
+      rafPending = false;
+      const rect       = timeline.getBoundingClientRect();
+      const viewportH  = window.innerHeight || document.documentElement.clientHeight;
+      const triggerY   = viewportH * 0.55;
+      const railTop    = rect.top + 14;
+      const railHeight = Math.max(0, rect.height - 28);
+
+      let h = triggerY - railTop;
+      if (h < 0) h = 0;
+      if (h > railHeight) h = railHeight;
+      progress.style.height = h + 'px';
+
+      items.forEach(item => {
+        const marker = item.querySelector('.about-timeline-marker');
+        if (!marker) return;
+        const mRect = marker.getBoundingClientRect();
+        const mid   = mRect.top + (mRect.height / 2);
+        item.classList.toggle('is-active', mid <= triggerY);
+      });
+    }
+
+    function onScroll() {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(updateTimeline);
+    }
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', onScroll, { passive: true });
+    updateTimeline();
+  }
+
+  // ── Formulário de contacto ──
   const form    = document.getElementById('contact-form');
   const submit  = document.getElementById('contact-submit-btn');
   const msgEl   = document.getElementById('contact-message');
