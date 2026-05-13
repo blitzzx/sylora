@@ -5816,10 +5816,11 @@ footer {
 .music-vol-slider::-webkit-slider-thumb:hover { transform: scale(1.25); box-shadow: 0 0 8px rgba(201, 153, 58, 0.6); }
 .music-vol-slider::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--gold-light); cursor: pointer; border: 2px solid var(--bg); }
 .music-vol-pct { font-family: var(--font-display); font-size: 14px; color: var(--muted); min-width: 28px; text-align: right; }
+.music-mute-btn { display: none; }
 
 @media (hover: none) {
   .music-vol-popup {
-    width: min(220px, calc(100vw - 24px));
+    width: min(240px, calc(100vw - 24px));
     padding: 14px 16px;
     left: auto;
     right: 0;
@@ -5828,19 +5829,40 @@ footer {
   .music-ctrl .music-vol-popup.music-vol-open {
     transform: translateY(0);
   }
+  .music-mute-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+    background: none;
+    border: none;
+    border-bottom: 1px solid var(--gold-border);
+    color: var(--muted);
+    font-family: var(--font-display);
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    padding: 0 0 12px;
+    margin-bottom: 12px;
+    cursor: pointer;
+    transition: color 150ms ease;
+  }
+  .music-mute-btn.is-muted { color: var(--gold); }
   .music-vol-row { gap: 10px; }
   .music-vol-slider {
     height: 6px;
     border-radius: 3px;
+    touch-action: none;
   }
   .music-vol-slider::-webkit-slider-thumb {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
     border-width: 3px;
   }
   .music-vol-slider::-moz-range-thumb {
-    width: 22px;
-    height: 22px;
+    width: 26px;
+    height: 26px;
     border-width: 3px;
   }
   .music-vol-pct {

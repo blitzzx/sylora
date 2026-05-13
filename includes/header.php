@@ -217,6 +217,13 @@ $currentPage = basename($_SERVER['PHP_SELF']);
           <svg id="music-icon-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="2" y1="2" x2="22" y2="22" stroke="currentColor" stroke-width="2"/></svg>
         </button>
         <div class="music-vol-popup" id="music-vol-popup" role="tooltip">
+          <button class="music-mute-btn" id="music-mute-btn" type="button">
+            <svg id="music-mute-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M15.54 8.46a5 5 0 010 7.07"/>
+            </svg>
+            <span id="music-mute-label">Silenciar</span>
+          </button>
           <div class="music-vol-row">
             <svg class="music-vol-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>
             <input type="range" class="music-vol-slider" id="music-vol-slider" min="0" max="100" step="1" value="50" aria-label="Volume da música">
