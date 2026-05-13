@@ -156,6 +156,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
   </div>
 </aside>
+<?php endif; ?>
 
 <!-- ===== AVATAR CROP MODAL ===== -->
 <?php if ($isLoggedIn): ?>
