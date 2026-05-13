@@ -39,6 +39,12 @@ include 'includes/header.php';
 
 <div class="game-page">
 
+    <!-- Aviso mobile: jogo só disponível em PC -->
+    <div class="game-mobile-notice">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
+      <span>O jogo está disponível apenas em <strong>computador</strong>. Aqui podes gerir as tuas saves.</span>
+    </div>
+
     <!-- Page Header -->
     <div class="page-header">
         <div>
@@ -127,8 +133,8 @@ include 'includes/header.php';
                 </div>
 
                 <div class="save-actions">
-                    <button class="btn btn-primary btn-sm" onclick="downloadSave(<?= $slot ?>, this)">
-                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <button class="btn btn-download" onclick="downloadSave(<?= $slot ?>, this)">
+                        <svg class="btn-download-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                         </svg>

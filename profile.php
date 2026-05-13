@@ -40,6 +40,17 @@ if (!verifyCSRFToken($csrf)) {
     redirect($profileUrl, 'Pedido inválido. Tenta novamente.', 'error');
 }
 
+// Responde em JSON se pedido via fetch (XHR), caso contrário redireciona
+function avatarRespond(string $profileUrl, string $msg, string $type): void {
+    if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+        strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
+        header('Content-Type: application/json');
+        echo json_encode(['success' => $type === 'success', 'message' => $msg]);
+        exit;
+    }
+    redirect($profileUrl, $msg, $type);
+}
+
 switch ($action) {
 
     case 'upload_avatar':
@@ -49,7 +60,7 @@ switch ($action) {
             $msg = in_array($uploadErr, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
                 ? 'A imagem excede o limite permitido (máx. 5MB).'
                 : 'Erro ao carregar imagem. Tenta novamente.';
-            redirect($profileUrl, $msg, 'error');
+            avatarRespond($profileUrl, $msg, 'error');
         }
 
         $file    = $_FILES['avatar'];
@@ -57,25 +68,25 @@ switch ($action) {
         $allowed = ['image/jpeg', 'image/png', 'image/webp'];
 
         if ($file['size'] > $maxSize) {
-            redirect($profileUrl, 'A imagem excede o limite permitido (máx. 5MB).', 'error');
+            avatarRespond($profileUrl, 'A imagem excede o limite permitido (máx. 5MB).', 'error');
         }
 
         $finfo    = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->file($file['tmp_name']);
 
         if (!in_array($mimeType, $allowed)) {
-            redirect($profileUrl, 'Formato inválido. Usa JPG, PNG ou WebP.', 'error');
+            avatarRespond($profileUrl, 'Formato inválido. Usa JPG, PNG ou WebP.', 'error');
         }
 
         // Verificar dimensões antes de carregar para memória
         $imgInfo = @getimagesize($file['tmp_name']);
         if (!$imgInfo) {
-            redirect($profileUrl, 'Ficheiro de imagem inválido.', 'error');
+            avatarRespond($profileUrl, 'Ficheiro de imagem inválido.', 'error');
         }
         // Estimar memória necessária: largura × altura × 4 bytes × 2 (src + dst)
         $estimatedBytes = $imgInfo[0] * $imgInfo[1] * 4 * 2;
         if ($estimatedBytes > 200 * 1024 * 1024) {
-            redirect($profileUrl, 'Imagem demasiado grande. Usa uma foto com menos de ~6000×6000px.', 'error');
+            avatarRespond($profileUrl, 'Imagem demasiado grande. Usa uma foto com menos de ~6000×6000px.', 'error');
         }
 
         $src = match($mimeType) {
@@ -86,7 +97,7 @@ switch ($action) {
         };
 
         if (!$src) {
-            redirect($profileUrl, 'Não foi possível processar a imagem.', 'error');
+            avatarRespond($profileUrl, 'Não foi possível processar a imagem.', 'error');
         }
 
         // Corrigir orientação EXIF (fotos de telemóvel giradas ou espelhadas)
@@ -151,7 +162,7 @@ switch ($action) {
         $stmt->close();
 
         $_SESSION['avatar'] = true;
-        redirect($profileUrl, 'Foto de perfil atualizada!', 'success');
+        avatarRespond($profileUrl, 'Foto de perfil atualizada!', 'success');
         break;
 
     case 'change_username':

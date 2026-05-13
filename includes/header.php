@@ -54,26 +54,34 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <?php if ($isLoggedIn): ?>
 <aside class="user-drawer" id="user-drawer" aria-hidden="true" role="dialog" aria-label="Menu do utilizador">
 
-  <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" class="drawer-header-link">
-    <div class="drawer-avatar">
-      <?php if (!empty($_SESSION['avatar'])): ?>
-        <img
-          src="avatar.php?id=<?php echo (int)$_SESSION['user_id']; ?>&t=<?php echo time(); ?>"
-          alt="Avatar de <?php echo $username; ?>"
-          width="52" height="52"
-          style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;"
-          onerror="this.outerHTML='<?php echo htmlspecialchars($userInitial, ENT_QUOTES); ?>'">
-      <?php else: ?>
-        <?php echo $userInitial; ?>
-      <?php endif; ?>
-    </div>
-    <div class="drawer-user-info">
-      <strong><?php echo $username; ?></strong>
-      <span><?php echo e($_SESSION['email'] ?? ''); ?></span>
-      <span class="drawer-role">Aventureiro</span>
-    </div>
-    <svg class="drawer-header-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
-  </a>
+  <div class="drawer-header-wrap">
+    <button class="drawer-avatar-btn" id="drawer-avatar-trigger" title="Mudar avatar" aria-label="Mudar avatar">
+      <div class="drawer-avatar">
+        <?php if (!empty($_SESSION['avatar'])): ?>
+          <img
+            src="avatar.php?id=<?php echo (int)$_SESSION['user_id']; ?>&t=<?php echo time(); ?>"
+            alt="Avatar de <?php echo $username; ?>"
+            width="52" height="52"
+            class="drawer-avatar-img"
+            data-initial="<?php echo e($userInitial); ?>"
+            style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">
+        <?php else: ?>
+          <?php echo $userInitial; ?>
+        <?php endif; ?>
+      </div>
+      <div class="drawer-avatar-edit">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+      </div>
+    </button>
+    <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" class="drawer-header-link">
+      <div class="drawer-user-info">
+        <strong><?php echo $username; ?></strong>
+        <span><?php echo e($_SESSION['email'] ?? ''); ?></span>
+        <span class="drawer-role">Aventureiro</span>
+      </div>
+      <svg class="drawer-header-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
+    </a>
+  </div>
 
   <button class="drawer-close" id="drawer-close" aria-label="Fechar menu">
     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
@@ -113,44 +121,6 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       </div>
     </div>
 
-    <!-- Avatar -->
-    <div class="drawer-section" id="ds-avatar">
-      <button class="drawer-section-title" aria-controls="ds-avatar-body">
-        <span class="dst-left">
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-          Mudar Avatar
-        </span>
-        <svg class="dst-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
-      </button>
-      <div class="drawer-section-body" id="ds-avatar-body">
-        <div class="drawer-subsection">
-          <form action="/profile" method="POST" enctype="multipart/form-data">
-            <input type="hidden" name="action" value="upload_avatar">
-            <input type="hidden" name="_csrf" value="<?php echo e(generateCSRFToken()); ?>">
-            <div class="avatar-upload-wrap">
-              <div class="avatar-preview" id="avatar-preview">
-                <?php if (!empty($_SESSION['avatar'])): ?>
-                  <img
-                    src="avatar.php?id=<?php echo (int)$_SESSION['user_id']; ?>&t=<?php echo time(); ?>"
-                    alt="Avatar atual"
-                    width="52" height="52"
-                    style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">
-                <?php else: ?>
-                  <?php echo $userInitial; ?>
-                <?php endif; ?>
-              </div>
-              <div class="avatar-upload-info">
-                <label for="avatar" class="btn btn-secondary btn-sm" style="cursor:pointer;">Escolher imagem</label>
-                <input type="file" id="avatar" name="avatar" accept="image/jpeg,image/png,image/webp,image/gif" style="display:none;">
-                <p class="avatar-hint">JPG, PNG ou GIF · máx. 10MB</p>
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary btn-sm" style="margin-top:10px;width:100%;">Guardar avatar</button>
-          </form>
-        </div>
-      </div>
-    </div>
-
     <!-- Tema -->
     <div class="drawer-section" id="ds-tema">
       <button class="drawer-section-title" aria-controls="ds-tema-body">
@@ -186,6 +156,34 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
   </div>
 </aside>
+
+<!-- ===== AVATAR CROP MODAL ===== -->
+<?php if ($isLoggedIn): ?>
+<div class="avatar-crop-overlay" id="avatar-crop-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Recortar avatar">
+  <div class="avatar-crop-box">
+    <div class="avatar-crop-header">
+      <span class="avatar-crop-title">Recortar imagem</span>
+    </div>
+    <div class="avatar-crop-viewport">
+      <canvas id="avatar-crop-canvas" width="280" height="280"></canvas>
+    </div>
+    <div class="avatar-crop-zoom-row">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/></svg>
+      <input type="range" id="avatar-crop-zoom" min="0.1" max="4" step="0.01" value="1" style="flex:1;">
+      <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/><line x1="8" y1="11" x2="14" y2="11"/><line x1="11" y1="8" x2="11" y2="14"/></svg>
+    </div>
+    <p class="avatar-crop-hint">Arrasta para reposicionar · Desliza para fazer zoom</p>
+    <div class="avatar-crop-actions">
+      <button class="btn btn-secondary btn-sm" id="avatar-crop-cancel">Cancelar</button>
+      <button class="btn btn-primary btn-sm" id="avatar-crop-confirm">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
+        Guardar
+      </button>
+    </div>
+  </div>
+</div>
+<input type="file" id="avatar-file-input" accept="image/jpeg,image/png,image/webp" style="display:none;">
+<input type="hidden" id="avatar-csrf-token" value="<?php echo e(generateCSRFToken()); ?>">
 <?php endif; ?>
 
 <!-- ===== NAVBAR ===== -->
@@ -248,8 +246,9 @@ $currentPage = basename($_SERVER['PHP_SELF']);
                 src="avatar.php?id=<?php echo (int)$_SESSION['user_id']; ?>&t=<?php echo time(); ?>"
                 alt=""
                 width="28" height="28"
-                style="width:28px;height:28px;border-radius:50%;object-fit:cover;display:block;"
-                onerror="this.outerHTML='<?php echo e($userInitial); ?>'">
+                class="nav-avatar-img"
+                data-initial="<?php echo e($userInitial); ?>"
+                style="width:28px;height:28px;border-radius:50%;object-fit:cover;display:block;">
             <?php else: ?>
               <?php echo e($userInitial); ?>
             <?php endif; ?>

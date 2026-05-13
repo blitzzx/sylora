@@ -151,25 +151,207 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ===== 4) Avatar preview
-  const avatarInput   = document.getElementById("avatar");
-  const avatarPreview = document.getElementById("avatar-preview");
-  if (avatarInput && avatarPreview) {
-    avatarInput.addEventListener("change", () => {
-      const file = avatarInput.files[0];
+  // ===== 4) Avatar crop modal
+  (function () {
+    const trigger    = document.getElementById("drawer-avatar-trigger");
+    const fileInput  = document.getElementById("avatar-file-input");
+    const modal      = document.getElementById("avatar-crop-modal");
+    const canvas     = document.getElementById("avatar-crop-canvas");
+    const zoomSlider = document.getElementById("avatar-crop-zoom");
+    const cancelBtn  = document.getElementById("avatar-crop-cancel");
+    const confirmBtn = document.getElementById("avatar-crop-confirm");
+    const csrfInput  = document.getElementById("avatar-csrf-token");
+
+    if (!trigger || !fileInput || !modal || !canvas) return;
+
+    const ctx  = canvas.getContext("2d");
+    const SIZE = 280;
+
+    let img = null, zoom = 1, offsetX = 0, offsetY = 0, dragStart = null;
+
+    trigger.addEventListener("click", () => fileInput.click());
+
+    fileInput.addEventListener("change", () => {
+      const file = fileInput.files[0];
       if (!file) return;
       if (file.size > 10 * 1024 * 1024) {
-        if (typeof showToast === "function") showToast("Imagem demasiado grande (máx. 10MB).", "error");
-        avatarInput.value = "";
+        showToast("Imagem demasiado grande (máx. 10MB).", "error");
+        fileInput.value = "";
         return;
       }
       const reader = new FileReader();
-      reader.onload = (e) => {
-        avatarPreview.innerHTML = `<img src="${e.target.result}" alt="Preview" style="width:52px;height:52px;border-radius:50%;object-fit:cover;display:block;">`;
+      reader.onload = (ev) => {
+        const image = new Image();
+        image.onload = () => {
+          img  = image;
+          zoom = Math.max(SIZE / img.width, SIZE / img.height);
+          if (zoomSlider) {
+            zoomSlider.min   = zoom;
+            zoomSlider.max   = zoom * 4;
+            zoomSlider.step  = zoom / 100;
+            zoomSlider.value = zoom;
+          }
+          offsetX = (SIZE - img.width  * zoom) / 2;
+          offsetY = (SIZE - img.height * zoom) / 2;
+          drawCrop();
+          modal.setAttribute("aria-hidden", "false");
+          modal.classList.add("open");
+        };
+        image.src = ev.target.result;
       };
       reader.readAsDataURL(file);
+      fileInput.value = "";
     });
-  }
+
+    function clampOffset() {
+      if (!img) return;
+      offsetX = Math.min(0, Math.max(SIZE - img.width  * zoom, offsetX));
+      offsetY = Math.min(0, Math.max(SIZE - img.height * zoom, offsetY));
+    }
+
+    function drawCrop() {
+      if (!img) return;
+      ctx.clearRect(0, 0, SIZE, SIZE);
+      ctx.drawImage(img, offsetX, offsetY, img.width * zoom, img.height * zoom);
+      ctx.save();
+      ctx.fillStyle = "rgba(0,0,0,0.52)";
+      ctx.fillRect(0, 0, SIZE, SIZE);
+      ctx.globalCompositeOperation = "destination-out";
+      ctx.beginPath();
+      ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
+      ctx.save();
+      ctx.strokeStyle = "rgba(201,153,58,0.85)";
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(SIZE / 2, SIZE / 2, SIZE / 2 - 4, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.restore();
+    }
+
+    if (zoomSlider) {
+      zoomSlider.addEventListener("input", () => {
+        const newZoom = parseFloat(zoomSlider.value);
+        const ratio   = newZoom / zoom;
+        offsetX = SIZE / 2 - (SIZE / 2 - offsetX) * ratio;
+        offsetY = SIZE / 2 - (SIZE / 2 - offsetY) * ratio;
+        zoom = newZoom;
+        clampOffset();
+        drawCrop();
+      });
+    }
+
+    canvas.addEventListener("mousedown", (e) => {
+      dragStart = { x: e.clientX - offsetX, y: e.clientY - offsetY };
+      canvas.style.cursor = "grabbing";
+    });
+    window.addEventListener("mousemove", (e) => {
+      if (!dragStart) return;
+      offsetX = e.clientX - dragStart.x;
+      offsetY = e.clientY - dragStart.y;
+      clampOffset();
+      drawCrop();
+    });
+    window.addEventListener("mouseup", () => {
+      dragStart = null;
+      canvas.style.cursor = "grab";
+    });
+
+    canvas.addEventListener("touchstart", (e) => {
+      const t = e.touches[0];
+      dragStart = { x: t.clientX - offsetX, y: t.clientY - offsetY };
+    }, { passive: true });
+    canvas.addEventListener("touchmove", (e) => {
+      if (!dragStart) return;
+      const t = e.touches[0];
+      offsetX = t.clientX - dragStart.x;
+      offsetY = t.clientY - dragStart.y;
+      clampOffset();
+      drawCrop();
+      e.preventDefault();
+    }, { passive: false });
+    canvas.addEventListener("touchend", () => { dragStart = null; });
+
+    function closeModal() {
+      modal.setAttribute("aria-hidden", "true");
+      modal.classList.remove("open");
+      img = null;
+    }
+
+    if (cancelBtn) cancelBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => { if (e.target === modal) closeModal(); });
+
+    if (confirmBtn) {
+      confirmBtn.addEventListener("click", async () => {
+        if (!img) return;
+        const out    = document.createElement("canvas");
+        out.width    = SIZE;
+        out.height   = SIZE;
+        const outCtx = out.getContext("2d");
+        outCtx.beginPath();
+        outCtx.arc(SIZE / 2, SIZE / 2, SIZE / 2, 0, Math.PI * 2);
+        outCtx.clip();
+        outCtx.drawImage(img, offsetX, offsetY, img.width * zoom, img.height * zoom);
+
+        const origLabel = confirmBtn.innerHTML;
+        confirmBtn.disabled   = true;
+        confirmBtn.textContent = "A guardar…";
+
+        out.toBlob(async (blob) => {
+          const form = new FormData();
+          form.append("action", "upload_avatar");
+          form.append("_csrf",  csrfInput ? csrfInput.value : "");
+          form.append("avatar", blob, "avatar.jpg");
+          try {
+            const res  = await fetch("/profile", {
+              method: "POST",
+              headers: { "X-Requested-With": "XMLHttpRequest" },
+              body: form,
+            });
+            const data = await res.json();
+            if (data.success) {
+              showToast("Avatar atualizado!", "success");
+              closeModal();
+              setTimeout(() => location.reload(), 900);
+            } else {
+              showToast(data.message || "Erro ao guardar avatar.", "error");
+            }
+          } catch {
+            showToast("Erro de ligação.", "error");
+          } finally {
+            confirmBtn.disabled = false;
+            confirmBtn.innerHTML = origLabel;
+          }
+        }, "image/jpeg", 0.92);
+      });
+    }
+  })();
+
+  // ===== 4b) Avatar fallback — imagens quebradas mostram a inicial com estilos corretos
+  (function () {
+    function installAvatarFallback(img) {
+      img.addEventListener("error", function onErr() {
+        img.removeEventListener("error", onErr);
+        const initial  = img.dataset.initial || "?";
+        const isSmall  = img.classList.contains("nav-avatar-img");
+        const size     = isSmall ? 28 : 52;
+        const fontSize = isSmall ? 12 : 18;
+        const wrapper  = document.createElement("div");
+        wrapper.textContent = initial;
+        wrapper.style.cssText = [
+          `width:${size}px`, `height:${size}px`, "border-radius:50%",
+          "background:linear-gradient(135deg,var(--gold-dark),var(--gold))",
+          "display:grid", "place-items:center",
+          `font-size:${fontSize}px`, "font-weight:700",
+          "font-family:var(--font-display)", "color:#0d0b08", "flex-shrink:0",
+        ].join(";");
+        img.replaceWith(wrapper);
+      });
+    }
+
+    document.querySelectorAll(".nav-avatar-img, .drawer-avatar-img").forEach(installAvatarFallback);
+  })();
 
   // ===== 5) Tema
   const html           = document.documentElement;
@@ -271,8 +453,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const savedOn     = localStorage.getItem(MUSIC_KEY) === "true";
     const savedMuted  = localStorage.getItem(MUTE_KEY) === "true";
     const savedTime   = parseFloat(localStorage.getItem(TIME_KEY) || "0");
-    const savedVol    = parseFloat(localStorage.getItem(VOL_KEY) || "0.7");
-    const safeVol     = isFinite(savedVol) ? Math.max(0, Math.min(1, savedVol)) : 0.7;
+    const savedVol    = parseFloat(localStorage.getItem(VOL_KEY) || "0.5");
+    const safeVol     = isFinite(savedVol) ? Math.max(0, Math.min(1, savedVol)) : 0.5;
 
     musicMuted = savedMuted;
     audio.muted = savedMuted;
@@ -301,8 +483,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setMusicState(savedOn);
 
+    const musicCtrl   = document.getElementById("music-ctrl");
+    const volPopup    = document.getElementById("music-vol-popup");
+    const isTouchOnly = window.matchMedia("(hover: none)").matches;
+    let volPopupOpen  = false;
+
+    function closeVolPopup() {
+      volPopupOpen = false;
+      if (volPopup) volPopup.classList.remove("music-vol-open");
+    }
+
     if (musicToggle) {
-      musicToggle.addEventListener("click", toggleMute);
+      musicToggle.addEventListener("click", (e) => {
+        if (isTouchOnly) {
+          if (!musicOn) {
+            setMusicState(true);
+            return;
+          }
+          e.stopPropagation();
+          volPopupOpen = !volPopupOpen;
+          if (volPopup) volPopup.classList.toggle("music-vol-open", volPopupOpen);
+        } else {
+          toggleMute();
+        }
+      });
+    }
+
+    if (isTouchOnly) {
+      document.addEventListener("click", (e) => {
+        if (volPopupOpen && musicCtrl && !musicCtrl.contains(e.target)) {
+          closeVolPopup();
+        }
+      });
     }
 
     if (volSlider) {
