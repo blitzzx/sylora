@@ -460,21 +460,32 @@ h1, h2, h3 {
 .avatar-crop-zoom-row input[type="range"] {
   -webkit-appearance: none;
   appearance: none;
-  height: 4px;
-  border-radius: 2px;
+  height: 2px;
+  border-radius: 1px;
   background: var(--surface-offset);
   outline: none;
   cursor: pointer;
   border: none;
+  flex: 1;
 }
 
 .avatar-crop-zoom-row input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
-  width: 14px; height: 14px;
+  width: 12px; height: 12px;
   border-radius: 50%;
-  background: var(--gold-light);
+  background: var(--gold);
   cursor: pointer;
   border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px rgba(201,153,58,0.4);
+}
+
+.avatar-crop-zoom-row input[type="range"]::-moz-range-thumb {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  background: var(--gold);
+  cursor: pointer;
+  border: 2px solid var(--bg);
+  box-shadow: 0 0 0 1px rgba(201,153,58,0.4);
 }
 
 .avatar-crop-hint {

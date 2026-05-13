@@ -161,8 +161,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const cancelBtn  = document.getElementById("avatar-crop-cancel");
     const confirmBtn = document.getElementById("avatar-crop-confirm");
     const csrfInput  = document.getElementById("avatar-csrf-token");
-    const rotateLBtn = document.getElementById("avatar-rotate-l");
-    const rotateRBtn = document.getElementById("avatar-rotate-r");
 
     if (!trigger || !fileInput || !modal || !canvas) return;
 
@@ -196,6 +194,16 @@ document.addEventListener("DOMContentLoaded", () => {
       fileInput.value = "";
     });
 
+    function updateZoomTrack() {
+      if (!zoomSlider) return;
+      const min = parseFloat(zoomSlider.min);
+      const max = parseFloat(zoomSlider.max);
+      const val = parseFloat(zoomSlider.value);
+      const pct = Math.round(((val - min) / (max - min)) * 100);
+      zoomSlider.style.background =
+        `linear-gradient(to right, var(--gold) 0%, var(--gold) ${pct}%, var(--surface-offset) ${pct}%, var(--surface-offset) 100%)`;
+    }
+
     function resetView() {
       zoom = Math.max(SIZE / img.width, SIZE / img.height);
       if (zoomSlider) {
@@ -203,30 +211,12 @@ document.addEventListener("DOMContentLoaded", () => {
         zoomSlider.max   = zoom * 4;
         zoomSlider.step  = zoom / 100;
         zoomSlider.value = zoom;
+        updateZoomTrack();
       }
       offsetX = (SIZE - img.width  * zoom) / 2;
       offsetY = (SIZE - img.height * zoom) / 2;
       drawCrop();
     }
-
-    function doRotate(deg) {
-      if (!img) return;
-      const rad  = (deg * Math.PI) / 180;
-      const srcW = img.width;
-      const srcH = img.height;
-      const off  = document.createElement("canvas");
-      off.width  = srcH;
-      off.height = srcW;
-      const offCtx = off.getContext("2d");
-      offCtx.translate(srcH / 2, srcW / 2);
-      offCtx.rotate(rad);
-      offCtx.drawImage(img, -srcW / 2, -srcH / 2);
-      img = off;
-      resetView();
-    }
-
-    if (rotateLBtn) rotateLBtn.addEventListener("click", () => doRotate(-90));
-    if (rotateRBtn) rotateRBtn.addEventListener("click", () => doRotate(90));
 
     function clampOffset() {
       if (!img) return;
@@ -267,6 +257,7 @@ document.addEventListener("DOMContentLoaded", () => {
         zoom = newZoom;
         clampOffset();
         drawCrop();
+        updateZoomTrack();
       });
     }
 
