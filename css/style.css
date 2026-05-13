@@ -1543,8 +1543,17 @@ footer {
   border-left-color: rgba(138, 95, 16, 0.20);
 }
 
-[data-theme="light"] .drawer-header-link {
+[data-theme="light"] .drawer-header-wrap {
   background: rgba(242, 237, 228, 0.99);
+  border-bottom-color: rgba(138, 95, 16, 0.15);
+}
+
+[data-theme="light"] .drawer-avatar-btn:hover {
+  background: rgba(138, 95, 16, 0.05);
+}
+
+[data-theme="light"] .drawer-header-link {
+  background: transparent;
   border-bottom-color: rgba(138, 95, 16, 0.15);
 }
 

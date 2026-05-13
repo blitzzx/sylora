@@ -748,11 +748,24 @@ include 'includes/header.php';
     });
   });
 
-  // ── Avatar upload
+  // ── Avatar upload → abre o modal de crop global (header.php)
   const avatarInput = document.getElementById('avatar-upload-input');
   if (avatarInput) {
     avatarInput.addEventListener('change', function () {
-      if (this.files && this.files[0]) {
+      const file = this.files && this.files[0];
+      this.value = '';
+      if (!file) return;
+      const cropInput = document.getElementById('avatar-file-input');
+      if (cropInput) {
+        try {
+          const dt = new DataTransfer();
+          dt.items.add(file);
+          cropInput.files = dt.files;
+          cropInput.dispatchEvent(new Event('change'));
+        } catch (_) {
+          document.getElementById('avatar-form').submit();
+        }
+      } else {
         document.getElementById('avatar-form').submit();
       }
     });
