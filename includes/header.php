@@ -290,7 +290,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 <!-- Música ambiente -->
 <audio id="bg-music" loop preload="none">
-  <source src="assets/audio/She.mp3" type="audio/mpeg">
+  <source src="assets/audio/syloramusic.mp3" type="audio/mpeg">
 </audio>
 <?php endif; ?>
 
