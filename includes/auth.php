@@ -13,14 +13,9 @@ function requireLogin() {
     }
 }
 
-function requireGuest() {
-    if (isLoggedIn()) {
-        header('Location: index.php');
-        exit();
-    }
-}
-
 function loginUser($userId, $username, $email, $role) {
+    global $conn;
+
     $csrfToken = $_SESSION['csrf_token'] ?? null;
 
     session_regenerate_id(true); // apaga sessão antiga
@@ -34,6 +29,17 @@ function loginUser($userId, $username, $email, $role) {
     $_SESSION['username'] = $username;
     $_SESSION['email']    = $email;
     $_SESSION['role']     = $role;
+
+    // Flag de avatar — usada pelo header/drawer para mostrar a foto de perfil.
+    // Definida aqui para cobrir todos os caminhos de login (password,
+    // remember-me, verificação de email e registo).
+    $stmt = $conn->prepare("SELECT LENGTH(avatar) > 0 FROM users WHERE id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $stmt->bind_result($hasAvatar);
+    $stmt->fetch();
+    $stmt->close();
+    $_SESSION['avatar'] = (bool) $hasAvatar;
 
     updateLastLogin($userId);
 }
@@ -214,57 +220,6 @@ function recordLoginAttempt($ip, $username, $success) {
     $stmt->bind_param("ssi", $ip, $username, $success);
     $stmt->execute();
     $stmt->close();
-}
-
-function createEmailVerificationToken(int $userId): string {
-    global $conn;
-
-    $selector  = bin2hex(random_bytes(12));
-    $token     = bin2hex(random_bytes(32));
-    $tokenHash = hash('sha256', $token);
-    $expiresAt = date('Y-m-d H:i:s', time() + 86400); // 24h
-
-    $stmt = $conn->prepare("DELETE FROM email_verifications WHERE user_id = ?");
-    $stmt->bind_param("i", $userId);
-    $stmt->execute();
-    $stmt->close();
-
-    $stmt = $conn->prepare("INSERT INTO email_verifications (user_id, selector, token_hash, expires_at) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("isss", $userId, $selector, $tokenHash, $expiresAt);
-    $stmt->execute();
-    $stmt->close();
-
-    return $selector . ':' . $token;
-}
-
-function verifyEmailToken(string $rawToken) {
-    global $conn;
-
-    $parts = explode(':', $rawToken, 2);
-    if (count($parts) !== 2) return false;
-    [$selector, $token] = $parts;
-
-    $stmt = $conn->prepare("SELECT user_id, token_hash FROM email_verifications WHERE selector = ? AND expires_at > NOW()");
-    $stmt->bind_param("s", $selector);
-    $stmt->execute();
-    $row = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    if (!$row || !hash_equals($row['token_hash'], hash('sha256', $token))) return false;
-
-    $uid = (int)$row['user_id'];
-
-    $stmt = $conn->prepare("UPDATE users SET email_verified_at = NOW(), is_active = 1 WHERE id = ?");
-    $stmt->bind_param("i", $uid);
-    $stmt->execute();
-    $stmt->close();
-
-    $stmt = $conn->prepare("DELETE FROM email_verifications WHERE user_id = ?");
-    $stmt->bind_param("i", $uid);
-    $stmt->execute();
-    $stmt->close();
-
-    return $uid;
 }
 
 function createPasswordResetToken(int $userId): string {

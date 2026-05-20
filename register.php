@@ -74,7 +74,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $newId = $conn->insert_id;
                         $stmt->close();
                         loginUser($newId, $username, $email, 'user');
-                        $_SESSION['avatar'] = false;
                         redirect('/', 'Conta criada! Bem-vindo, ' . e($username) . '!', 'success');
                     }
 

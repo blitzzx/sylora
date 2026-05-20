@@ -219,7 +219,7 @@ switch ($action) {
         $confirmNewPassword = $_POST['confirm_new_password'] ?? '';
 
         if (!isValidPassword($newPassword)) {
-            redirect($profileUrl, 'Password deve ter no mínimo 6 caracteres.', 'error');
+            redirect($profileUrl, 'Password deve ter no mínimo 8 caracteres.', 'error');
         }
         if ($newPassword !== $confirmNewPassword) {
             redirect($profileUrl, 'As passwords não coincidem.', 'error');

@@ -31,7 +31,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $user = $stmt->get_result()->fetch_assoc();
                 $stmt->close();
                 loginUser($userId, $user['username'], $user['email'], $user['role']);
-                $_SESSION['avatar'] = false;
                 unset($_SESSION['verify_for']);
                 redirect('/', 'Conta criada! Bem-vindo ao Sylora, ' . e($user['username']) . '!', 'success');
             }

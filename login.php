@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (!checkLoginRateLimit($ip)) {
             $errors[] = 'Demasiadas tentativas. Aguarda 15 minutos e tenta novamente.';
         } else {
-            $stmt = $conn->prepare('SELECT id, username, email, password, role, is_active, avatar, email_verified_at FROM users WHERE email = ? LIMIT 1');
+            $stmt = $conn->prepare('SELECT id, username, email, password, role, is_active, email_verified_at FROM users WHERE email = ? LIMIT 1');
             $stmt->bind_param('s', $email);
             $stmt->execute();
             $user = $stmt->get_result()->fetch_assoc();
@@ -44,7 +44,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 } else {
                     recordLoginAttempt($ip, $email, 1);
                     loginUser($user['id'], $user['username'], $user['email'], $user['role']);
-                    $_SESSION['avatar'] = !empty($user['avatar']);
 
                     if ($remember) {
                         createRememberMeToken($user['id']);

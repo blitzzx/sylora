@@ -348,7 +348,7 @@ include 'includes/header.php';
             <!-- Password -->
             <div class="up-edit-panel-content" id="ep-password" role="tabpanel">
               <h3>Alterar Password</h3>
-              <p>Escolhe uma password forte com pelo menos 6 caracteres.</p>
+              <p>Escolhe uma password forte com pelo menos 8 caracteres.</p>
               <form method="POST" action="/profile" class="profile-form">
                 <input type="hidden" name="action" value="change_password">
                 <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
@@ -359,7 +359,7 @@ include 'includes/header.php';
                 <div class="form-row-two">
                   <div class="form-group">
                     <label for="ep_new_pw">Nova Password</label>
-                    <input type="password" id="ep_new_pw" name="new_password" placeholder="••••••••" required minlength="6">
+                    <input type="password" id="ep_new_pw" name="new_password" placeholder="••••••••" required minlength="8">
                   </div>
                   <div class="form-group">
                     <label for="ep_confirm_pw">Confirmar</label>
