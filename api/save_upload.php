@@ -52,10 +52,15 @@ $xp_req         = (float) ($s['xp_req']         ?? 100);
 $damage         = (float) ($s['damage']         ?? 3);
 $story_progress = (int)   ($s['story_progress'] ?? 0);
 $room           = preg_replace('/[^a-zA-Z0-9_]/', '', $s['save_rm'] ?? 'Thalassos');
+$player_name = trim((string) ($data['player_name'] ?? ''));
+if (mb_strlen($player_name) > 32) {
+    $player_name = mb_substr($player_name, 0, 32);
+}
 
 $chapter_map = [
     'Thalassos'      => 'Ato I: Ilha de Thalassos',
     'Thalassos_Cave' => 'Ato I: Gruta de Thalassos',
+    'Thalassos_Boss' => 'Ato I: Templo de Pelágion',
     'Helion'         => 'Ato II: As Cinzas de Helion',
     'Zephyria'       => 'Ato III: O Véu dos Ventos',
 ];
@@ -63,9 +68,10 @@ $chapter = $chapter_map[$room] ?? 'Ato I: Ilha de Thalassos';
 
 $stmt = $conn->prepare("
     INSERT INTO saves
-        (user_id, slot, save_data, level, hp, hp_total, xp, xp_req, damage, chapter, story_progress)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        (user_id, slot, player_name, save_data, level, hp, hp_total, xp, xp_req, damage, chapter, story_progress)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     ON DUPLICATE KEY UPDATE
+        player_name    = VALUES(player_name),
         save_data      = VALUES(save_data),
         level          = VALUES(level),
         hp             = VALUES(hp),
@@ -77,8 +83,8 @@ $stmt = $conn->prepare("
         story_progress = VALUES(story_progress),
         last_saved     = CURRENT_TIMESTAMP
 ");
-$stmt->bind_param("iisidddddsi",
-    $user_id, $slot, $content,
+$stmt->bind_param("iissidddddsi",
+    $user_id, $slot, $player_name, $content,
     $level, $hp, $hp_total, $xp, $xp_req, $damage,
     $chapter, $story_progress
 );
