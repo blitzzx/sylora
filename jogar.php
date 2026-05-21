@@ -213,10 +213,18 @@ include 'includes/header.php';
 </div><!-- /game-page -->
 
 <script>
-const SAVE_CSRF = <?= json_encode($csrfToken) ?>;
+// window.* (não const) — o script é re-executado em cada navegação PJAX;
+// com `const` a 2ª execução rebentava com "Identifier already declared".
+window.SAVE_CSRF = <?= json_encode($csrfToken) ?>;
 
 document.getElementById('jogar-download-btn')?.addEventListener('click', () => {
-    if (typeof showToast === 'function') showToast('Download brevemente disponível.', 'info');
+    const a = document.createElement('a');
+    a.href = '/assets/download/Sylora%20Demo.zip';
+    a.download = 'Sylora Demo.zip';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    if (typeof showToast === 'function') showToast('Download iniciado!', 'success');
 });
 
 async function uploadSave(input, slot) {
@@ -251,7 +259,12 @@ async function uploadSave(input, slot) {
 function downloadSave(slot, btn) {
     btn.classList.add('btn-loading');
     setTimeout(() => btn.classList.remove('btn-loading'), 1200);
-    window.location.href = 'api/save_download.php?slot=' + slot;
+    const a = document.createElement('a');
+    a.href = '/api/save_download?slot=' + slot;
+    a.download = 'syloradata.sav';
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
 }
 
 async function deleteSave(slot, btn) {

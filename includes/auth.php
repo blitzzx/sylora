@@ -331,4 +331,3 @@ function verifyPendingCode(string $email, string $code) {
 
     return $newId;
 }
-?>

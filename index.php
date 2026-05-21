@@ -137,7 +137,13 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     });
 
     document.getElementById('hero-download')?.addEventListener('click', () => {
-      if (typeof showToast === 'function') showToast('Download brevemente disponível.', 'info');
+      const a = document.createElement('a');
+      a.href = '/assets/download/Sylora%20Demo.zip';
+      a.download = 'Sylora Demo.zip';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (typeof showToast === 'function') showToast('Download iniciado!', 'success');
     });
   })();
   </script>
