@@ -13,6 +13,14 @@ if (!verifyCSRFToken($csrf)) {
     exit;
 }
 
+// Rate limit: 30 uploads por hora por utilizador. Como cada save pode ter 2 MB,
+// sem limite um utilizador autenticado poderia encher a BD facilmente.
+if (!checkActionRateLimit('save_upload', (string) $user_id, 30, 60)) {
+    http_response_code(429);
+    echo json_encode(['error' => 'Demasiados uploads. Aguarda uma hora.']);
+    exit;
+}
+
 $slot = (int) ($_POST['slot'] ?? 0);
 if ($slot < 1 || $slot > 3) {
     http_response_code(400);
@@ -91,4 +99,5 @@ $stmt->bind_param("iissidddddsi",
 $stmt->execute();
 $stmt->close();
 
+recordActionAttempt('save_upload', (string) $user_id, 1);
 echo json_encode(['success' => true, 'message' => 'Save guardado na cloud!']);

@@ -37,7 +37,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (empty($user['is_active'])) {
                     recordLoginAttempt($ip, $email, 0);
                     if (empty($user['email_verified_at'])) {
-                        $errors[] = 'Precisas de verificar o teu e-mail antes de entrar. <a href="/verify">Reenviar link de verificação</a>.';
+                        $errors[]      = 'Precisas de verificar o teu e-mail antes de entrar.';
+                        $showVerifyLink = true;
                     } else {
                         $errors[] = 'Conta desativada. Contacta o suporte.';
                     }
@@ -141,6 +142,9 @@ $csrfToken = generateCSRFToken();
           <?php foreach ($errors as $err): ?>
             <p><?php echo e($err); ?></p>
           <?php endforeach; ?>
+          <?php if (!empty($showVerifyLink)): ?>
+            <p><a href="/verify">Reenviar código de verificação</a></p>
+          <?php endif; ?>
         </div>
       <?php endif; ?>
 

@@ -22,9 +22,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (strlen($code) !== 6) {
             $codeError = 'Introduz os 6 dígitos do código.';
+        } elseif (!checkActionRateLimit('verify_code', strtolower($email), 5, 15)) {
+            // Brute force defense: 6 dígitos = 1M combinações; sem limite seria
+            // viável adivinhar. 5 tentativas / 15 min por email é confortável
+            // para um humano e impraticável para um script.
+            $codeError = 'Demasiadas tentativas. Aguarda 15 minutos.';
         } else {
             $userId = verifyPendingCode($email, $code);
             if ($userId) {
+                recordActionAttempt('verify_code', strtolower($email), 1);
                 $stmt = $conn->prepare('SELECT username, email, role FROM users WHERE id = ? LIMIT 1');
                 $stmt->bind_param('i', $userId);
                 $stmt->execute();
@@ -34,6 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 unset($_SESSION['verify_for']);
                 redirect('/', 'Conta criada! Bem-vindo ao Sylora, ' . e($user['username']) . '!', 'success');
             }
+            recordActionAttempt('verify_code', strtolower($email), 0);
             $codeError = 'Código incorreto ou expirado. Tenta novamente.';
         }
     } else {
@@ -41,7 +48,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email = sanitize($_POST['email'] ?? '');
         if (!isValidEmail($email)) {
             $resendErrors[] = 'Email inválido.';
+        } elseif (!checkActionRateLimit('verify_resend', strtolower($email), 3, 60)) {
+            // Limita spam de emails: máx. 3 reenvios por hora por email
+            $resendErrors[] = 'Demasiados reenvios. Aguarda uma hora.';
         } else {
+            recordActionAttempt('verify_resend', strtolower($email), 1);
             $stmt = $conn->prepare('SELECT username, password_hash FROM pending_registrations WHERE email = ?');
             $stmt->bind_param('s', $email);
             $stmt->execute();

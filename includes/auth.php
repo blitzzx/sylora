@@ -117,7 +117,10 @@ function tryRememberMeLogin() {
 
     // Comparar token com hash (timing-safe)
     if (!hash_equals($session['token_hash'], $tokenHash)) {
-        // Token inválido - possível roubo - revogar TODAS as sessões deste utilizador
+        // Token inválido — possível roubo. Revogar TODAS as sessões persistentes
+        // do utilizador, não só limpar cookies do cliente atual: se o atacante já
+        // tem o token, manter as outras sessões abertas só ajudaria.
+        revokeAllUserSessions((int) $session['user_id']);
         clearRememberMeCookies();
         return false;
     }
@@ -218,6 +221,39 @@ function recordLoginAttempt($ip, $username, $success) {
     global $conn;
     $stmt = $conn->prepare("INSERT INTO login_attempts (ip, username, success) VALUES (?, ?, ?)");
     $stmt->bind_param("ssi", $ip, $username, $success);
+    $stmt->execute();
+    $stmt->close();
+}
+
+/**
+ * Rate-limit genérico para ações sensíveis (verify, forgot, register, save_upload…).
+ * Reutiliza a tabela login_attempts com prefixo no campo username para distinguir
+ * as ações — assim evitamos criar tabelas só para cada limiter.
+ *
+ * Retorna true se o pedido pode prosseguir; false se passou o máximo na janela.
+ */
+function checkActionRateLimit(string $action, string $key, int $maxAttempts, int $windowMinutes): bool {
+    global $conn;
+    $username = $action . ':' . $key;
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) AS attempts
+        FROM login_attempts
+        WHERE username = ?
+          AND attempted_at > DATE_SUB(NOW(), INTERVAL ? MINUTE)
+    ");
+    $stmt->bind_param('si', $username, $windowMinutes);
+    $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
+    $stmt->close();
+    return ((int) $result['attempts']) < $maxAttempts;
+}
+
+function recordActionAttempt(string $action, string $key, int $success = 0): void {
+    global $conn;
+    $username = $action . ':' . $key;
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $stmt = $conn->prepare("INSERT INTO login_attempts (ip, username, success) VALUES (?, ?, ?)");
+    $stmt->bind_param('ssi', $ip, $username, $success);
     $stmt->execute();
     $stmt->close();
 }

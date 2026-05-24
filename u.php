@@ -325,6 +325,10 @@ include 'includes/header.php';
                   <label for="ep_new_email">Novo Email</label>
                   <input type="email" id="ep_new_email" name="new_email" value="<?php echo e($profile['email'] ?? ''); ?>" placeholder="novo@email.com" required>
                 </div>
+                <div class="form-group">
+                  <label for="ep_email_current_pw">Password atual</label>
+                  <input type="password" id="ep_email_current_pw" name="current_password" placeholder="••••••••" autocomplete="current-password" required>
+                </div>
                 <button type="submit" class="btn btn-primary btn-sm">Guardar Email</button>
               </form>
             </div>

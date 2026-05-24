@@ -16,9 +16,12 @@ $TOXICITY_LIST = [
 ];
 
 function containsToxic(string $text, array $list): bool {
+    // Word-boundary match (\b) — evita falsos positivos como "scrap" → "rape"
+    // ou "association" → "ass". Usa /u para multi-byte UTF-8 (necessário em PT).
     $lower = mb_strtolower($text);
     foreach ($list as $term) {
-        if (str_contains($lower, $term)) return true;
+        $pattern = '/\b' . preg_quote($term, '/') . '\b/u';
+        if (preg_match($pattern, $lower)) return true;
     }
     return false;
 }

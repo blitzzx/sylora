@@ -31,7 +31,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $rd = verifyPasswordResetToken($postToken);
         if (!$rd) {
-            $errors[] = 'Link expirado. <a href="/forgot">Pede um novo aqui</a>.';
+            $errors[]  = 'Link expirado. Pede um novo no formulário de recuperação.';
+            $showLinkToForgot = true;
         } else {
             $hash = password_hash($password, PASSWORD_DEFAULT);
             $stmt = $conn->prepare('UPDATE users SET password = ? WHERE id = ?');
@@ -117,8 +118,11 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
       <?php if (!empty($errors)): ?>
         <div class="alert alert-error">
           <?php foreach ($errors as $err): ?>
-            <p><?php echo $err; ?></p>
+            <p><?php echo e($err); ?></p>
           <?php endforeach; ?>
+          <?php if (!empty($showLinkToForgot)): ?>
+            <p><a href="/forgot">Pedir um novo link</a></p>
+          <?php endif; ?>
         </div>
       <?php endif; ?>
 

@@ -18,12 +18,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email           = sanitize($_POST['email'] ?? '');
         $password        = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
+        $ip              = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 
         $formData = ['username' => $username, 'email' => $email];
 
         $termsAccepted = !empty($_POST['terms']);
 
-        if (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
+        // Rate-limit por IP para evitar spam de registos + envios de email
+        if (!checkActionRateLimit('register', $ip, 5, 60)) {
+            $errors[] = 'Demasiadas tentativas de registo. Aguarda uma hora.';
+        } elseif (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
             $errors[] = 'Preenche todos os campos.';
         } elseif (!$termsAccepted) {
             $errors[] = 'Tens de aceitar os termos de utilização.';

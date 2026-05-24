@@ -190,9 +190,25 @@ switch ($action) {
         break;
 
     case 'change_email':
-        $newEmail = sanitize($_POST['new_email'] ?? '');
+        $newEmail        = sanitize($_POST['new_email'] ?? '');
+        $currentPassword = $_POST['current_password'] ?? '';
+
         if (!isValidEmail($newEmail)) {
             redirect($profileUrl, 'Email inválido.', 'error');
+        }
+        if ($currentPassword === '') {
+            redirect($profileUrl, 'Tens de introduzir a password atual para alterar o email.', 'error');
+        }
+
+        // Re-confirma identidade — sem isto, uma sessão sequestrada pode trocar
+        // o email para o do atacante e iniciar reset de password.
+        $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
+        $stmt->bind_param("i", $user['id']);
+        $stmt->execute();
+        $row = $stmt->get_result()->fetch_assoc();
+        $stmt->close();
+        if (!$row || !password_verify($currentPassword, $row['password'])) {
+            redirect($profileUrl, 'Password atual incorreta.', 'error');
         }
 
         $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
@@ -241,7 +257,13 @@ switch ($action) {
         $stmt->execute();
         $stmt->close();
 
-        redirect($profileUrl, 'Password alterada! Faz login novamente.', 'success');
+        // Após mudar password, revogar TODAS as sessões persistentes (remember-me)
+        // e terminar a sessão atual. Senão um atacante que tenha sequestrado a
+        // sessão continua dentro, e os cookies "lembrar-me" antigos mantêm-se
+        // válidos noutros browsers.
+        revokeAllUserSessions($user['id']);
+        logoutUser();
+        redirect('login.php', 'Password alterada! Faz login novamente.', 'success');
         break;
 
     case 'change_bio':
