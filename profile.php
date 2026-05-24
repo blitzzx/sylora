@@ -8,12 +8,12 @@ $action = $_POST['action'] ?? '';
 
 $profileUrl = 'u.php?u=' . urlencode($user['username'] ?? '');
 
-// Reserva de memória: libertada no shutdown para garantir que ele consegue correr mesmo em OOM
+
 $GLOBALS['_mem_reserve'] = str_repeat(' ', 512 * 1024);
 
-// Capturar erros fatais (ex: memória esgotada) e redirecionar com toast amigável
+
 register_shutdown_function(function () use ($profileUrl) {
-    $GLOBALS['_mem_reserve'] = null; // liberta os 512KB reservados
+    $GLOBALS['_mem_reserve'] = null; 
     $err = error_get_last();
     if ($err && in_array($err['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR])) {
         while (ob_get_level() > 0) ob_end_clean();
@@ -30,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     redirect($profileUrl, 'Ação inválida.', 'error');
 }
 
-// Se post_max_size foi excedido, $_POST fica vazio antes do script correr
+
 if (empty($_POST) && !empty($_SERVER['CONTENT_LENGTH'])) {
     redirect($profileUrl, 'A imagem excede o limite permitido (máx. 5MB).', 'error');
 }
@@ -40,7 +40,7 @@ if (!verifyCSRFToken($csrf)) {
     redirect($profileUrl, 'Pedido inválido. Tenta novamente.', 'error');
 }
 
-// Responde em JSON se pedido via fetch (XHR), caso contrário redireciona
+
 function avatarRespond(string $profileUrl, string $msg, string $type): void {
     if (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) &&
         strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest') {
@@ -78,12 +78,12 @@ switch ($action) {
             avatarRespond($profileUrl, 'Formato inválido. Usa JPG, PNG ou WebP.', 'error');
         }
 
-        // Verificar dimensões antes de carregar para memória
+        
         $imgInfo = @getimagesize($file['tmp_name']);
         if (!$imgInfo) {
             avatarRespond($profileUrl, 'Ficheiro de imagem inválido.', 'error');
         }
-        // Estimar memória necessária: largura × altura × 4 bytes × 2 (src + dst)
+        
         $estimatedBytes = $imgInfo[0] * $imgInfo[1] * 4 * 2;
         if ($estimatedBytes > 200 * 1024 * 1024) {
             avatarRespond($profileUrl, 'Imagem demasiado grande. Usa uma foto com menos de ~6000×6000px.', 'error');
@@ -100,7 +100,7 @@ switch ($action) {
             avatarRespond($profileUrl, 'Não foi possível processar a imagem.', 'error');
         }
 
-        // Corrigir orientação EXIF (fotos de telemóvel giradas ou espelhadas)
+        
         if (function_exists('exif_read_data') && in_array($mimeType, ['image/jpeg', 'image/png'])) {
             $exif        = @exif_read_data($file['tmp_name']);
             $orientation = $exif['Orientation'] ?? 1;
@@ -200,8 +200,8 @@ switch ($action) {
             redirect($profileUrl, 'Tens de introduzir a password atual para alterar o email.', 'error');
         }
 
-        // Re-confirma identidade — sem isto, uma sessão sequestrada pode trocar
-        // o email para o do atacante e iniciar reset de password.
+        
+        
         $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
         $stmt->bind_param("i", $user['id']);
         $stmt->execute();
@@ -257,10 +257,10 @@ switch ($action) {
         $stmt->execute();
         $stmt->close();
 
-        // Após mudar password, revogar TODAS as sessões persistentes (remember-me)
-        // e terminar a sessão atual. Senão um atacante que tenha sequestrado a
-        // sessão continua dentro, e os cookies "lembrar-me" antigos mantêm-se
-        // válidos noutros browsers.
+        
+        
+        
+        
         revokeAllUserSessions($user['id']);
         logoutUser();
         redirect('login.php', 'Password alterada! Faz login novamente.', 'success');

@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const prefersReducedMotion = () =>
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // ===== initPageContent: executado em cada navegação PJAX
+
   function initPageContent(root) {
-    // Auto-dismiss de alerts
+
     $$(".alert", root).forEach((a) => {
       window.setTimeout(() => {
         a.style.transition = prefersReducedMotion() ? "none" : "opacity 200ms ease";
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 5000);
     });
 
-    // Evitar double submit
+
     $$("form", root).forEach((form) => {
       form.addEventListener("submit", () => {
         const submit = form.querySelector('button[type="submit"], input[type="submit"]');
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Password visibility toggle
+
     const SVG_EYE     = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
     const SVG_EYE_OFF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
     $$('input[type="password"]', root).forEach((input) => {
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       wrap.appendChild(toggle);
     });
 
-    // Validação: confirmar password
+
     const pw        = $('[id="password"]', root);
     const confirmPw = $('[id="confirm_password"]', root);
     if (pw && confirmPw) {
@@ -67,16 +67,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  // Primeira inicialização
+
   initPageContent(document);
 
-  // Re-init depois de cada navegação PJAX
+
   window.addEventListener("pjax:loaded", () => {
     const pjaxRoot = document.getElementById("pjax-root");
     if (pjaxRoot) initPageContent(pjaxRoot);
   });
 
-  // ===== 1) Mobile nav toggle
+
   const navMenu = $(".nav-mobile-menu");
   const navBtn  = $(".nav-toggle");
   if (navMenu && navBtn) {
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== 2) User Drawer
+
   const pillBtn     = document.getElementById("drawer-trigger");
   const drawer      = document.getElementById("user-drawer");
   const overlay     = document.getElementById("drawer-overlay");
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== 3) Drawer accordion
+
   $$(".drawer-section-title").forEach((title) => {
     title.addEventListener("click", () => {
       const section    = title.closest(".drawer-section");
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ===== 4) Avatar crop modal
+
   (function () {
     const trigger    = document.getElementById("drawer-avatar-trigger");
     const fileInput  = document.getElementById("avatar-file-input");
@@ -239,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.clearRect(0, 0, SIZE, SIZE);
       ctx.drawImage(img, offsetX, offsetY, img.width * zoom, img.height * zoom);
 
-      // Dark overlay only outside the preview circle (nonzero winding: CW rect + CCW arc)
+
       ctx.save();
       ctx.beginPath();
       ctx.rect(0, 0, SIZE, SIZE);
@@ -248,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fill();
       ctx.restore();
 
-      // Gold ring
+
       ctx.save();
       ctx.strokeStyle = "rgba(201,153,58,0.85)";
       ctx.lineWidth   = 2;
@@ -278,7 +278,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
-    // Mouse drag
+
     canvas.addEventListener("mousedown", (e) => {
       dragStart = { x: e.clientX - offsetX, y: e.clientY - offsetY };
       canvas.style.cursor = "grabbing";
@@ -295,7 +295,7 @@ document.addEventListener("DOMContentLoaded", () => {
       canvas.style.cursor = "grab";
     });
 
-    // Mouse wheel zoom
+
     canvas.addEventListener("wheel", (e) => {
       e.preventDefault();
       const rect      = canvas.getBoundingClientRect();
@@ -307,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
       applyZoom(zoom * (1 + delta), pivotX, pivotY);
     }, { passive: false });
 
-    // Touch: single-finger drag + two-finger pinch
+
     canvas.addEventListener("touchstart", (e) => {
       if (e.touches.length === 2) {
         const t1 = e.touches[0], t2 = e.touches[1];
@@ -406,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  // ===== 4b) Avatar fallback — imagens quebradas mostram a inicial com estilos corretos
+
   (function () {
     function installAvatarFallback(img) {
       img.addEventListener("error", function onErr() {
@@ -431,7 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".nav-avatar-img, .drawer-avatar-img").forEach(installAvatarFallback);
   })();
 
-  // ===== 5) Tema
+
   const html           = document.documentElement;
   const themeToggleNav = document.getElementById("theme-toggle-nav");
   const themeIconDark  = document.getElementById("theme-icon-dark");
@@ -467,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     b.addEventListener("click", () => applyTheme(b.dataset.themeSet));
   });
 
-  // ===== 6) Música ambiente: persiste sem pause via PJAX
+
   const audio        = document.getElementById("bg-music");
   const musicToggle  = document.getElementById("music-toggle");
   const iconOn       = document.getElementById("music-icon-on");
@@ -583,7 +583,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   }
 
-  // ===== 7) Cursor circular com inversão de cores
+
   (function () {
     if (window.matchMedia("(hover: none)").matches) return;
     const el = document.createElement("div");
@@ -619,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   })();
 
-  // ===== 8) PJAX: navegação sem recarregar a página (música contínua)
+
   (function () {
     const PJAX_SKIP = new Set(["logout.php", "logout", "profile.php"]);
 
@@ -648,13 +648,13 @@ document.addEventListener("DOMContentLoaded", () => {
       const root = document.getElementById("pjax-root");
       if (!root) { window.location.assign(url); return; }
 
-      // Abort any in-flight request
+
       if (pjaxController) pjaxController.abort();
       pjaxController = new AbortController();
 
       root.classList.add("pjax-loading");
 
-      // Safety net: remove loading state if navigation gets stuck
+
       const safetyTimer = setTimeout(() => root.classList.remove("pjax-loading"), 8000);
 
       fetch(url, {
@@ -687,14 +687,14 @@ document.addEventListener("DOMContentLoaded", () => {
           if (siteFooter) siteFooter.style.display = root.querySelector("[data-no-footer]") ? "none" : "";
           closeDrawer();
 
-          // Only push state when navigating to a new URL (not on popstate)
+
           if (url !== location.href) {
             history.pushState({ pjax: true, url }, "", url);
           }
 
-          // Se o URL tem hash, faz scroll ao elemento; caso contrário, vai ao topo
+
           let targetHash = "";
-          try { targetHash = new URL(url, location.origin).hash; } catch { /* ignore */ }
+          try { targetHash = new URL(url, location.origin).hash; } catch {  }
           if (targetHash) {
             const el = document.getElementById(targetHash.slice(1));
             if (el) {
@@ -737,7 +737,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       if (link.href === location.href) return;
 
-      // Mesma página, só hash diferente: scroll suave sem refetch
+
       const curr = new URL(location.href);
       if (url.pathname === curr.pathname && url.search === curr.search && url.hash) {
         const el = document.getElementById(url.hash.slice(1));
@@ -754,7 +754,7 @@ document.addEventListener("DOMContentLoaded", () => {
     window.addEventListener("popstate", () => pjaxGo(location.href));
   })();
 
-  // ===== Save helpers (jogar.php)
+
   function importSave(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -783,7 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
     URL.revokeObjectURL(url);
   }
 
-  // ===== 9) Navbar transparente no hero: scroll reveal
+
   (function () {
     const nav = document.querySelector(".navbar");
     if (!nav) return;

@@ -19,7 +19,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password  = $_POST['password'] ?? '';
     $confirm   = $_POST['confirm_password'] ?? '';
 
-    // CSRF derivado do reset token (não depende de sessão — a sessão pode não persistir entre requests vindos de email)
+    
     $expectedCsrf = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
 
     if (!hash_equals($expectedCsrf, $csrf)) {

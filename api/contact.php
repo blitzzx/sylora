@@ -5,8 +5,8 @@ require_once __DIR__ . '/../includes/mailer.php';
 header('Content-Type: application/json; charset=utf-8');
 
 const CONTACT_RECIPIENT      = 'marciosousaa2007@gmail.com';
-const CONTACT_RATE_WINDOW    = 60;   // minutos
-const CONTACT_RATE_MAX       = 3;    // mensagens por janela por IP
+const CONTACT_RATE_WINDOW    = 60;
+const CONTACT_RATE_MAX       = 3;
 const CONTACT_NAME_MIN       = 2;
 const CONTACT_NAME_MAX       = 80;
 const CONTACT_SUBJECT_MIN    = 4;
@@ -29,9 +29,8 @@ if (!verifyCSRFToken($csrf)) {
     jsonResponse(403, ['error' => 'Pedido inválido. Recarrega a página e tenta novamente.']);
 }
 
-// Honeypot: campo "website" deve ficar vazio (bots preenchem)
 if (!empty($_POST['website'] ?? '')) {
-    jsonResponse(200, ['success' => true]); // resposta neutra
+    jsonResponse(200, ['success' => true]);
 }
 
 $name    = trim($_POST['name']    ?? '');
@@ -63,7 +62,6 @@ if ($msgLen < CONTACT_MESSAGE_MIN || $msgLen > CONTACT_MESSAGE_MAX) {
     jsonResponse(400, ['error' => 'Mensagem deve ter entre ' . CONTACT_MESSAGE_MIN . ' e ' . CONTACT_MESSAGE_MAX . ' caracteres.']);
 }
 
-// Rate limiting por IP
 $stmt = $conn->prepare("
     SELECT COUNT(*) AS attempts
     FROM contact_attempts
@@ -79,7 +77,6 @@ if (((int)$row['attempts']) >= CONTACT_RATE_MAX) {
     jsonResponse(429, ['error' => 'Demasiadas mensagens. Tenta novamente daqui a uma hora.']);
 }
 
-// Registar tentativa antes do envio (mesmo que falhe, conta para o limite)
 $stmt = $conn->prepare("INSERT INTO contact_attempts (ip, email) VALUES (?, ?)");
 $stmt->bind_param('ss', $ip, $email);
 $stmt->execute();

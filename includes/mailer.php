@@ -1,6 +1,6 @@
 <?php
-// Envia email via Resend HTTP API (porta 443, nunca bloqueada por firewalls).
-// Fallback para SMTP genérico se RESEND_API_KEY não estiver definido.
+
+
 
 require_once __DIR__ . '/../vendor/autoload.php';
 

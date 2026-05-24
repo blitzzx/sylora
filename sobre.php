@@ -3,7 +3,6 @@ require_once 'includes/config.php';
 
 $csrfToken = generateCSRFToken();
 
-// Cálculo dinâmico de meses desde 2025-09-01
 $startDate    = new DateTime('2025-09-01');
 $today        = new DateTime();
 $diff         = $startDate->diff($today);
@@ -15,7 +14,6 @@ include 'includes/header.php';
 
 <div class="about-page">
 
-  <!-- HERO -->
   <div class="about-hero">
     <div class="about-hero-runes" aria-hidden="true">⊕ ✦ ◈ ⟡ ✦</div>
     <p class="about-overline">Sylora · Bastidores</p>
@@ -30,7 +28,6 @@ include 'includes/header.php';
     </div>
   </div>
 
-  <!-- STATS DO PROJETO -->
   <section class="about-section">
     <div class="about-section-header">
       <span class="about-badge">Projeto</span>
@@ -76,7 +73,6 @@ include 'includes/header.php';
     </div>
   </section>
 
-  <!-- EQUIPA -->
   <section class="about-section">
     <div class="about-section-header">
       <span class="about-badge">Equipa</span>
@@ -85,7 +81,6 @@ include 'includes/header.php';
 
     <div class="about-team-grid">
 
-      <!-- Márcio -->
       <article class="about-member-card">
         <div class="about-member-stripe" aria-hidden="true"></div>
         <header class="about-member-head">
@@ -117,7 +112,6 @@ include 'includes/header.php';
         </div>
       </article>
 
-      <!-- Samuel -->
       <article class="about-member-card">
         <div class="about-member-stripe" aria-hidden="true"></div>
         <header class="about-member-head">
@@ -153,7 +147,6 @@ include 'includes/header.php';
     </div>
   </section>
 
-  <!-- TIMELINE -->
   <section class="about-section">
     <div class="about-section-header">
       <span class="about-badge">Desenvolvimento</span>
@@ -211,7 +204,6 @@ include 'includes/header.php';
     </ol>
   </section>
 
-  <!-- FERRAMENTAS -->
   <section class="about-section">
     <div class="about-section-header">
       <span class="about-badge">Tecnologias</span>
@@ -281,7 +273,6 @@ include 'includes/header.php';
     </div>
   </section>
 
-  <!-- REFLEXÃO -->
   <section class="about-section">
     <div class="about-section-header">
       <span class="about-badge">Reflexão</span>
@@ -293,7 +284,6 @@ include 'includes/header.php';
     </div>
   </section>
 
-  <!-- CONTACTO -->
   <section class="about-section" id="contacto">
     <div class="about-section-header">
       <span class="about-badge">Contacto</span>
@@ -335,7 +325,6 @@ include 'includes/header.php';
     </form>
   </section>
 
-  <!-- CREDENCIAL PAP -->
   <div class="about-credential">
     <div class="about-credential-seal" aria-hidden="true">
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><polyline points="8.21 13.89 7 22 12 19 17 22 15.79 13.88"/></svg>
@@ -350,7 +339,7 @@ include 'includes/header.php';
 
 <script>
 (function () {
-  // ── Timeline animada com scroll ──
+
   const timeline = document.getElementById('about-timeline');
   const progress = document.getElementById('about-timeline-progress');
 
@@ -391,7 +380,6 @@ include 'includes/header.php';
     updateTimeline();
   }
 
-  // ── Formulário de contacto ──
   const form    = document.getElementById('contact-form');
   const submit  = document.getElementById('contact-submit-btn');
   const msgEl   = document.getElementById('contact-message');

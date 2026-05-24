@@ -1,4 +1,4 @@
-</div><!-- /#pjax-root -->
+</div>
 <?php if (empty($_SERVER['HTTP_X_PJAX'])): ?>
 <?php if (empty($noFooter)): ?>
 <footer class="site-footer">

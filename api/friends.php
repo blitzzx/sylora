@@ -13,9 +13,9 @@ if (!isLoggedIn()) jsonErr(401, 'Precisas de estar autenticado.');
 $method = $_SERVER['REQUEST_METHOD'];
 $myId   = (int) $_SESSION['user_id'];
 
-// ── GET: listar amigos ou estado de amizade
-// ?list=1 → lista de amigos aceites do utilizador autenticado
-// ?user_id=X → estado da relação entre o utilizador autenticado e X
+
+
+
 if ($method === 'GET') {
     if (isset($_GET['list'])) {
         $stmt = $conn->prepare("
@@ -68,7 +68,7 @@ if ($method === 'GET') {
     exit;
 }
 
-// ── POST: enviar pedido de amizade
+
 if ($method === 'POST') {
     $body      = json_decode(file_get_contents('php://input'), true) ?? $_POST;
     $targetId  = (int) ($body['user_id'] ?? 0);
@@ -77,7 +77,7 @@ if ($method === 'POST') {
     if (!verifyCSRFToken($csrf)) jsonErr(403, 'Token inválido.');
     if ($targetId <= 0 || $targetId === $myId) jsonErr(400, 'Utilizador inválido.');
 
-    // Verificar se já existe relação
+    
     $stmtCheck = $conn->prepare("
         SELECT id, status FROM friendships
         WHERE (requester_id = ? AND addressee_id = ?)
@@ -104,10 +104,10 @@ if ($method === 'POST') {
     exit;
 }
 
-// ── PUT: aceitar/recusar pedido
+
 if ($method === 'PUT') {
     $body     = json_decode(file_get_contents('php://input'), true) ?? [];
-    $action   = $body['action']  ?? ''; // 'accept' | 'decline'
+    $action   = $body['action']  ?? ''; 
     $fromId   = (int) ($body['user_id'] ?? 0);
     $csrf     = $body['_csrf'] ?? '';
 
@@ -131,7 +131,7 @@ if ($method === 'PUT') {
     exit;
 }
 
-// ── DELETE: remover amizade
+
 if ($method === 'DELETE') {
     $body     = json_decode(file_get_contents('php://input'), true) ?? [];
     $targetId = (int) ($body['user_id'] ?? 0);

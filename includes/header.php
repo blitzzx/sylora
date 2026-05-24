@@ -8,7 +8,7 @@ $isLoggedIn  = isset($_SESSION['user_id']);
 $username    = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 $userInitial = $isLoggedIn ? strtoupper(mb_substr($_SESSION['username'] ?? 'A', 0, 1)) : null;
 
-// Página atual para marcar nav-link como active
+
 $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <?php if (!$isPjax): ?>
@@ -26,7 +26,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
   <link rel="apple-touch-icon" href="assets/img/FavIcon-Sylora.png">
   <link rel="stylesheet" href="css/style.css?v=<?php echo @filemtime('css/style.css') ?: '1'; ?>">
 
-  <!-- Microsoft Clarity -->
+  
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -35,7 +35,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     })(window, document, "clarity", "script", "wpebubj10v");
   </script>
 
-  <!-- Tema: aplica ANTES do render para evitar flash -->
+  
   <script>
     (function(){
       var saved = localStorage.getItem('sylora-theme');
@@ -47,10 +47,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 </head>
 <body>
 
-<!-- ===== DRAWER OVERLAY ===== -->
+
 <div class="drawer-overlay" id="drawer-overlay" aria-hidden="true"></div>
 
-<!-- ===== USER DRAWER (só para utilizadores logados) ===== -->
+
 <?php if ($isLoggedIn): ?>
 <aside class="user-drawer" id="user-drawer" aria-hidden="true" role="dialog" aria-label="Menu do utilizador">
 
@@ -82,7 +82,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
   <div class="drawer-body">
 
-    <!-- Navegação rápida -->
+    
     <div class="drawer-section expanded" id="ds-nav">
       <button class="drawer-section-title" aria-controls="ds-nav-body">
         <span class="dst-left">
@@ -114,7 +114,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       </div>
     </div>
 
-    <!-- Tema -->
+    
     <div class="drawer-section" id="ds-tema">
       <button class="drawer-section-title" aria-controls="ds-tema-body">
         <span class="dst-left">
@@ -139,7 +139,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       </div>
     </div>
 
-    <!-- Logout -->
+    
     <div class="drawer-danger-zone">
       <a href="/logout" class="drawer-danger-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
@@ -151,7 +151,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 </aside>
 <?php endif; ?>
 
-<!-- ===== AVATAR CROP MODAL ===== -->
+
 <?php if ($isLoggedIn): ?>
 <div class="avatar-crop-overlay" id="avatar-crop-modal" aria-hidden="true" role="dialog" aria-modal="true" aria-label="Recortar avatar">
   <div class="avatar-crop-box">
@@ -181,7 +181,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <input type="hidden" id="avatar-csrf-token" value="<?php echo e(generateCSRFToken()); ?>">
 <?php endif; ?>
 
-<!-- ===== NAVBAR ===== -->
+
 <nav class="navbar" role="navigation" aria-label="Navegação principal">
   <div class="container">
 
@@ -189,7 +189,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <img src="assets/img/Logo-Sylora.png" alt="Sylora" height="44" loading="eager">
     </a>
 
-    <!-- Links desktop -->
+    
     <ul class="nav-menu" id="nav-menu" role="list">
       <li><a href="/historia" class="<?php echo $currentPage==='historia.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
@@ -209,7 +209,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
     <div class="nav-right">
 
-      <!-- Widget de música: click=mute, hover=volume -->
+      
       <div class="music-ctrl" id="music-ctrl">
         <button class="nav-icon-btn music-btn" id="music-toggle" aria-label="Ligar/desligar música">
           <svg id="music-icon-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
@@ -226,14 +226,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </div>
       </div>
 
-      <!-- Botão tema -->
+      
       <button class="nav-icon-btn" id="theme-toggle-nav" aria-label="Alternar tema">
         <svg id="theme-icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
         <svg id="theme-icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       </button>
 
       <?php if ($isLoggedIn): ?>
-        <!-- Pill utilizador -->
+        
         <button class="user-pill" id="drawer-trigger" aria-label="Abrir menu">
           <div class="user-avatar">
             <?php if (!empty($_SESSION['avatar'])): ?>
@@ -253,12 +253,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         </button>
 
       <?php else: ?>
-        <!-- Guest -->
+        
         <a href="/login"    class="btn btn-ghost btn-sm nav-guest-btn">Log in</a>
         <a href="/register" class="btn btn-primary btn-sm nav-guest-btn">Sign in</a>
       <?php endif; ?>
 
-      <!-- Hamburger mobile -->
+      
       <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile-menu" aria-label="Abrir menu">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
@@ -266,7 +266,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
   </div>
 
-  <!-- Menu mobile -->
+  
   <div class="nav-mobile-menu" id="nav-mobile-menu">
     <a href="/historia">História</a>
     <a href="/jogar">Jogar</a>
@@ -288,16 +288,16 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
 </nav>
 
-<!-- Música ambiente -->
+
 <audio id="bg-music" loop preload="none">
   <source src="assets/audio/syloramusic.mp3" type="audio/mpeg">
 </audio>
 <?php endif; ?>
 
-<!-- ===== TOAST GLOBAL ===== -->
+
 <div id="sylora-toast" aria-live="polite" aria-atomic="true"></div>
 
-<!-- ===== CONFIRM MODAL GLOBAL ===== -->
+
 <div class="sylora-confirm-overlay" id="sylora-confirm" role="dialog" aria-modal="true" aria-labelledby="sylora-confirm-msg">
   <div class="sylora-confirm-box">
     <div class="sylora-confirm-icon">
@@ -312,7 +312,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 </div>
 
 <script>
-/* ── Global toast ── */
+
 function showToast(msg, type) {
   const t = document.getElementById('sylora-toast');
   if (!t) return;
@@ -322,7 +322,7 @@ function showToast(msg, type) {
   t._timer = setTimeout(() => { t.className = ''; }, 3800);
 }
 
-/* ── Global confirm ── */
+
 function showConfirm(msg, onOk) {
   const overlay = document.getElementById('sylora-confirm');
   const msgEl   = document.getElementById('sylora-confirm-msg');

@@ -5,7 +5,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        // Tentar auto-login via cookie "remember me"
+        
         if (!tryRememberMeLogin()) {
             header('Location: login.php');
             exit();
@@ -18,9 +18,9 @@ function loginUser($userId, $username, $email, $role) {
 
     $csrfToken = $_SESSION['csrf_token'] ?? null;
 
-    session_regenerate_id(true); // apaga sessão antiga
+    session_regenerate_id(true); 
 
-    // Restaura o token após regenerar
+    
     if ($csrfToken) {
         $_SESSION['csrf_token'] = $csrfToken;
     }
@@ -30,9 +30,9 @@ function loginUser($userId, $username, $email, $role) {
     $_SESSION['email']    = $email;
     $_SESSION['role']     = $role;
 
-    // Flag de avatar — usada pelo header/drawer para mostrar a foto de perfil.
-    // Definida aqui para cobrir todos os caminhos de login (password,
-    // remember-me, verificação de email e registo).
+    
+    
+    
     $stmt = $conn->prepare("SELECT LENGTH(avatar) > 0 FROM users WHERE id = ?");
     $stmt->bind_param("i", $userId);
     $stmt->execute();
@@ -47,15 +47,15 @@ function loginUser($userId, $username, $email, $role) {
 function createRememberMeToken($userId) {
     global $conn;
 
-    // Gerar selector e token aleatórios
-    $selector  = bin2hex(random_bytes(12)); // 24 chars
-    $token     = bin2hex(random_bytes(32)); // 64 chars
+    
+    $selector  = bin2hex(random_bytes(12)); 
+    $token     = bin2hex(random_bytes(32)); 
     $tokenHash = hash('sha256', $token);
-    $expiresAt = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 dias
+    $expiresAt = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); 
     $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
     $ip        = $_SERVER['REMOTE_ADDR'];
 
-    // Guardar na BD
+    
     $stmt = $conn->prepare("
         INSERT INTO user_sessions (user_id, selector, token_hash, user_agent, ip, expires_at)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -64,7 +64,7 @@ function createRememberMeToken($userId) {
     $stmt->execute();
     $stmt->close();
 
-    // Definir cookies (30 dias, HttpOnly, SameSite)
+    
     $cookieOptions = [
         'expires'  => time() + (30 * 24 * 60 * 60),
         'path'     => '/',
@@ -86,7 +86,7 @@ function tryRememberMeLogin() {
     $token     = $_COOKIE['remember_token'];
     $tokenHash = hash('sha256', $token);
 
-    // Buscar sessão válida (não expirada, não revogada)
+    
     $stmt = $conn->prepare("
         SELECT us.id, us.user_id, us.token_hash,
                u.username, u.email, u.role, u.is_active
@@ -109,26 +109,26 @@ function tryRememberMeLogin() {
     $session = $result->fetch_assoc();
     $stmt->close();
 
-    // Verificar conta ativa
+    
     if (!$session['is_active']) {
         clearRememberMeCookies();
         return false;
     }
 
-    // Comparar token com hash (timing-safe)
+    
     if (!hash_equals($session['token_hash'], $tokenHash)) {
-        // Token inválido — possível roubo. Revogar TODAS as sessões persistentes
-        // do utilizador, não só limpar cookies do cliente atual: se o atacante já
-        // tem o token, manter as outras sessões abertas só ajudaria.
+        
+        
+        
         revokeAllUserSessions((int) $session['user_id']);
         clearRememberMeCookies();
         return false;
     }
 
-    // Tudo OK - fazer login automático
+    
     loginUser($session['user_id'], $session['username'], $session['email'], $session['role']);
 
-    // Renovar token (rotation de token para mais segurança)
+    
     createRememberMeToken($session['user_id']);
 
     return true;
@@ -143,7 +143,7 @@ function clearRememberMeCookies() {
 function logoutUser() {
     global $conn;
 
-    // Revogar sessão persistente atual
+    
     if (isset($_COOKIE['remember_selector'])) {
         $selector = $_COOKIE['remember_selector'];
         $stmt = $conn->prepare("UPDATE user_sessions SET revoked_at = NOW() WHERE selector = ? AND revoked_at IS NULL");
@@ -225,13 +225,7 @@ function recordLoginAttempt($ip, $username, $success) {
     $stmt->close();
 }
 
-/**
- * Rate-limit genérico para ações sensíveis (verify, forgot, register, save_upload…).
- * Reutiliza a tabela login_attempts com prefixo no campo username para distinguir
- * as ações — assim evitamos criar tabelas só para cada limiter.
- *
- * Retorna true se o pedido pode prosseguir; false se passou o máximo na janela.
- */
+
 function checkActionRateLimit(string $action, string $key, int $maxAttempts, int $windowMinutes): bool {
     global $conn;
     $username = $action . ':' . $key;
@@ -269,7 +263,7 @@ function createPasswordResetToken(int $userId): string {
     $selector  = bin2hex(random_bytes(12));
     $token     = bin2hex(random_bytes(32));
     $tokenHash = hash('sha256', $token);
-    $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 1h
+    $expiresAt = date('Y-m-d H:i:s', time() + 3600); 
 
     $stmt = $conn->prepare("INSERT INTO password_resets (user_id, selector, token_hash, expires_at) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("isss", $userId, $selector, $tokenHash, $expiresAt);
@@ -310,7 +304,7 @@ function createPendingRegistration(string $email, string $username, string $pass
 
     $code     = str_pad((string)random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
     $codeHash = hash('sha256', $code);
-    $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 1h
+    $expiresAt = date('Y-m-d H:i:s', time() + 3600); 
 
     $stmt = $conn->prepare("DELETE FROM pending_registrations WHERE email = ?");
     $stmt->bind_param("s", $email);
@@ -338,7 +332,7 @@ function verifyPendingCode(string $email, string $code) {
 
     if (!$row) return false;
 
-    // Race-condition guard: check users table before inserting
+    
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? OR username = ? LIMIT 1");
     $stmt->bind_param("ss", $email, $row['username']);
     $stmt->execute();

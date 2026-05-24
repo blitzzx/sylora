@@ -6,7 +6,6 @@ $user       = getCurrentUser();
 $user_id    = (int) $user['id'];
 $csrfToken  = generateCSRFToken();
 
-/* ── Buscar saves do utilizador ── */
 $saves = [];
 $stmt  = $conn->prepare("SELECT * FROM saves WHERE user_id = ? ORDER BY slot ASC");
 $stmt->bind_param("i", $user_id);
@@ -17,7 +16,6 @@ while ($row = $result->fetch_assoc()) {
 }
 $stmt->close();
 
-/* ── Mapeamentos ── */
 $act_icons = [
     'Ato I'   => '🌊',
     'Ato II'  => '🌋',
@@ -39,13 +37,11 @@ include 'includes/header.php';
 
 <div class="game-page">
 
-    <!-- Aviso mobile: jogo só disponível em PC -->
     <div class="game-mobile-notice">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
       <span>O jogo está disponível apenas em <strong>computador</strong>. Aqui podes gerir as tuas saves.</span>
     </div>
 
-    <!-- Page Header -->
     <div class="page-header">
         <div>
             <h1 style="padding-bottom : 10px">Jogar</h1>
@@ -64,7 +60,6 @@ include 'includes/header.php';
         </button>
     </div>
 
-    <!-- Saves Section -->
     <section class="saves-section">
 
         <div class="section-header">
@@ -77,31 +72,37 @@ include 'includes/header.php';
             <h2>As tuas Saves</h2>
         </div>
 
-        <!-- Helper: Onde está o meu save? -->
-        <aside class="save-helper" aria-label="Onde está o meu save">
-            <div class="save-helper-icon" aria-hidden="true">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+        <aside class="save-helper" id="save-helper" aria-label="Onde está o meu save">
+            <button type="button" class="save-helper-header" id="save-helper-toggle" aria-expanded="true" aria-controls="save-helper-content">
+                <span class="save-helper-icon" aria-hidden="true">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </span>
+                <span class="save-helper-title">Onde está a tua save?</span>
+                <svg class="save-helper-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <polyline points="6 9 12 15 18 9"/>
                 </svg>
-            </div>
-            <div class="save-helper-body">
-                <h3 class="save-helper-title">Onde está a tua save?</h3>
-                <p class="save-helper-text">O Sylora guarda o teu progresso neste ficheiro no teu PC:</p>
-                <div class="save-helper-path-row">
-                    <code class="save-helper-path" id="save-helper-path">%LocalAppData%\SyloraDemo\syloradata.sav</code>
-                    <button type="button" class="btn btn-secondary btn-sm save-helper-copy" id="save-helper-copy" title="Copiar caminho">
-                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <rect x="9" y="9" width="13" height="13" rx="2"/>
-                            <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
-                        </svg>
-                        <span>Copiar</span>
-                    </button>
+            </button>
+            <div class="save-helper-content" id="save-helper-content">
+                <div class="save-helper-content-inner">
+                    <p class="save-helper-text">O Sylora guarda o teu progresso nesta pasta no teu PC:</p>
+                    <div class="save-helper-path-row">
+                        <code class="save-helper-path" id="save-helper-path">%LocalAppData%\Sylora</code>
+                        <button type="button" class="btn btn-secondary btn-sm save-helper-copy" id="save-helper-copy" title="Copiar caminho">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="9" y="9" width="13" height="13" rx="2"/>
+                                <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
+                            </svg>
+                            <span>Copiar</span>
+                        </button>
+                    </div>
+                    <ol class="save-helper-steps">
+                        <li>Pressiona <kbd>Win</kbd> + <kbd>R</kbd>, cola o caminho e <kbd>Enter</kbd></li>
+                        <li>Arrasta o <strong>syloradata.sav</strong> para um slot em baixo (ou clica em <em>Carregar ficheiro</em>)</li>
+                        <li>Confirma a pré-visualização e a tua save fica guardada na cloud</li>
+                    </ol>
                 </div>
-                <ol class="save-helper-steps">
-                    <li>Pressiona <kbd>Win</kbd> + <kbd>R</kbd>, cola o caminho e <kbd>Enter</kbd></li>
-                    <li>Arrasta o <strong>syloradata.sav</strong> para um slot em baixo (ou clica em <em>Carregar ficheiro</em>)</li>
-                    <li>Confirma a pré-visualização e a tua save fica guardada na cloud</li>
-                </ol>
             </div>
         </aside>
 
@@ -115,7 +116,7 @@ include 'includes/header.php';
                 $icon    = actIcon($save['chapter']);
                 $date    = date('d/m/Y \à\s H:i', strtotime($save['last_saved']));
             ?>
-            <!-- SAVE COM DADOS -->
+
             <div class="save-card save-card-active" data-slot="<?= $slot ?>">
 
                 <div class="save-slot-badge">
@@ -169,14 +170,14 @@ include 'includes/header.php';
                 </div>
 
                 <div class="save-actions">
-                    <button class="btn btn-download" onclick="downloadSave(<?= $slot ?>, this)">
-                        <svg class="btn-download-icon" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
+                    <button class="btn btn-primary btn-sm save-action-btn" onclick="downloadSave(<?= $slot ?>, this)">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                         </svg>
                         Descarregar
                     </button>
-                    <label class="btn btn-secondary btn-sm" style="cursor:pointer;" title="Substituir save">
+                    <label class="btn btn-secondary btn-sm save-action-btn" title="Substituir save">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
@@ -184,7 +185,7 @@ include 'includes/header.php';
                         Substituir
                         <input type="file" accept=".sav" style="display:none" onchange="uploadSave(this, <?= $slot ?>)">
                     </label>
-                    <button class="btn btn-danger btn-sm" onclick="deleteSave(<?= $slot ?>, this)">
+                    <button class="btn btn-danger btn-sm save-action-btn" onclick="deleteSave(<?= $slot ?>, this)">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                             <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
                             <path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
@@ -196,7 +197,7 @@ include 'includes/header.php';
             </div>
 
             <?php else: ?>
-            <!-- SLOT VAZIO -->
+
             <div class="save-card save-card-empty" id="slot-card-<?= $slot ?>">
                 <div class="save-slot-badge" style="position:absolute;top:20px;left:24px;right:24px;">
                     <span>Save</span>
@@ -225,11 +226,10 @@ include 'includes/header.php';
             <?php endif; ?>
 
         <?php endfor; ?>
-        </div><!-- /saves-grid -->
+        </div>
 
-    </section><!-- /saves-section -->
+    </section>
 
-    <!-- Preview modal antes do upload -->
     <div class="save-preview-overlay" id="save-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="save-preview-title" aria-hidden="true">
         <div class="save-preview-box">
             <div class="save-preview-header">
@@ -261,11 +261,10 @@ include 'includes/header.php';
         </div>
     </div>
 
-</div><!-- /game-page -->
+</div>
 
 <script>
-// window.* (não const) — o script é re-executado em cada navegação PJAX;
-// com `const` a 2ª execução rebentava com "Identifier already declared".
+
 window.SAVE_CSRF = <?= json_encode($csrfToken) ?>;
 window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
     return [
@@ -278,7 +277,7 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
 (function () {
     'use strict';
 
-    const MAX_SIZE = 2 * 1024 * 1024; // 2 MB — espelha o limite server-side
+    const MAX_SIZE = 2 * 1024 * 1024;
 
     const CHAPTER_MAP = {
         'Thalassos':      'Ato I: Ilha de Thalassos',
@@ -413,7 +412,6 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         try { raw = await file.text(); }
         catch (e) { showToast('Não foi possível ler o ficheiro.', 'error'); return; }
 
-        // Stripping de NUL bytes que o GameMaker escreve no fim do buffer
         const clean = raw.replace(/\x00/g, '').trim();
         let data;
         try { data = JSON.parse(clean); }
@@ -446,7 +444,6 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         body.innerHTML = '';
         body.appendChild(buildPreviewCard(parsed));
 
-        // Warning se o slot já está ocupado — usa os dados server-rendered já validados
         const arr = Array.isArray(window.SAVES_DATA) ? window.SAVES_DATA : [];
         const current = arr.find(s => Number(s.slot) === Number(slot));
         if (current) {
@@ -509,7 +506,6 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         }
     }
 
-    // API exposta — usada pelos onchange inline e pelo drag/drop
     window.uploadSave = function (input, slot) {
         const file = input && input.files && input.files[0];
         if (file) openPreview(file, parseInt(slot, 10));
@@ -550,18 +546,32 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         });
     };
 
-    // Botão "Download do Jogo"
     document.getElementById('jogar-download-btn')?.addEventListener('click', () => {
         const a = document.createElement('a');
-        a.href = '/assets/download/Sylora%20Demo.zip';
-        a.download = 'Sylora Demo.zip';
+        a.href = '/assets/download/Sylora%20Demo.exe';
+        a.download = 'Sylora Demo.exe';
         document.body.appendChild(a);
         a.click();
         a.remove();
         if (typeof showToast === 'function') showToast('Download iniciado!', 'success');
     });
 
-    // Helper card — botão Copiar caminho
+    const helper = document.getElementById('save-helper');
+    const helperToggle = document.getElementById('save-helper-toggle');
+    if (helper && helperToggle) {
+        const STORAGE_KEY = 'sylora-helper-collapsed';
+        const startCollapsed = localStorage.getItem(STORAGE_KEY) === '1';
+        if (startCollapsed) {
+            helper.classList.add('collapsed');
+            helperToggle.setAttribute('aria-expanded', 'false');
+        }
+        helperToggle.addEventListener('click', () => {
+            const collapsed = helper.classList.toggle('collapsed');
+            helperToggle.setAttribute('aria-expanded', collapsed ? 'false' : 'true');
+            try { localStorage.setItem(STORAGE_KEY, collapsed ? '1' : '0'); } catch (e) {}
+        });
+    }
+
     const copyBtn = document.getElementById('save-helper-copy');
     if (copyBtn) {
         copyBtn.addEventListener('click', async () => {
@@ -572,7 +582,7 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
                 if (navigator.clipboard && window.isSecureContext) {
                     await navigator.clipboard.writeText(path);
                 } else {
-                    // Fallback para contextos sem clipboard API (HTTP local)
+
                     const ta = document.createElement('textarea');
                     ta.value = path;
                     ta.style.position = 'fixed';
@@ -594,7 +604,6 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         });
     }
 
-    // Modal — listeners (overlay e botões são re-criados a cada PJAX, sem leak)
     const overlay = document.getElementById('save-preview-overlay');
     if (overlay) {
         document.getElementById('save-preview-cancel')?.addEventListener('click', closePreview);
@@ -604,7 +613,6 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
             if (e.target === overlay) closePreview();
         });
 
-        // Escape — AbortController garante que não acumulamos listeners entre navegações PJAX
         if (window.__sylora_jogar_abort) window.__sylora_jogar_abort.abort();
         window.__sylora_jogar_abort = new AbortController();
         document.addEventListener('keydown', (e) => {
@@ -612,7 +620,6 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         }, { signal: window.__sylora_jogar_abort.signal });
     }
 
-    // Drag & drop em qualquer save card (vazio ou ativo — para substituição)
     function wireDrop(card) {
         const slot = card.dataset?.slot || card.id?.replace('slot-card-', '');
         if (!slot) return;

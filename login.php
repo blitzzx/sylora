@@ -93,7 +93,7 @@ $csrfToken = generateCSRFToken();
 
 <div class="auth-split">
 
-  <!-- ── Painel esquerdo decorativo ── -->
+  
   <div class="auth-deco" aria-hidden="true">
     <div class="auth-deco-bg"></div>
     <div class="auth-deco-content">
@@ -116,7 +116,7 @@ $csrfToken = generateCSRFToken();
     </div>
   </div>
 
-  <!-- ── Painel direito com formulário ── -->
+  
   <div class="auth-form-panel">
 
     <div class="auth-form-top">

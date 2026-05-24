@@ -13,8 +13,8 @@ if (!verifyCSRFToken($csrf)) {
     exit;
 }
 
-// Rate limit: 30 uploads por hora por utilizador. Como cada save pode ter 2 MB,
-// sem limite um utilizador autenticado poderia encher a BD facilmente.
+
+
 if (!checkActionRateLimit('save_upload', (string) $user_id, 30, 60)) {
     http_response_code(429);
     echo json_encode(['error' => 'Demasiados uploads. Aguarda uma hora.']);
@@ -28,7 +28,7 @@ if ($slot < 1 || $slot > 3) {
     exit;
 }
 
-$maxSize = 2 * 1024 * 1024; // 2 MB
+$maxSize = 2 * 1024 * 1024; 
 if (isset($_FILES['savefile']) && $_FILES['savefile']['size'] > $maxSize) {
     http_response_code(400);
     echo json_encode(['error' => 'Ficheiro demasiado grande (máx. 2 MB).']);

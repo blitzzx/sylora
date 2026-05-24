@@ -368,7 +368,7 @@ h1, h2, h3 {
   transform: translateX(3px);
 }
 
-/* ===== AVATAR CROP MODAL ===== */
+
 .avatar-crop-overlay {
   position: fixed;
   inset: 0;
@@ -1413,9 +1413,7 @@ footer {
   }
 }
 
-/* =====================================================
-   TEMA CLARO completo
-===================================================== */
+
 [data-theme="light"] {
   --bg:             #f8f5ef;
   --surface:        #f2ede4;
@@ -1437,7 +1435,7 @@ footer {
   --focus:          0 0 0 3px rgba(138, 95, 16, 0.28);
 }
 
-/* Body background claro */
+
 [data-theme="light"] body {
   background-color: var(--bg);
   background-image:
@@ -1446,7 +1444,7 @@ footer {
     radial-gradient(ellipse 1000px 600px at 50% 100%, rgba(100,70,20,0.05) 0%, transparent 60%);
 }
 
-/* â”€â”€ Navbar claro â”€â”€ */
+
 [data-theme="light"] .navbar {
   background: rgba(248, 245, 239, 0.92);
   border-bottom-color: rgba(138, 95, 16, 0.18);
@@ -1869,14 +1867,14 @@ footer {
   color: rgba(24, 22, 15, 0.40);
 }
 
-/* CTA locked no tema claro */
+
 [data-theme="light"] .island-cta-locked {
   background: rgba(138, 95, 16, 0.10);
   border-color: rgba(138, 95, 16, 0.28);
   color: var(--gold);
 }
 
-/* Sigils das ilhas no tema claro */
+
 [data-theme="light"] .island-sigil {
   color: #302c09;
 }
@@ -1888,9 +1886,7 @@ footer {
   background-clip:text;
 }
 
-/* =====================================================
-   ÃCONE TEMA NA NAVBAR
-===================================================== */
+
 .nav-icon-btn {
   display: inline-flex;
   align-items: center;
@@ -1917,9 +1913,7 @@ footer {
   box-shadow: var(--focus);
 }
 
-/* =====================================================
-   DRAWER NAV LINKS
-===================================================== */
+
 .drawer-nav-links {
   display: flex;
   flex-direction: column;
@@ -1949,9 +1943,7 @@ footer {
   color: var(--gold-light);
 }
 
-/* =====================================================
-   THEME TOGGLE ROW
-===================================================== */
+
 .theme-toggle-row {
   display: flex;
   gap: 8px;
@@ -1987,9 +1979,7 @@ footer {
   padding: 12px 20px;
 }
 
-/* =====================================================
-   OVERLINE BADGE
-===================================================== */
+
 .overline-badge {
   display: inline-flex;
   align-items: center;
@@ -2007,9 +1997,7 @@ footer {
   width: fit-content;
 }
 
-/* =====================================================
-   HERO LOGADO
-===================================================== */
+
 .hero-logged {
   position: relative;
   border-radius: var(--radius-lg);
@@ -2067,7 +2055,7 @@ footer {
   flex-wrap: wrap;
 }
 
-/* Clio orb */
+
 .hero-logged-clio {
   display: flex;
   flex-direction: column;
@@ -2118,9 +2106,7 @@ footer {
   to   { transform: rotate(360deg); }
 }
 
-/* =====================================================
-   MAPA DE ILHAS
-===================================================== */
+
 .island-map-section {
   margin-bottom: 48px;
 }
@@ -2159,7 +2145,7 @@ footer {
   min-height: 160px;
 }
 
-/* Backgrounds das ilhas */
+
 .island-card-bg {
   position: absolute;
   inset: 0;
@@ -2201,7 +2187,7 @@ footer {
     radial-gradient(ellipse at 50% 0%, rgba(201,153,58,0.35) 0%, transparent 55%);
 }
 
-/* Overlay gradiente sobre background */
+
 .island-card-bg::after {
   content: '';
   position: absolute;
@@ -2322,7 +2308,7 @@ footer {
   cursor: default;
 }
 
-/* Wide island layout */
+
 .island-wide .island-card-content {
   flex-direction: row;
   align-items: center;
@@ -2343,9 +2329,7 @@ footer {
   width: calc(100% - 36px);
 }
 
-/* =====================================================
-   HERO PARTICLES
-===================================================== */
+
 .hero-particles {
   position: absolute;
   inset: 0;
@@ -2374,9 +2358,7 @@ footer {
   100% { transform: translateY(-700px) translateX(40px); opacity: 0; }
 }
 
-/* =====================================================
-   FEATURE CARDS (redesign)
-===================================================== */
+
 .features-section {
   margin-bottom: 48px;
 }
@@ -2470,9 +2452,7 @@ footer {
   color: var(--muted);
 }
 
-/* =====================================================
-   PERSONAGENS
-===================================================== */
+
 .chars-section {
   margin-bottom: 48px;
 }
@@ -2535,9 +2515,7 @@ footer {
   opacity: 0.65;
 }
 
-/* =====================================================
-   CTA SECTION
-===================================================== */
+
 .cta-section {
   margin-bottom: 56px;
 }
@@ -2596,9 +2574,7 @@ footer {
   position: relative;
 }
 
-/* =====================================================
-   FOOTER
-===================================================== */
+
 .site-footer {
   border-top: 1px solid var(--gold-border);
   padding: 28px 0;
@@ -2652,9 +2628,7 @@ footer {
   color: var(--gold-light);
 }
 
-/* =====================================================
-   RESPONSIVE UPDATES
-===================================================== */
+
 @media (max-width: 1024px) {
   .island-map {
     grid-template-columns: repeat(2, 1fr);
@@ -2708,9 +2682,7 @@ footer {
   }
 }
 
-/* =====================================================
-   AUTH SPLIT LAYOUT
-===================================================== */
+
 .auth-page {
   min-height: 100dvh;
   display: flex;
@@ -2724,7 +2696,7 @@ footer {
   flex: 1;
 }
 
-/* â”€â”€ Painel decorativo â”€â”€ */
+
 .auth-deco {
   position: relative;
   overflow: hidden;
@@ -2805,7 +2777,7 @@ footer {
   margin: 0;
 }
 
-/* Stats (register) */
+
 .auth-deco-stats {
   display: flex;
   align-items: center;
@@ -2846,7 +2818,7 @@ footer {
   background: var(--gold-border);
 }
 
-/* Orbs animadas */
+
 .auth-deco-orbs {
   position: absolute;
   inset: 0;
@@ -2884,7 +2856,7 @@ footer {
   66%       { transform: translate(-15px, 20px); }
 }
 
-/* Runas decorativas */
+
 .auth-deco-runes {
   display: flex;
   gap: 16px;
@@ -2894,7 +2866,7 @@ footer {
   letter-spacing: 4px;
 }
 
-/* â”€â”€ Painel do formulÃ¡rio â”€â”€ */
+
 .auth-form-panel {
   display: flex;
   flex-direction: column;
@@ -2971,14 +2943,14 @@ footer {
   gap: 4px;
 }
 
-/* Grid 2 colunas para register */
+
 .form-row-two {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
 }
 
-/* Checkbox customizado */
+
 .auth-remember-row,
 .auth-terms {
   display: flex;
@@ -3060,14 +3032,14 @@ footer {
   text-decoration: underline;
 }
 
-/* BotÃ£o submit */
+
 .auth-submit-btn {
   margin-top: 8px;
   padding: 13px 20px;
   font-size: 15px;
 }
 
-/* Strength meter */
+
 .password-strength {
   display: flex;
   align-items: center;
@@ -3099,7 +3071,7 @@ footer {
   text-align: right;
 }
 
-/* â”€â”€ Tema claro: painel decorativo â”€â”€ */
+
 [data-theme="light"] .auth-deco-bg {
   background:
     radial-gradient(ellipse 120% 80% at 30% 20%, rgba(184,136,30,0.14) 0%, transparent 55%),
@@ -3164,7 +3136,7 @@ footer {
   background: rgba(138, 95, 16, 0.15);
 }
 
-/* â”€â”€ Responsive â”€â”€ */
+
 @media (max-width: 768px) {
   .auth-split {
     grid-template-columns: 1fr;
@@ -3193,9 +3165,7 @@ footer {
   }
 }
 
-/* =====================================================
-   PROFILE PAGE
-===================================================== */
+
 .profile-main {
   min-height: calc(100dvh - 64px);
   padding: clamp(24px, 4vw, 48px) var(--space-4);
@@ -3213,7 +3183,7 @@ footer {
   margin: 0;
 }
 
-/* â”€â”€ Hero card â”€â”€ */
+
 .profile-hero-card {
   position: relative;
   overflow: hidden;
@@ -3251,7 +3221,7 @@ footer {
   padding: clamp(24px, 4vw, 36px) clamp(20px, 4vw, 40px);
 }
 
-/* Avatar */
+
 .profile-avatar-wrap {
   position: relative;
   flex-shrink: 0;
@@ -3309,7 +3279,7 @@ footer {
   transform: scale(1.1);
 }
 
-/* Info */
+
 .profile-hero-info {
   min-width: 0;
 }
@@ -3358,7 +3328,7 @@ footer {
   margin: 0;
 }
 
-/* Quick stats */
+
 .profile-quick-stats {
   display: flex;
   align-items: center;
@@ -3406,7 +3376,7 @@ footer {
   background: var(--gold-border);
 }
 
-/* â”€â”€ Tabs â”€â”€ */
+
 .profile-tabs-wrap {
   border: 1px solid var(--gold-border);
   border-radius: var(--radius-lg);
@@ -3500,7 +3470,7 @@ footer {
   display: block;
 }
 
-/* Danger zone */
+
 .danger-card {
   display: flex;
   align-items: center;
@@ -3545,7 +3515,7 @@ footer {
   color: #e09080;
 }
 
-/* â”€â”€ Tema claro: profile â”€â”€ */
+
 [data-theme="light"] .profile-hero-bg {
   background:
     radial-gradient(ellipse 80% 120% at 0% 50%, rgba(138,95,16,0.07) 0%, transparent 55%),
@@ -3583,7 +3553,7 @@ footer {
   background: rgba(160,70,55,0.03);
 }
 
-/* â”€â”€ Responsive â”€â”€ */
+
 @media (max-width: 768px) {
   .profile-hero-inner {
     grid-template-columns: auto 1fr;
@@ -3612,7 +3582,7 @@ footer {
   }
 }
 
-/* â”€â”€ Avatar no pill e drawer â”€â”€ */
+
 .user-pill-avatar {
   width: 28px;
   height: 28px;
@@ -3673,16 +3643,16 @@ footer {
   transition: transform 200ms ease;
 }
 
-/* â”€â”€ VariÃ¡veis de accent dourado â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
 :root {
   --gold:        #c9953a;
   --gold-dim:    rgba(201,149,58,0.22);
   --gold-border: rgba(201,149,58,0.35);
   --gold-glow:   rgba(201,149,58,0.15);
-  --gold-text:   #e8b86d;   /* gold mais claro p/ texto no dark */
+  --gold-text:   #e8b86d;   
 }
 
-/* â”€â”€ Light mode â€” fundo pergaminho â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
 [data-theme="light"] {
   --bg:     #f5f0e8;
   --text:   #1c1410;
@@ -3805,9 +3775,9 @@ footer {
   background: rgba(139,100,50,0.25);
 }
 
-/* â”€â”€ SubstituiÃ§Ã£o global do roxo â†’ dourado â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 
-/* badges e labels de acento */
+
+
 .story-badge,
 .story-act-label,
 .story-act-roman {
@@ -3825,35 +3795,35 @@ footer {
   border-color: rgba(201,149,58,0.35);
 }
 
-/* boss star & label */
+
 .story-boss-star { color: #e8b86d; }
 .story-boss-label { color: #e8a060; }
 
 [data-theme="light"] .story-boss-star { color: #c07020; }
 [data-theme="light"] .story-boss-label { color: #b05a18; }
 
-/* ending label */
+
 .story-ending-label { color: #7ecf8e; }
 [data-theme="light"] .story-ending-label { color: #1a7a3a; }
 
-/* bullet list */
+
 .story-list li::before { color: var(--gold-text); }
 [data-theme="light"] .story-list li::before { color: #c9953a; }
 
-/* act final dot */
+
 .story-act-final::before {
   background: linear-gradient(135deg, #c9953a, #e8b86d) !important;
   border-color: rgba(201,149,58,0.7) !important;
   box-shadow: 0 0 12px rgba(201,149,58,0.45);
 }
 
-/* act final card */
+
 .story-act-final .story-act-card {
   border-color: var(--gold-border);
   background: var(--gold-glow);
 }
 
-/* hero gradient */
+
 .story-hero {
   background: linear-gradient(145deg,
     rgba(201,149,58,0.1) 0%,
@@ -3879,7 +3849,7 @@ footer {
   background-clip: text;
 }
 
-/* â”€â”€ Tamanhos de fonte maiores â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
 .story-page {
   max-width: 880px;
   margin: 0 auto;
@@ -3931,7 +3901,7 @@ footer {
   font-size: 24px;
 }
 
-/* â”€â”€ Timeline (reutiliza resto do CSS anterior) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
+
 .story-page { padding-bottom: 60px; }
 
 .story-timeline {
@@ -4124,7 +4094,7 @@ footer {
 
 .story-ending-label::before { content: '◈'; font-size: 10px; }
 
-/* Hero */
+
 .story-hero {
   position: relative;
   padding: 56px 44px;
@@ -4161,7 +4131,7 @@ footer {
   margin: 0 0 18px;
 }
 
-/* SecÃ§Ãµes estÃ¡ticas */
+
 .story-section {
   border: 1px solid var(--border);
   border-radius: var(--radius);
@@ -4234,7 +4204,7 @@ footer {
   font-family: 'Segoe UI Symbol', 'Apple Symbols', 'Symbola', sans-serif;
 }
 
-/* TÃ­tulo dos atos */
+
 .story-acts { margin-top: 40px; }
 
 .story-acts-title {
@@ -4258,7 +4228,7 @@ footer {
   background: var(--border);
 }
 
-/* Reduced motion */
+
 @media (prefers-reduced-motion: reduce) {
   .story-act {
     opacity: 1 !important;
@@ -4267,7 +4237,7 @@ footer {
   }
 }
 
-/* Mobile */
+
 @media (max-width: 600px) {
   .story-hero { padding: 36px 20px; text-align: left; }
   .story-hero-runes { justify-content: flex-start; }
@@ -4281,9 +4251,7 @@ footer {
   .story-content, .story-act-body { padding-left: 18px; padding-right: 18px; }
 }
 
-/* =====================================================
-   SOBRE / ABOUT PAGE
-===================================================== */
+
 
 .about-page {
   max-width: 1100px;
@@ -4291,7 +4259,7 @@ footer {
   padding: 56px 32px 90px;
 }
 
-/* ── HERO ── */
+
 .about-hero {
   text-align: center;
   padding: 36px 16px 28px;
@@ -4366,7 +4334,7 @@ footer {
   font-weight: 700;
 }
 
-/* ── SECTION WRAPPER ── */
+
 .about-section {
   margin-top: 56px;
 }
@@ -4402,7 +4370,7 @@ footer {
   letter-spacing: 0.3px;
 }
 
-/* ── STATS GRID ── */
+
 .about-stats-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -4464,7 +4432,7 @@ footer {
   opacity: 0.8;
 }
 
-/* ── TEAM ── */
+
 .about-team-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -4615,7 +4583,7 @@ footer {
   letter-spacing: 0.4px;
 }
 
-/* ── TIMELINE ── */
+
 .about-timeline {
   position: relative;
   list-style: none;
@@ -4729,7 +4697,7 @@ footer {
   color: var(--muted);
 }
 
-/* ── TOOLS ── */
+
 .about-tools-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -4781,7 +4749,7 @@ footer {
   line-height: 1.55;
 }
 
-/* ── TEXT BLOCK (Reflexão) ── */
+
 .about-text-block {
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid var(--border);
@@ -4800,7 +4768,7 @@ footer {
   margin-bottom: 0;
 }
 
-/* ── CONTACT FORM ── */
+
 .about-contact-intro {
   margin: 0 0 24px;
   font-size: 16px;
@@ -4892,7 +4860,7 @@ footer {
   margin-top: 4px;
 }
 
-/* ── CREDENCIAL PAP ── */
+
 .about-credential {
   margin-top: 56px;
   display: flex;
@@ -4946,7 +4914,7 @@ footer {
   color: var(--muted);
 }
 
-/* ── Light mode overrides ── */
+
 [data-theme="light"] .about-stat-card,
 [data-theme="light"] .about-member-card,
 [data-theme="light"] .about-timeline-body,
@@ -4969,7 +4937,7 @@ footer {
   background: linear-gradient(135deg, rgba(201, 153, 58, 0.18) 0%, rgba(201, 153, 58, 0.05) 100%);
 }
 
-/* ── Responsivo ── */
+
 @media (max-width: 900px) {
   .about-stats-grid { grid-template-columns: repeat(2, 1fr); }
   .about-tools-grid { grid-template-columns: repeat(2, 1fr); }
@@ -4997,9 +4965,7 @@ footer {
   .about-timeline-body { padding: 16px 18px; }
 }
 
-/* ============================================================
-   CURSOR CIRCULAR COM INVERSÃƒO DE CORES
-   ============================================================ */
+
 * { cursor: none !important; }
 
 #custom-cursor {
@@ -5026,14 +4992,12 @@ footer {
   transform: translate(-50%, -50%) scale(1.33);
 }
 
-/* Desativa em mobile (sem rato) */
+
 @media (hover: none) {
   * { cursor: auto !important; }
   #custom-cursor { display: none; }
 }
-/* ═══════════════════════════════════════════════════════════
-   JOGAR.PHP: game saves page
-═══════════════════════════════════════════════════════════ */
+
 
 .game-page {
     max-width: 1100px;
@@ -5255,6 +5219,18 @@ footer {
     margin-top: auto;
     flex-wrap: wrap;
 }
+.save-actions > .save-action-btn {
+    flex: 1 1 0;
+    min-width: 0;
+    min-height: 38px;
+    padding: 7px 10px;
+    font-size: 12.5px;
+    gap: 6px;
+    cursor: pointer;
+}
+.save-actions > .save-action-btn svg {
+    flex-shrink: 0;
+}
 
 .save-empty-icon {
     color: var(--faint);
@@ -5280,7 +5256,7 @@ footer {
 }
 .saves-notice svg { flex-shrink: 0; color: var(--gold); }
 
-/* Botão de download destacado */
+
 .btn-download {
     display: inline-flex;
     align-items: center;
@@ -5307,7 +5283,7 @@ footer {
 .btn-download-icon { transition: transform 200ms ease; }
 .btn-download:hover .btn-download-icon { transform: translateY(2px); }
 
-/* Aviso mobile no jogar.php */
+
 .game-mobile-notice {
     display: none;
     align-items: center;
@@ -5352,9 +5328,7 @@ footer {
     .jogar-download-btn { display: none; }
 }
 
-/* =========================
-   BUTTONS
-========================= */
+
 
 .btn {
   position: relative;
@@ -5540,10 +5514,7 @@ footer {
   border-color: rgba(138, 95, 16, 0.16);
 }
 
-/* =========================================================
-   HISTORIA.PHP: LIGHT MODE
-   Cola no fim do style.css
-========================================================= */
+
 
 [data-theme="light"] .story-page {
   --story-bg: #f7f1e7;
@@ -5563,7 +5534,7 @@ footer {
   color: var(--story-text);
 }
 
-/* Base */
+
 [data-theme="light"] .story-page {
   background:
     radial-gradient(circle at 12% 0%, rgba(201, 149, 58, 0.10), transparent 34%),
@@ -5584,7 +5555,7 @@ footer {
   color: var(--story-text);
 }
 
-/* Hero */
+
 [data-theme="light"] .story-hero {
   background:
     radial-gradient(ellipse at top, rgba(201, 149, 58, 0.12), transparent 58%),
@@ -5622,7 +5593,7 @@ footer {
   color: var(--story-muted);
 }
 
-/* Static sections */
+
 [data-theme="light"] .story-section {
   background: var(--story-surface);
   border-color: var(--story-border);
@@ -5653,7 +5624,7 @@ footer {
   color: var(--story-text);
 }
 
-/* Callout */
+
 [data-theme="light"] .story-callout {
   background: var(--story-blue-soft);
   border-color: rgba(86, 145, 190, 0.22);
@@ -5664,7 +5635,7 @@ footer {
   color: #3d7fb0;
 }
 
-/* Lists */
+
 [data-theme="light"] .story-list li {
   color: var(--story-muted);
 }
@@ -5673,7 +5644,7 @@ footer {
   color: var(--story-gold);
 }
 
-/* Acts title */
+
 [data-theme="light"] .story-acts-title {
   color: var(--story-faint);
 }
@@ -5683,7 +5654,7 @@ footer {
   background: rgba(138, 95, 16, 0.22);
 }
 
-/* Timeline */
+
 [data-theme="light"] .story-timeline::before {
   background: linear-gradient(
     to bottom,
@@ -5711,7 +5682,7 @@ footer {
   box-shadow: 0 0 16px rgba(201, 149, 58, 0.28);
 }
 
-/* Act cards */
+
 [data-theme="light"] .story-act-card {
   background: var(--story-surface-strong);
   border-color: var(--story-border);
@@ -5753,7 +5724,7 @@ footer {
   border-left-color: rgba(201, 149, 58, 0.44);
 }
 
-/* Boss */
+
 [data-theme="light"] .story-boss {
   background: var(--story-red-soft);
   border-color: rgba(176, 76, 52, 0.22);
@@ -5772,7 +5743,7 @@ footer {
   color: #a5551a;
 }
 
-/* Ending */
+
 [data-theme="light"] .story-ending {
   background: var(--story-green-soft);
   border-color: rgba(56, 140, 82, 0.22);
@@ -5786,7 +5757,7 @@ footer {
   color: var(--story-muted);
 }
 
-/* Final card */
+
 [data-theme="light"] .story-act-final .story-act-card {
   background:
     radial-gradient(circle at top, rgba(201, 149, 58, 0.10), transparent 48%),
@@ -5794,7 +5765,7 @@ footer {
   border-color: rgba(201, 149, 58, 0.32);
 }
 
-/* Mobile */
+
 @media (max-width: 600px) {
   [data-theme="light"] .story-hero {
     box-shadow: 0 12px 28px rgba(120, 84, 28, 0.08);
@@ -5806,9 +5777,7 @@ footer {
   }
 }
 
-/* ════════════════════════════════════════════
-   SEARCH PAGE
-════════════════════════════════════════════ */
+
 .search-main {
   padding: 60px 0 80px;
   min-height: 80vh;
@@ -5961,9 +5930,7 @@ footer {
   margin-top: 16px;
 }
 
-/* ════════════════════════════════════════════
-   USER PUBLIC PROFILE (u.php)
-════════════════════════════════════════════ */
+
 .user-profile-main {
   padding: 60px 0 80px;
 }
@@ -6083,7 +6050,7 @@ footer {
   gap: 8px;
 }
 
-/* Grid */
+
 .up-grid {
   display: grid;
   grid-template-columns: 280px 1fr;
@@ -6095,7 +6062,7 @@ footer {
   .up-grid { grid-template-columns: 1fr; }
 }
 
-/* Cards genéricos */
+
 .up-card {
   background: var(--surface-2);
   border: 1px solid var(--gold-border);
@@ -6139,7 +6106,7 @@ footer {
   text-transform: none;
 }
 
-/* Game stats */
+
 .up-stat-level {
   display: flex;
   align-items: baseline;
@@ -6204,7 +6171,7 @@ footer {
   margin: 12px 0;
 }
 
-/* Amigos em comum */
+
 .up-mutual-list {
   display: flex;
   flex-direction: column;
@@ -6238,7 +6205,7 @@ footer {
   flex-shrink: 0;
 }
 
-/* Comments */
+
 .up-comment-form {
   margin-bottom: 20px;
   padding-bottom: 20px;
@@ -6368,7 +6335,7 @@ footer {
   text-align: center;
 }
 
-/* Light theme overrides */
+
 [data-theme="light"] .up-hero-card,
 [data-theme="light"] .up-card {
   background: rgba(255, 252, 245, 0.95);
@@ -6392,9 +6359,7 @@ footer {
   background: rgba(255, 252, 245, 0.95);
   border-color: rgba(138, 95, 16, 0.18);
 }
-/* =====================================================
-   MUSIC VOLUME WIDGET
-===================================================== */
+
 .music-ctrl { position: relative; }
 .music-vol-popup {
   position: absolute; top: calc(100% + 6px); left: 50%;
@@ -6422,9 +6387,7 @@ footer {
 }
 [data-theme="light"] .music-vol-popup { background: rgba(242, 237, 228, 0.98); border-color: rgba(138, 95, 16, 0.22); }
 
-/* =====================================================
-   EDIT PANEL (u.php own profile)
-===================================================== */
+
 .up-edit-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1), margin-bottom 320ms ease; margin-bottom: 0; }
 .up-edit-panel.open { grid-template-rows: 1fr; margin-bottom: 20px; }
 .up-edit-panel-inner { overflow: hidden; }
@@ -6447,9 +6410,7 @@ footer {
 .up-avatar-edit-btn { position: absolute; bottom: -2px; right: -2px; width: 28px; height: 28px; border-radius: 50%; background: var(--gold); border: 2px solid var(--bg); display: flex; align-items: center; justify-content: center; cursor: pointer; color: #0d0b08; transition: background var(--t), transform 120ms ease; }
 .up-avatar-edit-btn:hover { background: var(--gold-light); transform: scale(1.08); }
 
-/* =====================================================
-   CONTENT TABS
-===================================================== */
+
 .up-content-tabs { display: flex; border-bottom: 1px solid var(--gold-border); margin-bottom: 20px; overflow-x: auto; scrollbar-width: none; }
 .up-content-tabs::-webkit-scrollbar { display: none; }
 .up-content-tab { display: inline-flex; align-items: center; gap: 7px; padding: 10px 20px; background: none; border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; color: var(--muted); font-family: var(--font-display); font-size: 13px; font-weight: 600; letter-spacing: 0.3px; cursor: pointer; white-space: nowrap; transition: color var(--t), border-color var(--t); }
@@ -6460,9 +6421,7 @@ footer {
 .up-content-panel { display: none; }
 .up-content-panel.active { display: block; }
 
-/* =====================================================
-   FRIENDS TAB
-===================================================== */
+
 .up-section { margin-bottom: 28px; }
 .up-section-title { font-family: var(--font-display); font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gold); margin: 0 0 12px; display: flex; align-items: center; gap: 6px; }
 .up-friends-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 10px; }
@@ -6493,9 +6452,7 @@ footer {
 [data-theme="light"] .up-search-result-item, [data-theme="light"] .up-pending-item { background: rgba(255, 250, 240, 0.8); border-color: rgba(138, 95, 16, 0.18); }
 [data-theme="light"] .up-search-result-item:hover { background: rgba(255, 248, 230, 1.0); }
 
-/* ============================================================
-   TOAST GLOBAL
-   ============================================================ */
+
 #sylora-toast {
   position: fixed;
   bottom: 28px;
@@ -6517,9 +6474,7 @@ footer {
 #sylora-toast.sylora-toast-success { background: rgba(106,180,106,0.15); border: 1px solid rgba(106,180,106,0.4); color: #8adb8a; }
 #sylora-toast.sylora-toast-error   { background: rgba(201,90,80,0.15); border: 1px solid rgba(201,90,80,0.4); color: #e07060; }
 
-/* ============================================================
-   CONFIRM MODAL GLOBAL
-   ============================================================ */
+
 .sylora-confirm-overlay {
   position: fixed;
   inset: 0;
@@ -6554,19 +6509,19 @@ footer {
 .sylora-confirm-actions { display: flex; gap: 10px; margin-top: 4px; }
 .sylora-confirm-box .btn { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(15,12,9,0.92); }
 
-/* Volume slider cursor */
+
 #music-vol-slider,
 #music-vol-slider::-webkit-slider-thumb,
 #music-vol-slider::-moz-range-thumb { cursor: none !important; }
 
-/* Drag & drop: slots vazios */
+
 .save-card-empty.drag-over {
   border-color: var(--gold) !important;
   background: rgba(201,153,58,0.08) !important;
   transform: translateY(-3px);
 }
 
-/* ── Navbar invisível no hero guest (position: fixed sai do fluxo) ── */
+
 .navbar.navbar-hero {
   position: fixed !important;
   top: 0 !important;
@@ -6593,13 +6548,11 @@ footer {
 }
 .save-drag-hint { font-size: 12px; color: var(--muted); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
 
-/* ═══════════════════════════════════════════════════════════
-   HISTORIA.PHP: logged-in experience (.sx-* classes)
-═══════════════════════════════════════════════════════════ */
-/* ── Reserva espaço para o header fixo ── */
+
+
 .sx-outer{position:relative;width:100%;}
 
-/* ── TEMA DARK/LIGHT ── */
+
 [data-theme="dark"] .sx-wrap{background:#0f0e0c;}
 [data-theme="dark"] .sx-hero-lead{color:rgba(232,220,190,.75);}
 [data-theme="dark"] .sx-scroll-cta{color:rgba(201,153,58,.75);}
@@ -6623,7 +6576,7 @@ footer {
 [data-theme="dark"] .sx-boss-ico{color:#c9993a;}
 [data-theme="dark"] .sx-panel-glow{opacity:.7;}
 
-/* ── WRAPPER da experiência ── */
+
 .sx-wrap{
   position:relative;
   width:100%;
@@ -6633,7 +6586,7 @@ footer {
   font-family:inherit;
 }
 
-/* ── FUNDO SUAVE ── */
+
 .sx-bg{
   position:absolute;
   inset:0;
@@ -6690,7 +6643,7 @@ footer {
   pointer-events:none;
 }
 
-/* ── BARRA PROGRESSO ── */
+
 .sx-prog{
   position:absolute;
   top:0;
@@ -6720,7 +6673,7 @@ footer {
   text-transform:uppercase;
 }
 
-/* ── DOTS ── */
+
 .sx-dots{
   position:absolute;
   bottom:22px;
@@ -6772,7 +6725,7 @@ footer {
   font-weight:600;
 }
 
-/* ── TRACK ── */
+
 .sx-track{
   position:absolute;
   inset:0;
@@ -6783,7 +6736,7 @@ footer {
   will-change:transform;
 }
 
-/* ── PANEL BASE ── */
+
 .sx-panel{
   flex:0 0 calc(100% / 9);
   height:100%;
@@ -6808,7 +6761,7 @@ footer {
     radial-gradient(ellipse at 6% 78%,rgba(138,95,16,.10),transparent 40%);
 }
 
-/* ── PAINEL INTRO ── */
+
 .sx-panel-intro{
   background:radial-gradient(ellipse at 50% 40%,rgba(201,153,58,.12),transparent 56%);
 }
@@ -6897,7 +6850,7 @@ footer {
   50%{transform:rotate(-45deg) translate(4px,4px);opacity:.9}
 }
 
-/* ── CONTENT ── */
+
 .sx-content{
   position:relative;
   z-index:2;
@@ -7194,7 +7147,7 @@ footer {
   font-style:italic;
 }
 
-/* ── MOBILE ── */
+
 @media(max-width:820px){
   .sx-content{
     grid-template-columns:1fr;
@@ -7210,9 +7163,7 @@ footer {
   .sx-track{transition:none!important}
 }
 
-/* ═══════════════════════════════════════════════════════════
-   INDEX.PHP: hero fullscreen (guest)
-═══════════════════════════════════════════════════════════ */
+
   .site-hero-full {
     position: relative;
     height: 100svh;
@@ -7385,21 +7336,19 @@ footer {
     60%       { transform: translateY(5px); opacity: 0.6; }
   }
 
-/* ═══════════════════════════════════════════════════════════
-   MOBILE FIXES (max-width: 768px)
-═══════════════════════════════════════════════════════════ */
+
 @media (max-width: 768px) {
-  /* Esconder botões "Log in" / "Sign in" da navbar — estão no menu mobile */
+  
   .nav-guest-btn { display: none; }
 
-  /* Esconder botão Download no hero */
+  
   .hero-download-btn { display: none !important; }
 
-  /* Scroll indicator: trocar rato por seta de swipe */
+  
   .hero-mouse-svg { display: none; }
   .hero-swipe-svg { display: block !important; }
 
-  /* .saves-notice: empilhar verticalmente em mobile */
+  
   .saves-notice {
     flex-direction: column;
     align-items: flex-start;
@@ -7409,16 +7358,16 @@ footer {
     word-break: break-all;
   }
 
-  /* Auth pages: padding inferior para não ficar atrás da barra do browser */
+  
   .auth-form-panel {
     padding-bottom: 80px;
   }
 
-  /* Scroll indicator clicável em mobile */
+  
   .hero-scroll-indicator { cursor: pointer; }
 }
 
-/* Centralizar botões CTA também em 560px + ocultar painel deco nas páginas auth */
+
 @media (max-width: 560px) {
   .hero-actions,
   .cta-actions {
@@ -7430,42 +7379,80 @@ footer {
   .auth-form-panel { width: 100%; }
 }
 
-/* ════════════════════════════════════════════
-   SAVE HELPER CARD — "Onde está o meu save?"
-══════════════════════════════════════════════ */
 .save-helper {
-    display: flex;
-    gap: 16px;
-    padding: 18px 20px;
     background: linear-gradient(135deg, rgba(201,153,58,0.07) 0%, rgba(201,153,58,0.03) 100%);
     border: 1px solid rgba(201,153,58,0.30);
     border-radius: 14px;
     margin-bottom: 22px;
-    align-items: flex-start;
+    overflow: hidden;
+}
+.save-helper-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    width: 100%;
+    padding: 14px 18px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    font-family: inherit;
+    color: var(--text);
+    transition: background 160ms ease;
+}
+.save-helper-header:hover {
+    background: rgba(201,153,58,0.05);
+}
+.save-helper-header:focus-visible {
+    outline: 2px solid var(--gold);
+    outline-offset: -2px;
 }
 .save-helper-icon {
-    width: 40px;
-    height: 40px;
+    width: 34px;
+    height: 34px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     background: rgba(201,153,58,0.14);
     border: 1px solid var(--gold-border);
-    border-radius: 12px;
+    border-radius: 10px;
     color: var(--gold);
     flex-shrink: 0;
 }
-.save-helper-body {
-    flex: 1;
-    min-width: 0;
-}
 .save-helper-title {
+    flex: 1;
     font-family: var(--font-display);
-    font-size: 17px;
+    font-size: 16px;
     font-weight: 700;
     color: var(--text);
-    margin: 0 0 4px;
     letter-spacing: 0.3px;
+}
+.save-helper-chevron {
+    color: var(--gold);
+    flex-shrink: 0;
+    transition: transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.save-helper.collapsed .save-helper-chevron {
+    transform: rotate(-90deg);
+}
+.save-helper-content {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 320ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+.save-helper.collapsed .save-helper-content {
+    grid-template-rows: 0fr;
+}
+.save-helper-content-inner {
+    overflow: hidden;
+    min-height: 0;
+}
+.save-helper-content-inner > * {
+    padding-left: 18px;
+    padding-right: 18px;
+}
+.save-helper-content-inner > *:last-child {
+    padding-bottom: 16px;
 }
 .save-helper-text {
     font-size: 13.5px;
@@ -7570,9 +7557,7 @@ footer {
     .save-helper-copy { width: 100%; justify-content: center; }
 }
 
-/* ════════════════════════════════════════════
-   SAVE PREVIEW MODAL
-══════════════════════════════════════════════ */
+
 .save-preview-overlay {
     position: fixed;
     inset: 0;
@@ -7676,7 +7661,7 @@ footer {
     margin-top: 2px;
 }
 .save-preview-body .save-preview-card {
-    /* Card sem hover translate dentro do modal — não é interativo */
+    
     transition: none;
 }
 .save-preview-body .save-preview-card:hover {

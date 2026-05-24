@@ -2,22 +2,22 @@
 require_once __DIR__ . '/../includes/config.php';
 header('Content-Type: application/json; charset=utf-8');
 
-// ── Lista negra de termos tóxicos (PT + EN)
-// Usada para bloquear conteúdo ofensivo sem API externa
+
+
 $TOXICITY_LIST = [
-    // PT
+    
     'merda','puta','caralho','filho da puta','fdp','corno','viado','bicha','porra','idiota',
     'estupido','estúpido','burro','imbecil','racista','nazista','pedofilo','pedófilo',
     'matar','suicidio','suicídio','mato-me','nojento','nojentos','odeio-te', 'gay',
-    // EN
+    
     'fuck','shit','bitch','asshole','nigger','faggot','cunt','retard','kill yourself',
     'kys','rape','nazi','pedophile','whore','slut','moron','loser','idiot',
     'die','i hate you','scum','trash','worthless',
 ];
 
 function containsToxic(string $text, array $list): bool {
-    // Word-boundary match (\b) — evita falsos positivos como "scrap" → "rape"
-    // ou "association" → "ass". Usa /u para multi-byte UTF-8 (necessário em PT).
+    
+    
     $lower = mb_strtolower($text);
     foreach ($list as $term) {
         $pattern = '/\b' . preg_quote($term, '/') . '\b/u';
@@ -34,7 +34,7 @@ function jsonErr(int $code, string $msg): never {
 
 $method = $_SERVER['REQUEST_METHOD'];
 
-// ── GET /api/comments.php?user_id=X[&page=1]
+
 if ($method === 'GET') {
     $profileUserId = (int) ($_GET['user_id'] ?? 0);
     if ($profileUserId <= 0) jsonErr(400, 'user_id inválido.');
@@ -72,7 +72,7 @@ if ($method === 'GET') {
     exit;
 }
 
-// ── POST: criar comentário
+
 if ($method === 'POST') {
     if (!isLoggedIn()) jsonErr(401, 'Precisas de estar autenticado.');
 
@@ -90,7 +90,7 @@ if ($method === 'POST') {
         jsonErr(422, 'O teu comentário contém linguagem inadequada. Por favor, mantém um ambiente respeitoso.');
     }
 
-    // Verificar se o perfil existe
+    
     $stmtCheck = $conn->prepare("SELECT id FROM users WHERE id = ? AND is_active = 1 LIMIT 1");
     $stmtCheck->bind_param('i', $profileUserId);
     $stmtCheck->execute();
@@ -99,7 +99,7 @@ if ($method === 'POST') {
 
     $authorId = (int) $_SESSION['user_id'];
 
-    // Rate limit: máx 5 comentários por hora por utilizador
+    
     $stmtRate = $conn->prepare("
         SELECT COUNT(*) FROM profile_comments
         WHERE author_id = ? AND created_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)
@@ -129,7 +129,7 @@ if ($method === 'POST') {
     exit;
 }
 
-// ── DELETE: apagar comentário (próprio ou admin)
+
 if ($method === 'DELETE') {
     if (!isLoggedIn()) jsonErr(401, 'Precisas de estar autenticado.');
     parse_str(file_get_contents('php://input'), $body);
@@ -149,7 +149,7 @@ if ($method === 'DELETE') {
 
     if (!$row) jsonErr(404, 'Comentário não encontrado.');
 
-    // Pode apagar: autor, dono do perfil, ou admin
+    
     $canDelete = $row['author_id'] === $userId
               || $row['profile_user_id'] === $userId
               || isAdmin();

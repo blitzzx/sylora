@@ -42,7 +42,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
   <?php else: ?>
 
-  <!-- ===== HERO GUEST (NOVO) ===== -->
+  
   <section class="site-hero-full" id="hero-full">
     <video class="hero-video" id="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
       <source src="assets/video/trailer.mp4" type="video/mp4">
@@ -81,7 +81,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
 
   <script>
-  /* ── Canvas partículas do hero ── */
+  
   (function () {
     const canvas = document.getElementById('hero-canvas');
     if (!canvas) return;
@@ -138,8 +138,8 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
     document.getElementById('hero-download')?.addEventListener('click', () => {
       const a = document.createElement('a');
-      a.href = '/assets/download/Sylora%20Demo.zip';
-      a.download = 'Sylora Demo.zip';
+      a.href = '/assets/download/Sylora%20Demo.exe';
+      a.download = 'Sylora Demo.exe';
       document.body.appendChild(a);
       a.click();
       a.remove();
@@ -150,12 +150,12 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
   <?php endif; ?>
 
-  <!-- ===== MAPA DE ILHAS ===== -->
+  
   <section class="island-map-section container">
     <div class="ornament-divider"><span>As Ilhas de Sylora</span></div>
 
     <div class="island-map">
-      <!-- Ilha 1: Thalassos -->
+      
       <div class="island-card island-thalassos" data-act="I">
         <div class="island-card-bg">
           <div class="island-bg-ocean"></div>
@@ -182,7 +182,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <?php endif; ?>
       </div>
 
-      <!-- Ilha 2: Helion -->
+      
       <div class="island-card island-helion" data-act="II">
         <div class="island-card-bg">
           <div class="island-bg-fire"></div>
@@ -209,7 +209,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <?php endif; ?>
       </div>
 
-      <!-- Ilha 3: Zephyria -->
+      
       <div class="island-card island-zephyria" data-act="III">
         <div class="island-card-bg">
           <div class="island-bg-wind"></div>
@@ -229,7 +229,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <span class="island-cta island-cta-soon">Em breve</span>
       </div>
 
-      <!-- Ilha 4: Tártaro -->
+      
       <div class="island-card island-tartaro" data-act="IV">
         <div class="island-card-bg">
           <div class="island-bg-abyss"></div>
@@ -249,7 +249,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <span class="island-cta island-cta-soon">Em breve</span>
       </div>
 
-      <!-- Ilha 5: Olimpo -->
+      
       <div class="island-card island-olimpo island-wide" data-act="V">
         <div class="island-card-bg">
           <div class="island-bg-olympus"></div>
@@ -271,7 +271,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     </div>
   </section>
 
-  <!-- ===== FEATURES ===== -->
+  
   <section class="features-section container">
     <div class="ornament-divider"><span>O que te espera</span></div>
 
@@ -375,7 +375,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     </div>
   </section>
 
-  <!-- ===== PERSONAGENS ===== -->
+  
   <section class="chars-section container">
     <div class="ornament-divider"><span>Figuras da Lenda</span></div>
     <div class="chars-grid">
@@ -411,7 +411,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
   </section>
 
   <?php if (!$isLoggedIn): ?>
-  <!-- ===== CTA FINAL ===== -->
+  
   <section class="cta-section container">
     <div class="cta-box">
       <div class="cta-box-deco" aria-hidden="true">

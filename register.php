@@ -24,7 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $termsAccepted = !empty($_POST['terms']);
 
-        // Rate-limit por IP para evitar spam de registos + envios de email
+        
         if (!checkActionRateLimit('register', $ip, 5, 60)) {
             $errors[] = 'Demasiadas tentativas de registo. Aguarda uma hora.';
         } elseif (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif ($password !== $confirmPassword) {
             $errors[] = 'As passwords não coincidem.';
         } else {
-            // Limpar conta inativa antiga para este email (sistema antigo de token via link)
+            
             $stmt = $conn->prepare('DELETE FROM users WHERE email = ? AND is_active = 0 AND email_verified_at IS NULL');
             $stmt->bind_param('s', $email);
             $stmt->execute();
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             } else {
                 $stmt->close();
 
-                // Verificar username em registos pendentes de outro email
+                
                 $stmt = $conn->prepare('SELECT id FROM pending_registrations WHERE username = ? AND email != ? AND expires_at > NOW() LIMIT 1');
                 $stmt->bind_param('ss', $username, $email);
                 $stmt->execute();
@@ -109,7 +109,7 @@ $csrfToken = generateCSRFToken();
   <link rel="icon" type="image/png" href="assets/img/FavIcon-Sylora.png">
   <link rel="apple-touch-icon" href="assets/img/FavIcon-Sylora.png">
   <style>
-    /* ── Mobile: auth-split stacks vertically ── */
+    
     @media (max-width: 767px) {
       .auth-split { flex-direction: column; min-height: 100dvh; }
       .auth-deco  { display: none; }
@@ -121,14 +121,14 @@ $csrfToken = generateCSRFToken();
       .auth-form-inner { padding: 20px 16px 36px; }
       .auth-form-top   { padding: 14px 16px; }
     }
-    /* ── Terms error ── */
+    
     .terms-error-msg {
       display: none;
       color: #c96b5a;
       font-size: 12px;
       margin-top: 6px;
     }
-    /* ── Terms Modal ── */
+    
     .terms-overlay {
       position: fixed; inset: 0;
       background: rgba(0,0,0,0.72);
@@ -228,7 +228,7 @@ $csrfToken = generateCSRFToken();
 
 <div class="auth-split auth-split-register">
 
-  <!-- ── Painel esquerdo decorativo ── -->
+  
   <div class="auth-deco" aria-hidden="true">
     <div class="auth-deco-bg auth-deco-bg-register"></div>
     <div class="auth-deco-content">
@@ -264,7 +264,7 @@ $csrfToken = generateCSRFToken();
     </div>
   </div>
 
-  <!-- ── Painel direito com formulário ── -->
+  
   <div class="auth-form-panel">
 
     <div class="auth-form-top">
@@ -385,7 +385,7 @@ $csrfToken = generateCSRFToken();
 
 </div>
 
-<!-- ── Terms of Use Modal ── -->
+
 <div class="terms-overlay" id="terms-overlay" role="dialog" aria-modal="true" aria-labelledby="terms-title">
   <div class="terms-sheet">
     <div class="terms-sheet-handle"></div>
@@ -516,7 +516,7 @@ $csrfToken = generateCSRFToken();
     });
   })();
 
-  /* ── Terms Modal ── */
+  
   (function() {
     const overlay    = document.getElementById('terms-overlay');
     const openLink   = document.getElementById('terms-open-link');
@@ -541,7 +541,7 @@ $csrfToken = generateCSRFToken();
     document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && overlay.classList.contains('open')) close(); });
   })();
 
-  /* ── Form: validate terms + submit feedback ── */
+  
   (function() {
     const form     = document.querySelector('form.auth-form');
     const checkbox = document.getElementById('terms');
@@ -568,7 +568,7 @@ $csrfToken = generateCSRFToken();
     });
   })();
 
-  /* ── Custom cursor ── */
+  
   (function() {
     if (window.matchMedia('(hover: none)').matches) return;
     const el = document.createElement('div');

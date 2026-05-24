@@ -20,8 +20,8 @@ if ($slot < 1 || $slot > 3) {
     exit;
 }
 
-// Rate limit: 30 deletes por hora por utilizador. Evita scripts a apagar tudo
-// repetidamente; uso normal raramente passa de alguns por dia.
+
+
 if (!checkActionRateLimit('save_delete', (string) $user_id, 30, 60)) {
     http_response_code(429);
     echo json_encode(['error' => 'Demasiadas remoções. Aguarda uma hora.']);

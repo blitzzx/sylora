@@ -19,9 +19,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!isValidEmail($email)) {
         $errors[] = 'Endereço de e-mail inválido.';
     } else {
-        // Rate-limit por IP e por email para impedir spam de emails de reset
-        // e protege contra enumeração via timing. A resposta continua sempre
-        // "sent" para não revelar se o email existe.
+        
+        
+        
         $allowed = checkActionRateLimit('forgot_ip', $ip, 5, 60)
                 && checkActionRateLimit('forgot_email', strtolower($email), 3, 60);
         if ($allowed) {
@@ -38,7 +38,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 mailPasswordReset($email, $user['username'], $token);
             }
         }
-        // Always show success to prevent e-mail enumeration
+        
         $sent = true;
     }
 }

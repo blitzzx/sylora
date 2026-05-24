@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCSRFToken($csrf)) {
         $codeError = 'Pedido inválido. Tenta novamente.';
     } elseif (array_key_exists('code', $_POST)) {
-        // ── Verificação do código ──────────────────────────
+        
         $code  = preg_replace('/\D/', '', $_POST['code'] ?? '');
         $email = sanitize($_POST['email'] ?? '');
         $pendingEmail = $email;
@@ -23,9 +23,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (strlen($code) !== 6) {
             $codeError = 'Introduz os 6 dígitos do código.';
         } elseif (!checkActionRateLimit('verify_code', strtolower($email), 5, 15)) {
-            // Brute force defense: 6 dígitos = 1M combinações; sem limite seria
-            // viável adivinhar. 5 tentativas / 15 min por email é confortável
-            // para um humano e impraticável para um script.
+            
+            
+            
             $codeError = 'Demasiadas tentativas. Aguarda 15 minutos.';
         } else {
             $userId = verifyPendingCode($email, $code);
@@ -44,12 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $codeError = 'Código incorreto ou expirado. Tenta novamente.';
         }
     } else {
-        // ── Reenvio de código ──────────────────────────────
+        
         $email = sanitize($_POST['email'] ?? '');
         if (!isValidEmail($email)) {
             $resendErrors[] = 'Email inválido.';
         } elseif (!checkActionRateLimit('verify_resend', strtolower($email), 3, 60)) {
-            // Limita spam de emails: máx. 3 reenvios por hora por email
+            
             $resendErrors[] = 'Demasiados reenvios. Aguarda uma hora.';
         } else {
             recordActionAttempt('verify_resend', strtolower($email), 1);
@@ -95,7 +95,7 @@ $csrfToken = generateCSRFToken();
       .auth-form-inner { padding: 20px 16px 36px; }
       .auth-form-top   { padding: 14px 16px; }
     }
-    /* ── OTP boxes ── */
+    
     .otp-wrap {
       display: flex;
       gap: 10px;
@@ -188,7 +188,7 @@ $csrfToken = generateCSRFToken();
 
       <?php if ($showCodeForm): ?>
 
-        <!-- ── Estado: mostrar form de código OTP ── -->
+        
         <div class="auth-form-header">
           <h1>Introduz o código</h1>
           <p>Enviámos um código de 6 dígitos para<br><strong><?php echo e($pendingEmail); ?></strong></p>
@@ -238,7 +238,7 @@ $csrfToken = generateCSRFToken();
 
       <?php else: ?>
 
-        <!-- ── Estado: sem email pendente: pedir email para reenvio ── -->
+        
         <div class="auth-form-header">
           <h1>Verificar E-mail</h1>
           <p>Insere o teu e-mail para receber um novo código de verificação.</p>
@@ -276,7 +276,7 @@ $csrfToken = generateCSRFToken();
 </div>
 
 <script>
-  /* ── OTP widget ── */
+  
   (function() {
     var inputs  = document.querySelectorAll('.otp-input');
     var hidden  = document.getElementById('code-hidden');
@@ -323,10 +323,10 @@ $csrfToken = generateCSRFToken();
       });
     });
 
-    // Auto-focus first box on load
+
     if (inputs[0]) inputs[0].focus();
 
-    // Auto-submit when all 6 filled
+
     var otpForm = document.getElementById('otp-form');
     if (otpForm) {
       otpForm.addEventListener('submit', function() {
@@ -335,7 +335,7 @@ $csrfToken = generateCSRFToken();
     }
   })();
 
-  /* ── Custom cursor ── */
+  
   (function(){
     if (window.matchMedia('(hover: none)').matches) return;
     var el = document.createElement('div');
