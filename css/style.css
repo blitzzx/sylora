@@ -7501,10 +7501,11 @@ footer {
     list-style: none;
     counter-reset: step;
     padding: 0;
+    padding-bottom: 20px;
     margin: 0;
     display: flex;
     flex-direction: column;
-    gap: 8px;
+    gap: 10px;
 }
 .save-helper-steps li {
     counter-increment: step;
