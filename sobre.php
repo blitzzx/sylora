@@ -3,7 +3,7 @@ require_once 'includes/config.php';
 
 $csrfToken = generateCSRFToken();
 
-$startDate    = new DateTime('2025-09-01');
+$startDate    = new DateTime('2025-09-15');
 $today        = new DateTime();
 $diff         = $startDate->diff($today);
 $monthsActive = ($diff->y * 12) + $diff->m + ($diff->d >= 15 ? 1 : 0);
@@ -41,16 +41,16 @@ include 'includes/header.php';
         </div>
         <div class="about-stat-value"><?= $monthsActive ?></div>
         <div class="about-stat-label">Meses de Desenvolvimento</div>
-        <div class="about-stat-sub">Desde Setembro 2025</div>
+        <div class="about-stat-sub">Desde setembro 2025</div>
       </div>
 
       <div class="about-stat-card">
         <div class="about-stat-icon">
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
         </div>
-        <div class="about-stat-value">0</div>
+        <div class="about-stat-value">1</div>
         <div class="about-stat-label">Atos Jogáveis</div>
-        <div class="about-stat-sub">Jogo ainda em desenvolvimento</div>
+        <div class="about-stat-sub">Ato I jogável</div>
       </div>
 
       <div class="about-stat-card">
@@ -169,7 +169,7 @@ include 'includes/header.php';
       <li class="about-timeline-item">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
-          <div class="about-timeline-meta">Outono 2025</div>
+          <div class="about-timeline-meta">Outubro 2025</div>
           <h3>Escolha do GameMaker</h3>
           <p>O GameMaker foi escolhido pela sua curva de aprendizagem acessível para jogos 2D. Rapidamente descobrimos que os seus recursos têm limites que nos obrigaram a repensar vários objetivos iniciais.</p>
         </div>
@@ -178,7 +178,7 @@ include 'includes/header.php';
       <li class="about-timeline-item">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
-          <div class="about-timeline-meta">Inverno 2025/2026</div>
+          <div class="about-timeline-meta">Dezembro 2025</div>
           <h3>Site de suporte</h3>
           <p>Em paralelo ao jogo, foi desenvolvido um site completo: sistema de contas, perfis, avatares com crop, página de história, área de jogo e saves na cloud. O volume de trabalho multiplicou, e a aprendizagem em desenvolvimento web full-stack também.</p>
         </div>
@@ -187,7 +187,7 @@ include 'includes/header.php';
       <li class="about-timeline-item">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
-          <div class="about-timeline-meta">Primavera 2026</div>
+          <div class="about-timeline-meta">Março 2026</div>
           <h3>Iteração e polish</h3>
           <p>Funcionalidades que pareciam simples transformaram-se em pesadelos técnicos. Sistemas que imaginávamos implementar em dias levaram semanas. Aprendemos a adaptar, a simplificar sem perder a essência, e a encontrar soluções criativas dentro das limitações da engine.</p>
         </div>
