@@ -9,8 +9,6 @@ if (isLoggedIn()) {
 $sent            = false;
 $errors          = [];
 $recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
-$rcDebug         = $_SESSION['_rc_debug'] ?? null;
-unset($_SESSION['_rc_debug']);
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf  = $_POST['_csrf'] ?? '';
@@ -194,14 +192,15 @@ $csrfToken = generateCSRFToken();
 
     function rcToast(msg, ok) {
       var t = document.createElement('div');
-      t.style.cssText = 'position:fixed;bottom:20px;left:20px;z-index:99999;padding:10px 14px;border-radius:8px;font-size:12px;font-family:monospace;max-width:420px;word-break:break-all;box-shadow:0 4px 16px rgba(0,0,0,0.5);pointer-events:none;' +
+      t.style.cssText = 'position:fixed;bottom:20px;left:20px;z-index:99999;opacity:1;padding:10px 14px;border-radius:8px;font-size:12px;font-family:monospace;max-width:420px;word-break:break-all;box-shadow:0 4px 16px rgba(0,0,0,0.5);pointer-events:none;transition:none;animation:none;' +
         (ok ? 'background:#0a2a0a;border:1px solid #3a7a3a;color:#7aad6e;' : 'background:#2a0a0a;border:1px solid #8a3a3a;color:#c96b5a;');
       t.innerHTML = '<strong>' + (ok ? '✓ reCAPTCHA' : '✗ reCAPTCHA') + '</strong><br>' + msg;
       document.body.appendChild(t);
-      setTimeout(function() { t.style.transition='opacity .4s'; t.style.opacity='0'; setTimeout(function(){t.remove();},400); }, ok ? 6000 : 15000);
+      var dur = ok ? 6000 : 30000;
+      setTimeout(function() { t.style.transition='opacity .4s'; t.style.opacity='0'; setTimeout(function(){t.remove();},400); }, dur);
     }
 
-    <?php if ($rcDebug): ?>
+    <?php $rcDebug = $_SESSION['_rc_debug'] ?? null; unset($_SESSION['_rc_debug']); if ($rcDebug): ?>
     (function() {
       var d = <?= json_encode($rcDebug) ?>;
       if (d.skipped) { rcToast('Saltado — ' + d.reason, false); return; }
