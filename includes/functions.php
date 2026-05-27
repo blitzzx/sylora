@@ -21,10 +21,7 @@ function isValidPassword($password) {
 
 function verifyRecaptchaV3(string $token, string $action = ''): bool {
     $secret = getenv('RECAPTCHA_SECRET_KEY') ?: '';
-    if (!$secret || !$token) {
-        $_SESSION['_rc_debug'] = ['skipped' => true, 'reason' => !$secret ? 'RECAPTCHA_SECRET_KEY não configurada' : 'token vazio (script não carregou?)'];
-        return true;
-    }
+    if (!$secret || !$token) return true;
 
     $ctx = stream_context_create(['http' => [
         'method'        => 'POST',
@@ -35,8 +32,6 @@ function verifyRecaptchaV3(string $token, string $action = ''): bool {
     ]]);
     $res  = @file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $ctx);
     $data = $res ? json_decode($res, true) : null;
-
-    $_SESSION['_rc_debug'] = $data ?: ['error' => 'sem resposta da API Google'];
 
     if (!$data || empty($data['success'])) return false;
     if ($action && ($data['action'] ?? '') !== $action) return false;

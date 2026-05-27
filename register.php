@@ -603,36 +603,10 @@ $csrfToken = generateCSRFToken();
     });
   })();
 
-  /* ── reCAPTCHA v3 debug + execução ── */
+  /* ── reCAPTCHA v3 ── */
   (function() {
     var siteKey = <?= json_encode($recaptchaSiteKey) ?>;
-
-    function rcToast(msg, ok) {
-      var t = document.createElement('div');
-      t.style.cssText = 'position:fixed;bottom:20px;left:20px;z-index:99999;opacity:1;padding:10px 14px;border-radius:8px;font-size:12px;font-family:monospace;max-width:420px;word-break:break-all;box-shadow:0 4px 16px rgba(0,0,0,0.5);pointer-events:none;transition:none;animation:none;' +
-        (ok ? 'background:#0a2a0a;border:1px solid #3a7a3a;color:#7aad6e;' : 'background:#2a0a0a;border:1px solid #8a3a3a;color:#c96b5a;');
-      t.innerHTML = '<strong>' + (ok ? '✓ reCAPTCHA' : '✗ reCAPTCHA') + '</strong><br>' + msg;
-      document.body.appendChild(t);
-      var dur = ok ? 6000 : 30000;
-      setTimeout(function() { t.style.transition='opacity .4s'; t.style.opacity='0'; setTimeout(function(){t.remove();},400); }, dur);
-    }
-
-    <?php $rcDebug = $_SESSION['_rc_debug'] ?? null; unset($_SESSION['_rc_debug']); if ($rcDebug): ?>
-    (function() {
-      var d = <?= json_encode($rcDebug) ?>;
-      if (d.skipped) { rcToast('Saltado — ' + d.reason, false); return; }
-      if (d.error)   { rcToast('Erro API: ' + d.error, false); return; }
-      var ok = d.success && (d.score >= 0.5);
-      rcToast(
-        'success=' + d.success +
-        ' | score=' + (d.score !== undefined ? d.score.toFixed(2) : '?') +
-        ' | action=' + (d.action || '?') +
-        (d['error-codes'] ? ' | erros=' + JSON.stringify(d['error-codes']) : ''),
-        ok
-      );
-    })();
-    <?php endif; ?>
-
+    <?php unset($_SESSION['_rc_debug']); ?>
     if (!siteKey) return;
     var form       = document.querySelector('form.auth-form');
     var tokenInput = document.getElementById('g-recaptcha-token');
@@ -648,18 +622,14 @@ $csrfToken = generateCSRFToken();
         if (token) tokenInput.value = token;
         form.submit();
       }
-      var timer = setTimeout(function() {
-        rcToast('Timeout 4s — script não carregou ou domínio não registado', false);
-        proceed('');
-      }, 4000);
+      var timer = setTimeout(function() { proceed(''); }, 4000);
       try {
-        rcToast('grecaptcha.ready() chamado…', true);
         grecaptcha.ready(function() {
           grecaptcha.execute(siteKey, {action: 'register'})
-            .then(function(t) { clearTimeout(timer); rcToast('Token obtido: ' + t.substring(0,24) + '…', true); proceed(t); })
-            .catch(function(err) { clearTimeout(timer); rcToast('execute() falhou: ' + (err && err.message ? err.message : String(err)), false); proceed(''); });
+            .then(function(t) { clearTimeout(timer); proceed(t); })
+            .catch(function() { clearTimeout(timer); proceed(''); });
         });
-      } catch(err) { clearTimeout(timer); rcToast('grecaptcha indefinido: ' + err.message, false); proceed(''); }
+      } catch(err) { clearTimeout(timer); proceed(''); }
     });
   })();
 </script>
