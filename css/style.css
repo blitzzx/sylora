@@ -178,6 +178,75 @@ h1, h2, h3 {
   margin-left: auto;
 }
 
+/* ── Language switcher ── */
+.lang-switcher {
+  display: flex;
+  align-items: center;
+  gap: 1px;
+  padding: 3px;
+  border-radius: 8px;
+  background: rgba(232,223,200,0.05);
+  border: 1px solid rgba(232,223,200,0.08);
+}
+
+.lang-btn {
+  font-family: var(--font-display);
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+  color: var(--muted);
+  padding: 4px 7px;
+  border-radius: 5px;
+  border: 1px solid transparent;
+  text-decoration: none;
+  line-height: 1;
+  transition: color var(--t), background var(--t), border-color var(--t);
+}
+
+.lang-btn:hover { color: var(--text); text-decoration: none; }
+
+.lang-btn.active {
+  color: var(--gold);
+  border-color: rgba(201,153,58,0.30);
+  background: rgba(201,153,58,0.10);
+}
+
+[data-theme="light"] .lang-switcher {
+  background: rgba(24,22,15,0.04);
+  border-color: rgba(24,22,15,0.10);
+}
+
+[data-theme="light"] .lang-btn.active {
+  color: #8a5f10;
+  border-color: rgba(138,95,16,0.30);
+  background: rgba(138,95,16,0.10);
+}
+
+/* ── CTA download button ── */
+.btn-cta {
+  background: linear-gradient(135deg, #f5e070 0%, var(--gold-light) 30%, var(--gold) 62%, #a06818 100%);
+  border-color: rgba(240,190,70,0.65);
+  color: #0d0b08;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  padding: 15px 30px;
+  min-height: 54px;
+  border-radius: 14px;
+  animation: cta-pulse 3.5s ease-in-out infinite;
+}
+
+.btn-cta:hover {
+  background: linear-gradient(135deg, #fce870 0%, #f5d870 28%, var(--gold-light) 62%, var(--gold) 100%);
+  animation: none;
+  box-shadow: 0 8px 36px rgba(201,153,58,0.55), 0 3px 10px rgba(0,0,0,0.28);
+}
+
+@keyframes cta-pulse {
+  0%, 100% { box-shadow: 0 4px 20px rgba(201,153,58,0.24), 0 1px 4px rgba(0,0,0,0.20); }
+  50%       { box-shadow: 0 6px 30px rgba(201,153,58,0.52), 0 2px 8px rgba(0,0,0,0.26); }
+}
+
 .nav-guest-badge {
   display: inline-flex;
   align-items: center;
@@ -796,13 +865,25 @@ main.container {
 }
 
 .btn-danger {
-  background: rgba(201, 107, 90, 0.10);
-  border-color: rgba(201, 107, 90, 0.30);
   color: #e8a090;
+  border: 1px solid rgba(201, 107, 90, 0.26);
+  background:
+    linear-gradient(180deg, rgba(255,90,70,0.04) 0%, rgba(255,90,70,0.01) 100%),
+    rgba(20, 8, 6, 0.90);
+  box-shadow:
+    inset 0 1px 0 rgba(255,80,60,0.05),
+    0 4px 16px rgba(0,0,0,0.24);
 }
 
 .btn-danger:hover {
-  background: rgba(201, 107, 90, 0.18);
+  color: #f0a898;
+  border-color: rgba(201, 107, 90, 0.44);
+  background:
+    linear-gradient(180deg, rgba(255,90,70,0.07) 0%, rgba(255,90,70,0.02) 100%),
+    rgba(28, 10, 8, 0.92);
+  box-shadow:
+    inset 0 1px 0 rgba(255,80,60,0.08),
+    0 6px 20px rgba(0,0,0,0.28);
   text-decoration: none;
 }
 

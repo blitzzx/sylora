@@ -53,11 +53,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $csrfToken = generateCSRFToken();
 ?>
 <!DOCTYPE html>
-<html lang="pt" data-theme="">
+<html lang="<?= getLang() ?>" data-theme="">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Recuperar Password - Sylora</title>
+  <title><?= t('forgot.title') ?> - Sylora</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -92,9 +92,9 @@ $csrfToken = generateCSRFToken();
         <img src="assets/img/Logo-Sylora.png" alt="Sylora" height="64">
       </a>
       <div class="auth-deco-text">
-        <p class="auth-deco-overline">✦ Ecos dos Deuses</p>
-        <h2>A memória pode ser recuperada.</h2>
-        <p class="auth-deco-sub">Insere o teu e-mail e enviamos um link para repores a tua password.</p>
+        <p class="auth-deco-overline"><?= t('forgot.deco_over') ?></p>
+        <h2><?= t('forgot.deco_h2') ?></h2>
+        <p class="auth-deco-sub"><?= t('forgot.deco_sub') ?></p>
       </div>
       <div class="auth-deco-orbs" aria-hidden="true">
         <span class="auth-orb ao1"></span>
@@ -109,18 +109,18 @@ $csrfToken = generateCSRFToken();
     <div class="auth-form-top">
       <a href="/login" class="auth-back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Login
+        <?= t('forgot.back_login') ?>
       </a>
     </div>
 
     <div class="auth-form-inner">
 
       <div class="auth-form-header">
-        <h1>Recuperar Password</h1>
+        <h1><?= t('forgot.title') ?></h1>
         <?php if ($sent): ?>
-          <p>Se esse e-mail estiver registado, receberás um link em breve. Verifica também a pasta de spam.</p>
+          <p><?= t('forgot.sent') ?></p>
         <?php else: ?>
-          <p>Lembras-te da password? <a href="/login">Faz login aqui</a></p>
+          <p><?= t('forgot.subtitle') ?></p>
         <?php endif; ?>
       </div>
 
@@ -138,12 +138,12 @@ $csrfToken = generateCSRFToken();
           <input type="hidden" id="g-recaptcha-token" name="g_recaptcha_token">
 
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email"><?= t('forgot.email_label') ?></label>
             <input
               type="email"
               id="email"
               name="email"
-              placeholder="o-teu@email.com"
+              placeholder="<?= t('forgot.email_ph') ?>"
               autocomplete="email"
               required
             >
@@ -152,13 +152,13 @@ $csrfToken = generateCSRFToken();
           <input type="text" name="hp_website" id="hp_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:1px;width:1px;overflow:hidden;">
 
           <button type="submit" class="btn btn-primary btn-block auth-submit-btn">
-            Enviar link de recuperação
+            <?= t('forgot.submit') ?>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </form>
       <?php else: ?>
         <a href="/login" class="btn btn-primary btn-block auth-submit-btn" style="text-align:center;">
-          Ir para o Login
+          <?= t('forgot.go_login') ?>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
       <?php endif; ?>
@@ -186,36 +186,10 @@ $csrfToken = generateCSRFToken();
     });
   })();
 
-  /* ── reCAPTCHA v3 debug + execução ── */
+  /* ── reCAPTCHA v3 ── */
   (function() {
     var siteKey = <?= json_encode($recaptchaSiteKey) ?>;
-
-    function rcToast(msg, ok) {
-      var t = document.createElement('div');
-      t.style.cssText = 'position:fixed;bottom:20px;left:20px;z-index:99999;opacity:1;padding:10px 14px;border-radius:8px;font-size:12px;font-family:monospace;max-width:420px;word-break:break-all;box-shadow:0 4px 16px rgba(0,0,0,0.5);pointer-events:none;transition:none;animation:none;' +
-        (ok ? 'background:#0a2a0a;border:1px solid #3a7a3a;color:#7aad6e;' : 'background:#2a0a0a;border:1px solid #8a3a3a;color:#c96b5a;');
-      t.innerHTML = '<strong>' + (ok ? '✓ reCAPTCHA' : '✗ reCAPTCHA') + '</strong><br>' + msg;
-      document.body.appendChild(t);
-      var dur = ok ? 6000 : 30000;
-      setTimeout(function() { t.style.transition='opacity .4s'; t.style.opacity='0'; setTimeout(function(){t.remove();},400); }, dur);
-    }
-
-    <?php $rcDebug = $_SESSION['_rc_debug'] ?? null; unset($_SESSION['_rc_debug']); if ($rcDebug): ?>
-    (function() {
-      var d = <?= json_encode($rcDebug) ?>;
-      if (d.skipped) { rcToast('Saltado — ' + d.reason, false); return; }
-      if (d.error)   { rcToast('Erro API: ' + d.error, false); return; }
-      var ok = d.success && (d.score >= 0.5);
-      rcToast(
-        'success=' + d.success +
-        ' | score=' + (d.score !== undefined ? d.score.toFixed(2) : '?') +
-        ' | action=' + (d.action || '?') +
-        (d['error-codes'] ? ' | erros=' + JSON.stringify(d['error-codes']) : ''),
-        ok
-      );
-    })();
-    <?php endif; ?>
-
+    <?php unset($_SESSION['_rc_debug']); ?>
     if (!siteKey) return;
     var form       = document.querySelector('form.auth-form');
     var tokenInput = document.getElementById('g-recaptcha-token');
@@ -231,18 +205,14 @@ $csrfToken = generateCSRFToken();
         if (token) tokenInput.value = token;
         form.submit();
       }
-      var timer = setTimeout(function() {
-        rcToast('Timeout 4s — script não carregou ou domínio não registado', false);
-        proceed('');
-      }, 4000);
+      var timer = setTimeout(function() { proceed(''); }, 4000);
       try {
-        rcToast('grecaptcha.ready() chamado…', true);
         grecaptcha.ready(function() {
           grecaptcha.execute(siteKey, {action: 'forgot'})
-            .then(function(t) { clearTimeout(timer); rcToast('Token obtido: ' + t.substring(0,24) + '…', true); proceed(t); })
-            .catch(function(err) { clearTimeout(timer); rcToast('execute() falhou: ' + (err && err.message ? err.message : String(err)), false); proceed(''); });
+            .then(function(t) { clearTimeout(timer); proceed(t); })
+            .catch(function() { clearTimeout(timer); proceed(''); });
         });
-      } catch(err) { clearTimeout(timer); rcToast('grecaptcha indefinido: ' + err.message, false); proceed(''); }
+      } catch(err) { clearTimeout(timer); proceed(''); }
     });
   })();
 </script>

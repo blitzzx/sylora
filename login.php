@@ -63,11 +63,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $csrfToken = generateCSRFToken();
 ?>
 <!DOCTYPE html>
-<html lang="pt" data-theme="">
+<html lang="<?= getLang() ?>" data-theme="">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Entrar - Sylora</title>
+  <title><?= t('login.title') ?> - Sylora</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -101,9 +101,9 @@ $csrfToken = generateCSRFToken();
         <img src="assets/img/Logo-Sylora.png" alt="Sylora" height="64">
       </a>
       <div class="auth-deco-text">
-        <p class="auth-deco-overline">✦ Ecos dos Deuses</p>
-        <h2>Bem-vindo de volta, Aventureiro.</h2>
-        <p class="auth-deco-sub">A tua jornada continua onde a deixaste. Sylora aguarda.</p>
+        <p class="auth-deco-overline"><?= t('login.deco_over') ?></p>
+        <h2><?= t('login.deco_h2') ?></h2>
+        <p class="auth-deco-sub"><?= t('login.deco_sub') ?></p>
       </div>
       <div class="auth-deco-orbs" aria-hidden="true">
         <span class="auth-orb ao1"></span>
@@ -122,7 +122,7 @@ $csrfToken = generateCSRFToken();
     <div class="auth-form-top">
       <a href="/" class="auth-back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Início
+        <?= t('login.back_home') ?>
       </a>
       <button class="nav-icon-btn auth-theme-toggle" id="auth-theme-toggle" aria-label="Alternar tema">
         <svg id="ath-icon-dark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -133,8 +133,8 @@ $csrfToken = generateCSRFToken();
     <div class="auth-form-inner">
 
       <div class="auth-form-header">
-        <h1>Entrar</h1>
-        <p>Não tens conta? <a href="/register">Cria uma agora</a></p>
+        <h1><?= t('login.title') ?></h1>
+        <p><?= t('login.no_account') ?></p>
       </div>
 
       <?php if (!empty($errors)): ?>
@@ -143,7 +143,7 @@ $csrfToken = generateCSRFToken();
             <p><?php echo e($err); ?></p>
           <?php endforeach; ?>
           <?php if (!empty($showVerifyLink)): ?>
-            <p><a href="/verify">Reenviar código de verificação</a></p>
+            <p><a href="/verify"><?= t('login.resend_verify') ?></a></p>
           <?php endif; ?>
         </div>
       <?php endif; ?>
@@ -159,12 +159,12 @@ $csrfToken = generateCSRFToken();
         <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
 
         <div class="form-group">
-          <label for="email">Email</label>
+          <label for="email"><?= t('login.email_label') ?></label>
           <input
             type="email"
             id="email"
             name="email"
-            placeholder="o-teu@email.com"
+            placeholder="<?= t('login.email_ph') ?>"
             value="<?php echo e($emailValue); ?>"
             autocomplete="email"
             required
@@ -172,7 +172,7 @@ $csrfToken = generateCSRFToken();
         </div>
 
         <div class="form-group">
-          <label for="password">Password</label>
+          <label for="password"><?= t('login.password') ?></label>
           <div class="pw-wrap">
             <input
               type="password"
@@ -182,7 +182,7 @@ $csrfToken = generateCSRFToken();
               autocomplete="current-password"
               required
             >
-            <button type="button" class="pw-toggle" aria-label="Mostrar ou esconder password">Mostrar</button>
+            <button type="button" class="pw-toggle" aria-label="Mostrar ou esconder password"><?= t('login.show') ?></button>
           </div>
         </div>
 
@@ -190,13 +190,13 @@ $csrfToken = generateCSRFToken();
           <label class="auth-checkbox-label">
             <input type="checkbox" name="remember" id="remember">
             <span class="auth-checkbox-custom"></span>
-            Lembrar-me
+            <?= t('login.remember') ?>
           </label>
-          <a href="/forgot" class="auth-forgot-link">Esqueceste a password?</a>
+          <a href="/forgot" class="auth-forgot-link"><?= t('login.forgot') ?></a>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block auth-submit-btn">
-          Entrar
+          <?= t('login.submit') ?>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
 

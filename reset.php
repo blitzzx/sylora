@@ -51,11 +51,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
 ?>
 <!DOCTYPE html>
-<html lang="pt" data-theme="">
+<html lang="<?= getLang() ?>" data-theme="">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Nova Password - Sylora</title>
+  <title><?= t('reset.title') ?> - Sylora</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -87,9 +87,9 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
         <img src="assets/img/Logo-Sylora.png" alt="Sylora" height="64">
       </a>
       <div class="auth-deco-text">
-        <p class="auth-deco-overline">✦ Ecos dos Deuses</p>
-        <h2>Define uma nova password.</h2>
-        <p class="auth-deco-sub">Escolhe uma password forte para proteger a tua conta Sylora.</p>
+        <p class="auth-deco-overline"><?= t('reset.deco_over') ?></p>
+        <h2><?= t('reset.deco_h2') ?></h2>
+        <p class="auth-deco-sub"><?= t('reset.deco_sub') ?></p>
       </div>
       <div class="auth-deco-orbs" aria-hidden="true">
         <span class="auth-orb ao1"></span>
@@ -104,15 +104,15 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
     <div class="auth-form-top">
       <a href="/login" class="auth-back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Login
+        <?= t('login.title') ?>
       </a>
     </div>
 
     <div class="auth-form-inner">
 
       <div class="auth-form-header">
-        <h1>Nova Password</h1>
-        <p>Escolhe uma password com pelo menos 8 caracteres.</p>
+        <h1><?= t('reset.title') ?></h1>
+        <p><?= t('reset.subtitle') ?></p>
       </div>
 
       <?php if (!empty($errors)): ?>
@@ -131,7 +131,7 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
         <input type="hidden" name="_reset_token" value="<?php echo e($rawToken); ?>">
 
         <div class="form-group">
-          <label for="password">Nova Password</label>
+          <label for="password"><?= t('reset.pw_label') ?></label>
           <div class="pw-wrap">
             <input
               type="password"
@@ -142,12 +142,12 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
               required
               minlength="8"
             >
-            <button type="button" class="pw-toggle" aria-label="Mostrar password">Mostrar</button>
+            <button type="button" class="pw-toggle" aria-label="Mostrar password"><?= t('reset.show') ?></button>
           </div>
         </div>
 
         <div class="form-group">
-          <label for="confirm_password">Confirmar Password</label>
+          <label for="confirm_password"><?= t('reset.pw_confirm') ?></label>
           <div class="pw-wrap">
             <input
               type="password"
@@ -157,7 +157,7 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
               autocomplete="new-password"
               required
             >
-            <button type="button" class="pw-toggle" aria-label="Mostrar password">Mostrar</button>
+            <button type="button" class="pw-toggle" aria-label="Mostrar password"><?= t('reset.show') ?></button>
           </div>
         </div>
 
@@ -169,7 +169,7 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
         </div>
 
         <button type="submit" class="btn btn-primary btn-block auth-submit-btn">
-          Guardar Password
+          <?= t('reset.submit') ?>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
       </form>

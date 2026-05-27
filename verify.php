@@ -81,11 +81,11 @@ $showCodeForm = !empty($pendingEmail);
 $csrfToken = generateCSRFToken();
 ?>
 <!DOCTYPE html>
-<html lang="pt" data-theme="">
+<html lang="<?= getLang() ?>" data-theme="">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Verificar E-mail - Sylora</title>
+  <title><?= t('verify.title_form') ?> - Sylora</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -171,11 +171,9 @@ $csrfToken = generateCSRFToken();
         <img src="assets/img/Logo-Sylora.png" alt="Sylora" height="64">
       </a>
       <div class="auth-deco-text">
-        <p class="auth-deco-overline">✦ Ecos dos Deuses</p>
-        <h2><?php echo $showCodeForm ? 'Quase lá.' : 'Confirma a tua identidade.'; ?></h2>
-        <p class="auth-deco-sub"><?php echo $showCodeForm
-          ? 'Introduz o código de 6 dígitos que enviámos para o teu e-mail para ativar a conta.'
-          : 'Um passo antes de começares a tua aventura.'; ?></p>
+        <p class="auth-deco-overline"><?= t('verify.deco_over') ?></p>
+        <h2><?= $showCodeForm ? t('verify.deco_h2_code') : t('verify.deco_h2_form') ?></h2>
+        <p class="auth-deco-sub"><?= $showCodeForm ? t('verify.deco_sub_code') : t('verify.deco_sub_form') ?></p>
       </div>
       <div class="auth-deco-orbs" aria-hidden="true">
         <span class="auth-orb ao1"></span>
@@ -190,7 +188,7 @@ $csrfToken = generateCSRFToken();
     <div class="auth-form-top">
       <a href="/" class="auth-back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Início
+        <?= t('verify.back_home') ?>
       </a>
     </div>
 
@@ -200,13 +198,13 @@ $csrfToken = generateCSRFToken();
 
         
         <div class="auth-form-header">
-          <h1>Introduz o código</h1>
-          <p>Enviámos um código de 6 dígitos para<br><strong><?php echo e($pendingEmail); ?></strong></p>
+          <h1><?= t('verify.title_code') ?></h1>
+          <p><?= t('verify.code_sent_to') ?><br><strong><?php echo e($pendingEmail); ?></strong></p>
         </div>
 
         <?php if ($resent): ?>
           <div class="alert alert-success" style="margin-bottom:16px;">
-            <p>Novo código enviado! Verifica também a pasta de spam.</p>
+            <p><?= t('verify.resent') ?></p>
           </div>
         <?php endif; ?>
 
@@ -231,29 +229,29 @@ $csrfToken = generateCSRFToken();
           </div>
 
           <button type="submit" class="btn btn-primary btn-block auth-submit-btn" id="otp-submit" disabled>
-            Verificar Código
+            <?= t('verify.submit_code') ?>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </form>
 
-        <p style="color:var(--text-muted,#7a6a4a);font-size:13px;text-align:center;margin-top:24px;margin-bottom:10px;">Não recebeste o código?</p>
+        <p style="color:var(--text-muted,#7a6a4a);font-size:13px;text-align:center;margin-top:24px;margin-bottom:10px;"><?= t('verify.no_code') ?></p>
         <form method="POST" action="/verify" style="text-align:center;" id="resend-form">
           <input type="hidden" name="_csrf"  value="<?php echo e($csrfToken); ?>">
           <input type="hidden" name="email"  value="<?php echo e($pendingEmail); ?>">
           <input type="hidden" id="g-recaptcha-resend" name="g_recaptcha_token">
           <input type="text" name="hp_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:1px;width:1px;overflow:hidden;">
-          <button type="submit" class="btn btn-ghost btn-block">Reenviar código</button>
+          <button type="submit" class="btn btn-ghost btn-block"><?= t('verify.resend') ?></button>
         </form>
         <div style="text-align:center;margin-top:14px;">
-          <a href="/register" class="auth-back-link">Usar outro e-mail</a>
+          <a href="/register" class="auth-back-link"><?= t('verify.other_email') ?></a>
         </div>
 
       <?php else: ?>
 
         
         <div class="auth-form-header">
-          <h1>Verificar E-mail</h1>
-          <p>Insere o teu e-mail para receber um novo código de verificação.</p>
+          <h1><?= t('verify.title_form') ?></h1>
+          <p><?= t('verify.form_sub') ?></p>
         </div>
 
         <?php if (!empty($resendErrors)): ?>
@@ -269,17 +267,17 @@ $csrfToken = generateCSRFToken();
           <input type="hidden" id="g-recaptcha-verify" name="g_recaptcha_token">
           <input type="text" name="hp_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:1px;width:1px;overflow:hidden;">
           <div class="form-group">
-            <label for="email">E-mail da conta</label>
-            <input type="email" id="email" name="email" placeholder="o-teu@email.com" autocomplete="email" required>
+            <label for="email"><?= t('verify.email_label') ?></label>
+            <input type="email" id="email" name="email" placeholder="<?= t('login.email_ph') ?>" autocomplete="email" required>
           </div>
           <button type="submit" class="btn btn-primary btn-block auth-submit-btn">
-            Enviar código de verificação
+            <?= t('verify.submit_form') ?>
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </form>
 
         <div style="text-align:center;margin-top:20px;">
-          <a href="/login" class="auth-back-link">Voltar ao Login</a>
+          <a href="/login" class="auth-back-link"><?= t('verify.back_login') ?></a>
         </div>
 
       <?php endif; ?>

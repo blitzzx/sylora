@@ -109,11 +109,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 $csrfToken = generateCSRFToken();
 ?>
 <!DOCTYPE html>
-<html lang="pt" data-theme="">
+<html lang="<?= getLang() ?>" data-theme="">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Criar Conta - Sylora</title>
+  <title><?= t('register.title') ?> - Sylora</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -251,24 +251,24 @@ $csrfToken = generateCSRFToken();
         <img src="assets/img/Logo-Sylora.png" alt="Sylora" height="64">
       </a>
       <div class="auth-deco-text">
-        <p class="auth-deco-overline">✦ Começa a tua jornada</p>
-        <h2>O teu destino foi escrito nas estrelas.</h2>
-        <p class="auth-deco-sub">Junta-te a outros aventureiros. Explora ilhas corrompidas e descobre a tua memória esquecida.</p>
+        <p class="auth-deco-overline"><?= t('register.deco_over') ?></p>
+        <h2><?= t('register.deco_h2') ?></h2>
+        <p class="auth-deco-sub"><?= t('register.deco_sub') ?></p>
       </div>
       <div class="auth-deco-stats">
         <div class="auth-stat">
           <span class="auth-stat-num">5</span>
-          <span class="auth-stat-label">Ilhas</span>
+          <span class="auth-stat-label"><?= t('register.stat_islands') ?></span>
         </div>
         <div class="auth-stat-divider"></div>
         <div class="auth-stat">
           <span class="auth-stat-num">∞</span>
-          <span class="auth-stat-label">Escolhas</span>
+          <span class="auth-stat-label"><?= t('register.stat_choices') ?></span>
         </div>
         <div class="auth-stat-divider"></div>
         <div class="auth-stat">
           <span class="auth-stat-num">1</span>
-          <span class="auth-stat-label">Destino</span>
+          <span class="auth-stat-label"><?= t('register.stat_destiny') ?></span>
         </div>
       </div>
       <div class="auth-deco-orbs" aria-hidden="true">
@@ -285,7 +285,7 @@ $csrfToken = generateCSRFToken();
     <div class="auth-form-top">
       <a href="/" class="auth-back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
-        Início
+        <?= t('nav.home') ?>
       </a>
       <button class="nav-icon-btn auth-theme-toggle" id="auth-theme-toggle" aria-label="Alternar tema">
         <svg id="ath-icon-dark" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
@@ -296,8 +296,8 @@ $csrfToken = generateCSRFToken();
     <div class="auth-form-inner">
 
       <div class="auth-form-header">
-        <h1>Criar Conta</h1>
-        <p>Já tens conta? <a href="/login">Faz login aqui</a></p>
+        <h1><?= t('register.title') ?></h1>
+        <p><?= t('register.has_account') ?></p>
       </div>
 
       <?php if (!empty($errors)): ?>
@@ -315,12 +315,12 @@ $csrfToken = generateCSRFToken();
 
         <div class="form-row-two">
           <div class="form-group">
-            <label for="username">Username</label>
+            <label for="username"><?= t('register.username') ?></label>
             <input
               type="text"
               id="username"
               name="username"
-              placeholder="aventureiro_123"
+              placeholder="<?= t('register.username_ph') ?>"
               value="<?php echo e($formData['username']); ?>"
               autocomplete="username"
               required
@@ -329,12 +329,12 @@ $csrfToken = generateCSRFToken();
             >
           </div>
           <div class="form-group">
-            <label for="email">Email</label>
+            <label for="email"><?= t('register.email') ?></label>
             <input
               type="email"
               id="email"
               name="email"
-              placeholder="o-teu@email.com"
+              placeholder="<?= t('register.email_ph') ?>"
               value="<?php echo e($formData['email']); ?>"
               autocomplete="email"
               required
@@ -344,7 +344,7 @@ $csrfToken = generateCSRFToken();
 
         <div class="form-row-two">
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password"><?= t('register.password') ?></label>
             <div class="pw-wrap">
               <input
                 type="password"
@@ -355,11 +355,11 @@ $csrfToken = generateCSRFToken();
                 required
                 minlength="8"
               >
-              <button type="button" class="pw-toggle" aria-label="Mostrar password">Mostrar</button>
+              <button type="button" class="pw-toggle" aria-label="Mostrar password"><?= t('register.show') ?></button>
             </div>
           </div>
           <div class="form-group">
-            <label for="confirm_password">Confirmar Password</label>
+            <label for="confirm_password"><?= t('register.confirm_pw') ?></label>
             <div class="pw-wrap">
               <input
                 type="password"
@@ -369,7 +369,7 @@ $csrfToken = generateCSRFToken();
                 autocomplete="new-password"
                 required
               >
-              <button type="button" class="pw-toggle" aria-label="Mostrar password">Mostrar</button>
+              <button type="button" class="pw-toggle" aria-label="Mostrar password"><?= t('register.show') ?></button>
             </div>
           </div>
         </div>
@@ -385,13 +385,13 @@ $csrfToken = generateCSRFToken();
           <label class="auth-checkbox-label">
             <input type="checkbox" name="terms" id="terms" value="1">
             <span class="auth-checkbox-custom"></span>
-            Aceito os <a href="#" id="terms-open-link">termos de utilização</a>
+            <?= t('register.terms') ?>
           </label>
-          <span class="terms-error-msg" id="terms-error">Tens de aceitar os termos para continuar.</span>
+          <span class="terms-error-msg" id="terms-error"><?= t('register.terms_err') ?></span>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block auth-submit-btn">
-          Criar Conta
+          <?= t('register.submit') ?>
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </button>
 
@@ -407,7 +407,7 @@ $csrfToken = generateCSRFToken();
   <div class="terms-sheet">
     <div class="terms-sheet-handle"></div>
     <div class="terms-sheet-header">
-      <h2 class="terms-sheet-title" id="terms-title">Termos de Utilização</h2>
+      <h2 class="terms-sheet-title" id="terms-title"><?= t('terms.title') ?></h2>
       <button class="terms-sheet-close" id="terms-close-btn" aria-label="Fechar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
@@ -458,10 +458,10 @@ $csrfToken = generateCSRFToken();
     </div>
     <div class="terms-sheet-footer">
       <button type="button" id="terms-accept-btn" class="btn btn-primary" style="flex:1;">
-        Aceitar e Fechar
+        <?= t('terms.accept') ?>
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
       </button>
-      <button type="button" id="terms-decline-btn" class="btn btn-ghost">Recusar</button>
+      <button type="button" id="terms-decline-btn" class="btn btn-ghost"><?= t('terms.decline') ?></button>
     </div>
   </div>
 </div>

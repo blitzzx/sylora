@@ -13,12 +13,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 ?>
 <?php if (!$isPjax): ?>
 <!DOCTYPE html>
-<html lang="pt" data-theme="">
+<html lang="<?= getLang() ?>" data-theme="">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Sylora: Ecos dos Deuses</title>
-  <meta name="description" content="Sylora é um jogo de aventura narrativa na Grécia Antiga. Explora ilhas corrompidas, derrota titãs e descobre o teu passado esquecido.">
+  <title><?= t('site.title') ?></title>
+  <meta name="description" content="<?= t('site.description') ?>">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
@@ -71,7 +71,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <div class="drawer-user-info">
       <strong><?php echo $username; ?></strong>
       <span><?php echo e($_SESSION['email'] ?? ''); ?></span>
-      <span class="drawer-role">Aventureiro</span>
+      <span class="drawer-role"><?= t('drawer.role') ?></span>
     </div>
     <svg class="drawer-header-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
   </a>
@@ -87,7 +87,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <button class="drawer-section-title" aria-controls="ds-nav-body">
         <span class="dst-left">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-          Navegação
+          <?= t('drawer.navigation') ?>
         </span>
         <svg class="dst-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
       </button>
@@ -95,19 +95,19 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <div class="drawer-subsection">
           <nav class="drawer-nav-links">
             <a href="/" class="drawer-nav-link <?php echo $currentPage==='index.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> Início
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> <?= t('nav.home') ?>
             </a>
             <a href="/historia" class="drawer-nav-link <?php echo $currentPage==='historia.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> História
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> <?= t('nav.historia') ?>
             </a>
             <a href="/jogar" class="drawer-nav-link <?php echo $currentPage==='jogar.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> Jogar
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> <?= t('nav.play') ?>
             </a>
             <a href="/sobre" class="drawer-nav-link <?php echo $currentPage==='sobre.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> Sobre Nós
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> <?= t('nav.about') ?>
             </a>
             <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" class="drawer-nav-link <?php echo $currentPage==='u.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Perfil
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <?= t('nav.profile') ?>
             </a>
           </nav>
         </div>
@@ -119,7 +119,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <button class="drawer-section-title" aria-controls="ds-tema-body">
         <span class="dst-left">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          Tema
+          <?= t('drawer.theme') ?>
         </span>
         <svg class="dst-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
       </button>
@@ -128,11 +128,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
           <div class="theme-toggle-row">
             <button class="theme-btn" data-theme-set="dark">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-              Escuro
+              <?= t('drawer.dark') ?>
             </button>
             <button class="theme-btn" data-theme-set="light">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-              Claro
+              <?= t('drawer.light') ?>
             </button>
           </div>
         </div>
@@ -143,7 +143,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <div class="drawer-danger-zone">
       <a href="/logout" class="drawer-danger-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        Terminar Sessão
+        <?= t('nav.logout') ?>
       </a>
     </div>
 
@@ -193,16 +193,16 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <ul class="nav-menu" id="nav-menu" role="list">
       <li><a href="/historia" class="<?php echo $currentPage==='historia.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        História
+        <?= t('nav.historia') ?>
       </a></li>
       <li><a href="/jogar" class="<?php echo $currentPage==='jogar.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        Jogar
+        <?= t('nav.play') ?>
       </a></li>
       <?php if ($isLoggedIn): ?>
       <li><a href="/sobre" class="<?php echo $currentPage==='sobre.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        Sobre Nós
+        <?= t('nav.about') ?>
       </a></li>
       <?php endif; ?>
     </ul>
@@ -232,8 +232,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <svg id="theme-icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       </button>
 
+      <div class="lang-switcher" id="lang-switcher">
+        <?php foreach(['en','pt','es'] as $l): ?>
+        <a href="/api/set_lang?lang=<?= $l ?>" class="lang-btn<?= getLang()===$l?' active':'' ?>"><?= strtoupper($l) ?></a>
+        <?php endforeach; ?>
+      </div>
+
       <?php if ($isLoggedIn): ?>
-        
+
         <button class="user-pill" id="drawer-trigger" aria-label="Abrir menu">
           <div class="user-avatar">
             <?php if (!empty($_SESSION['avatar'])): ?>
@@ -254,8 +260,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
       <?php else: ?>
         
-        <a href="/login"    class="btn btn-ghost btn-sm nav-guest-btn">Log in</a>
-        <a href="/register" class="btn btn-primary btn-sm nav-guest-btn">Sign in</a>
+        <a href="/login"    class="btn btn-ghost btn-sm nav-guest-btn"><?= t('nav.login') ?></a>
+        <a href="/register" class="btn btn-primary btn-sm nav-guest-btn"><?= t('nav.register') ?></a>
       <?php endif; ?>
 
       
@@ -268,20 +274,25 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
   
   <div class="nav-mobile-menu" id="nav-mobile-menu">
-    <a href="/historia">História</a>
-    <a href="/jogar">Jogar</a>
+    <a href="/historia"><?= t('nav.historia') ?></a>
+    <a href="/jogar"><?= t('nav.play') ?></a>
     <?php if ($isLoggedIn): ?>
-      <a href="/sobre">Sobre Nós</a>
-      <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>">Perfil</a>
-      <a href="/logout" style="color:rgba(201,107,90,0.85);">Sair</a>
+      <a href="/sobre"><?= t('nav.about') ?></a>
+      <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>"><?= t('nav.profile') ?></a>
+      <a href="/logout" style="color:rgba(201,107,90,0.85);"><?= t('nav.logout') ?></a>
     <?php else: ?>
-      <a href="/login">Log in</a>
-      <a href="/register">Sign in</a>
+      <a href="/login"><?= t('nav.login') ?></a>
+      <a href="/register"><?= t('nav.register') ?></a>
     <?php endif; ?>
+    <div class="mobile-lang-row" style="display:flex;gap:6px;padding:10px 18px 4px;justify-content:center;">
+      <?php foreach(['en','pt','es'] as $l): ?>
+      <a href="/api/set_lang?lang=<?= $l ?>" class="lang-btn<?= getLang()===$l?' active':'' ?>" style="flex:1;text-align:center;"><?= strtoupper($l) ?></a>
+      <?php endforeach; ?>
+    </div>
     <?php if ($isLoggedIn): ?>
     <div class="mobile-theme-row">
-      <button class="theme-btn" data-theme-set="dark">Escuro</button>
-      <button class="theme-btn" data-theme-set="light">Claro</button>
+      <button class="theme-btn" data-theme-set="dark"><?= t('drawer.dark') ?></button>
+      <button class="theme-btn" data-theme-set="light"><?= t('drawer.light') ?></button>
     </div>
     <?php endif; ?>
   </div>
@@ -305,8 +316,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     </div>
     <p class="sylora-confirm-msg" id="sylora-confirm-msg"></p>
     <div class="sylora-confirm-actions">
-      <button class="btn btn-secondary btn-sm" id="sylora-confirm-cancel">Cancelar</button>
-      <button class="btn btn-danger btn-sm" id="sylora-confirm-ok">Confirmar</button>
+      <button class="btn btn-secondary btn-sm" id="sylora-confirm-cancel"><?= t('confirm.cancel') ?></button>
+      <button class="btn btn-danger btn-sm" id="sylora-confirm-ok"><?= t('confirm.confirm') ?></button>
     </div>
   </div>
 </div>
