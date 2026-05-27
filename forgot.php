@@ -198,12 +198,20 @@ $csrfToken = generateCSRFToken();
       if (tokenInput.value) return;
       e.preventDefault();
       if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'A verificar…'; }
-      grecaptcha.ready(function() {
-        grecaptcha.execute(siteKey, {action: 'forgot'}).then(function(token) {
-          tokenInput.value = token;
-          form.submit();
-        }).catch(function() { form.submit(); });
-      });
+      var done = false;
+      function proceed(token) {
+        if (done) return; done = true;
+        if (token) tokenInput.value = token;
+        form.submit();
+      }
+      var timer = setTimeout(function() { proceed(''); }, 4000);
+      try {
+        grecaptcha.ready(function() {
+          grecaptcha.execute(siteKey, {action: 'forgot'})
+            .then(function(t) { clearTimeout(timer); proceed(t); })
+            .catch(function() { clearTimeout(timer); proceed(''); });
+        });
+      } catch(err) { clearTimeout(timer); proceed(''); }
     });
   })();
 </script>
