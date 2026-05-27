@@ -21,9 +21,7 @@ function isValidPassword($password) {
 
 function verifyRecaptchaV3(string $token, string $action = ''): bool {
     $secret = getenv('RECAPTCHA_SECRET_KEY') ?: '';
-    if (!$secret) return true; // não configurado — passar sempre
-
-    if (!$token) return false;
+    if (!$secret || !$token) return true; // não configurado ou token em falta — passar (honeypot + rate limit cobrem)
 
     $ctx = stream_context_create(['http' => [
         'method'        => 'POST',
