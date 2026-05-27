@@ -39,15 +39,15 @@ include 'includes/header.php';
 
     <div class="game-mobile-notice">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="3" width="20" height="14" rx="2"/><line x1="8" y1="21" x2="16" y2="21"/><line x1="12" y1="17" x2="12" y2="21"/></svg>
-      <span><?= t('jogar.mobile_notice') ?></span>
+      <span data-i18n-html="jogar.mobile_notice"><?= t('jogar.mobile_notice') ?></span>
     </div>
 
     <div class="page-header">
         <div>
-            <h1 style="padding-bottom : 10px"><?= t('jogar.title') ?></h1>
+            <h1 style="padding-bottom : 10px" data-i18n="jogar.title"><?= t('jogar.title') ?></h1>
             <p class="page-subtitle">
                 <?= t('jogar.welcome', ['name' => '<strong>' . htmlspecialchars($user['username']) . '</strong>']) ?>
-                <?= t('jogar.subtitle') ?>
+                <span data-i18n="jogar.subtitle"><?= t('jogar.subtitle') ?></span>
             </p>
         </div>
         <button class="btn btn-cta jogar-download-btn" id="jogar-download-btn">
@@ -56,7 +56,7 @@ include 'includes/header.php';
                 <polyline points="7 10 12 15 17 10"/>
                 <line x1="12" y1="15" x2="12" y2="3"/>
             </svg>
-            <?= t('jogar.download_game') ?>
+            <span data-i18n="jogar.download_game"><?= t('jogar.download_game') ?></span>
         </button>
     </div>
 
@@ -69,7 +69,7 @@ include 'includes/header.php';
                     <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
                 </svg>
             </div>
-            <h2><?= t('jogar.saves_title') ?></h2>
+            <h2 data-i18n="jogar.saves_title"><?= t('jogar.saves_title') ?></h2>
         </div>
 
         <aside class="save-helper" id="save-helper" aria-label="Onde está o meu save">
@@ -79,14 +79,14 @@ include 'includes/header.php';
                         <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/>
                     </svg>
                 </span>
-                <span class="save-helper-title"><?= t('jogar.helper_title') ?></span>
+                <span class="save-helper-title" data-i18n="jogar.helper_title"><?= t('jogar.helper_title') ?></span>
                 <svg class="save-helper-chevron" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <polyline points="6 9 12 15 18 9"/>
                 </svg>
             </button>
             <div class="save-helper-content" id="save-helper-content">
                 <div class="save-helper-content-inner">
-                    <p class="save-helper-text"><?= t('jogar.helper_text') ?></p>
+                    <p class="save-helper-text" data-i18n="jogar.helper_text"><?= t('jogar.helper_text') ?></p>
                     <div class="save-helper-path-row">
                         <code class="save-helper-path" id="save-helper-path">%LocalAppData%\Sylora</code>
                         <button type="button" class="btn btn-secondary btn-sm save-helper-copy" id="save-helper-copy" title="<?= t('jogar.copy') ?>">
@@ -94,13 +94,13 @@ include 'includes/header.php';
                                 <rect x="9" y="9" width="13" height="13" rx="2"/>
                                 <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/>
                             </svg>
-                            <span><?= t('jogar.copy') ?></span>
+                            <span data-i18n="jogar.copy"><?= t('jogar.copy') ?></span>
                         </button>
                     </div>
                     <ol class="save-helper-steps">
-                        <li><?= t('jogar.helper_step1') ?></li>
-                        <li><?= t('jogar.helper_step2') ?></li>
-                        <li><?= t('jogar.helper_step3') ?></li>
+                        <li data-i18n-html="jogar.helper_step1"><?= t('jogar.helper_step1') ?></li>
+                        <li data-i18n-html="jogar.helper_step2"><?= t('jogar.helper_step2') ?></li>
+                        <li data-i18n-html="jogar.helper_step3"><?= t('jogar.helper_step3') ?></li>
                     </ol>
                 </div>
             </div>
@@ -131,11 +131,11 @@ include 'includes/header.php';
 
                 <div class="save-stats">
                     <div class="save-stat">
-                        <div class="save-stat-label"><?= t('jogar.level') ?></div>
+                        <div class="save-stat-label" data-i18n="jogar.level"><?= t('jogar.level') ?></div>
                         <div class="save-stat-value"><?= $save['level'] ?><small>lvl</small></div>
                     </div>
                     <div class="save-stat">
-                        <div class="save-stat-label"><?= t('jogar.damage') ?></div>
+                        <div class="save-stat-label" data-i18n="jogar.damage"><?= t('jogar.damage') ?></div>
                         <div class="save-stat-value"><?= round($save['damage'], 1) ?><small>dmg</small></div>
                     </div>
                 </div>
@@ -175,14 +175,14 @@ include 'includes/header.php';
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
                         </svg>
-                        <?= t('jogar.download') ?>
+                        <span data-i18n="jogar.download"><?= t('jogar.download') ?></span>
                     </button>
                     <label class="btn btn-secondary btn-sm save-action-btn">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                         </svg>
-                        <?= t('jogar.replace') ?>
+                        <span data-i18n="jogar.replace"><?= t('jogar.replace') ?></span>
                         <input type="file" accept=".sav" style="display:none" onchange="uploadSave(this, <?= $slot ?>)">
                     </label>
                     <button class="btn btn-danger btn-sm save-action-btn" onclick="deleteSave(<?= $slot ?>, this)">
@@ -190,7 +190,7 @@ include 'includes/header.php';
                             <polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14H6L5 6"/>
                             <path d="M10 11v6M14 11v6"/><path d="M9 6V4h6v2"/>
                         </svg>
-                        <?= t('jogar.delete') ?>
+                        <span data-i18n="jogar.delete"><?= t('jogar.delete') ?></span>
                     </button>
                 </div>
 
@@ -209,18 +209,18 @@ include 'includes/header.php';
                         <polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/>
                     </svg>
                 </div>
-                <p class="save-empty-label"><?= t('jogar.slot_empty') ?></p>
+                <p class="save-empty-label" data-i18n="jogar.slot_empty"><?= t('jogar.slot_empty') ?></p>
                 <label class="btn btn-secondary btn-sm" style="cursor:pointer;">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2">
                         <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                         <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
                     </svg>
-                    <?= t('jogar.upload_file') ?>
+                    <span data-i18n="jogar.upload_file"><?= t('jogar.upload_file') ?></span>
                     <input type="file" accept=".sav" style="display:none" onchange="uploadSave(this, <?= $slot ?>)">
                 </label>
                 <p class="save-drag-hint">
                     <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                    <?= t('jogar.drag_hint') ?>
+                    <span data-i18n="jogar.drag_hint"><?= t('jogar.drag_hint') ?></span>
                 </p>
             </div>
             <?php endif; ?>
@@ -233,7 +233,7 @@ include 'includes/header.php';
     <div class="save-preview-overlay" id="save-preview-overlay" role="dialog" aria-modal="true" aria-labelledby="save-preview-title" aria-hidden="true">
         <div class="save-preview-box">
             <div class="save-preview-header">
-                <h2 id="save-preview-title"><?= t('jogar.preview_title') ?></h2>
+                <h2 id="save-preview-title" data-i18n="jogar.preview_title"><?= t('jogar.preview_title') ?></h2>
                 <button class="save-preview-close" id="save-preview-close" type="button" aria-label="Fechar">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"/>
@@ -255,8 +255,8 @@ include 'includes/header.php';
             <div class="save-preview-body" id="save-preview-body"></div>
 
             <div class="save-preview-actions">
-                <button class="btn btn-secondary btn-sm" type="button" id="save-preview-cancel"><?= t('jogar.preview_cancel') ?></button>
-                <button class="btn btn-primary btn-sm" type="button" id="save-preview-confirm"><?= t('jogar.preview_confirm') ?></button>
+                <button class="btn btn-secondary btn-sm" type="button" id="save-preview-cancel" data-i18n="jogar.preview_cancel"><?= t('jogar.preview_cancel') ?></button>
+                <button class="btn btn-primary btn-sm" type="button" id="save-preview-confirm" data-i18n="jogar.preview_confirm"><?= t('jogar.preview_confirm') ?></button>
             </div>
         </div>
     </div>
@@ -266,6 +266,14 @@ include 'includes/header.php';
 <script>
 
 window.SAVE_CSRF = <?= json_encode($csrfToken) ?>;
+document.addEventListener('sylora:langchange', function(e) {
+  var d = e.detail.dict;
+  window.JOGAR_LANG = {
+    confirm_delete: d['jogar.confirm_delete'] || window.JOGAR_LANG.confirm_delete,
+    preview_slot:   d['jogar.preview_slot']   || window.JOGAR_LANG.preview_slot,
+    preview_warn:   d['jogar.preview_warn']   || window.JOGAR_LANG.preview_warn,
+  };
+});
 window.JOGAR_LANG = <?= json_encode([
     'confirm_delete' => t('jogar.confirm_delete'),
     'preview_slot'   => t('jogar.preview_slot'),

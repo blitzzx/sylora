@@ -44,6 +44,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
+  <script>window.SYLORA_I18N=<?= json_encode(['en'=>require __DIR__.'/../lang/en.php','pt'=>require __DIR__.'/../lang/pt.php','es'=>require __DIR__.'/../lang/es.php'],JSON_HEX_TAG|JSON_HEX_AMP) ?>;</script>
 </head>
 <body>
 
@@ -71,7 +72,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <div class="drawer-user-info">
       <strong><?php echo $username; ?></strong>
       <span><?php echo e($_SESSION['email'] ?? ''); ?></span>
-      <span class="drawer-role"><?= t('drawer.role') ?></span>
+      <span class="drawer-role" data-i18n="drawer.role"><?= t('drawer.role') ?></span>
     </div>
     <svg class="drawer-header-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
   </a>
@@ -87,7 +88,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <button class="drawer-section-title" aria-controls="ds-nav-body">
         <span class="dst-left">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 1v4M12 19v4M4.22 4.22l2.83 2.83M16.95 16.95l2.83 2.83M1 12h4M19 12h4M4.22 19.78l2.83-2.83M16.95 7.05l2.83-2.83"/></svg>
-          <?= t('drawer.navigation') ?>
+          <span data-i18n="drawer.navigation"><?= t('drawer.navigation') ?></span>
         </span>
         <svg class="dst-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
       </button>
@@ -95,19 +96,19 @@ $currentPage = basename($_SERVER['PHP_SELF']);
         <div class="drawer-subsection">
           <nav class="drawer-nav-links">
             <a href="/" class="drawer-nav-link <?php echo $currentPage==='index.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> <?= t('nav.home') ?>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg> <span data-i18n="nav.home"><?= t('nav.home') ?></span>
             </a>
             <a href="/historia" class="drawer-nav-link <?php echo $currentPage==='historia.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> <?= t('nav.historia') ?>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg> <span data-i18n="nav.historia"><?= t('nav.historia') ?></span>
             </a>
             <a href="/jogar" class="drawer-nav-link <?php echo $currentPage==='jogar.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> <?= t('nav.play') ?>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg> <span data-i18n="nav.play"><?= t('nav.play') ?></span>
             </a>
             <a href="/sobre" class="drawer-nav-link <?php echo $currentPage==='sobre.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> <?= t('nav.about') ?>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg> <span data-i18n="nav.about"><?= t('nav.about') ?></span>
             </a>
             <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" class="drawer-nav-link <?php echo $currentPage==='u.php'?'active':''; ?>">
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <?= t('nav.profile') ?>
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span data-i18n="nav.profile"><?= t('nav.profile') ?></span>
             </a>
           </nav>
         </div>
@@ -119,7 +120,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <button class="drawer-section-title" aria-controls="ds-tema-body">
         <span class="dst-left">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-          <?= t('drawer.theme') ?>
+          <span data-i18n="drawer.theme"><?= t('drawer.theme') ?></span>
         </span>
         <svg class="dst-chevron" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9l6 6 6-6"/></svg>
       </button>
@@ -128,11 +129,11 @@ $currentPage = basename($_SERVER['PHP_SELF']);
           <div class="theme-toggle-row">
             <button class="theme-btn" data-theme-set="dark">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
-              <?= t('drawer.dark') ?>
+              <span data-i18n="drawer.dark"><?= t('drawer.dark') ?></span>
             </button>
             <button class="theme-btn" data-theme-set="light">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
-              <?= t('drawer.light') ?>
+              <span data-i18n="drawer.light"><?= t('drawer.light') ?></span>
             </button>
           </div>
         </div>
@@ -143,7 +144,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <div class="drawer-danger-zone">
       <a href="/logout" class="drawer-danger-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
-        <?= t('nav.logout') ?>
+        <span data-i18n="nav.logout"><?= t('nav.logout') ?></span>
       </a>
     </div>
 
@@ -167,12 +168,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       </div>
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"/><polyline points="3 15 8 10 13 14 16 11 21 15"/><circle cx="8.5" cy="8.5" r="1.5"/></svg>
     </div>
-    <p class="avatar-crop-hint">Arrasta para mover · Belisca ou roda para fazer zoom</p>
+    <p class="avatar-crop-hint" data-i18n="avatar.crop_hint"><?= t('avatar.crop_hint') ?></p>
     <div class="avatar-crop-actions">
-      <button class="btn btn-secondary btn-sm" id="avatar-crop-cancel">Cancelar</button>
+      <button class="btn btn-secondary btn-sm" id="avatar-crop-cancel" data-i18n="avatar.cancel"><?= t('avatar.cancel') ?></button>
       <button class="btn btn-primary btn-sm" id="avatar-crop-confirm">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><polyline points="20 6 9 17 4 12"/></svg>
-        Guardar
+        <span data-i18n="avatar.save"><?= t('avatar.save') ?></span>
       </button>
     </div>
   </div>
@@ -193,16 +194,16 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <ul class="nav-menu" id="nav-menu" role="list">
       <li><a href="/historia" class="<?php echo $currentPage==='historia.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
-        <?= t('nav.historia') ?>
+        <span data-i18n="nav.historia"><?= t('nav.historia') ?></span>
       </a></li>
       <li><a href="/jogar" class="<?php echo $currentPage==='jogar.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-        <?= t('nav.play') ?>
+        <span data-i18n="nav.play"><?= t('nav.play') ?></span>
       </a></li>
       <?php if ($isLoggedIn): ?>
       <li><a href="/sobre" class="<?php echo $currentPage==='sobre.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-        <?= t('nav.about') ?>
+        <span data-i18n="nav.about"><?= t('nav.about') ?></span>
       </a></li>
       <?php endif; ?>
     </ul>
@@ -234,7 +235,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
       <div class="lang-switcher" id="lang-switcher">
         <?php foreach(['en','pt','es'] as $l): ?>
-        <a href="/api/set_lang?lang=<?= $l ?>" onclick="event.preventDefault();setLang('<?= $l ?>')" class="lang-btn<?= getLang()===$l?' active':'' ?>"><?= strtoupper($l) ?></a>
+        <a href="/api/set_lang?lang=<?= $l ?>" onclick="event.preventDefault();setLang('<?= $l ?>')" class="lang-btn<?= getLang()===$l?' active':'' ?>" data-lang="<?= $l ?>"><?= strtoupper($l) ?></a>
         <?php endforeach; ?>
       </div>
 
@@ -260,8 +261,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
       <?php else: ?>
         
-        <a href="/login"    class="btn btn-ghost btn-sm nav-guest-btn"><?= t('nav.login') ?></a>
-        <a href="/register" class="btn btn-primary btn-sm nav-guest-btn"><?= t('nav.register') ?></a>
+        <a href="/login"    class="btn btn-ghost btn-sm nav-guest-btn" data-i18n="nav.login"><?= t('nav.login') ?></a>
+        <a href="/register" class="btn btn-primary btn-sm nav-guest-btn" data-i18n="nav.register"><?= t('nav.register') ?></a>
       <?php endif; ?>
 
       
@@ -274,25 +275,25 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
   
   <div class="nav-mobile-menu" id="nav-mobile-menu">
-    <a href="/historia"><?= t('nav.historia') ?></a>
-    <a href="/jogar"><?= t('nav.play') ?></a>
+    <a href="/historia" data-i18n="nav.historia"><?= t('nav.historia') ?></a>
+    <a href="/jogar" data-i18n="nav.play"><?= t('nav.play') ?></a>
     <?php if ($isLoggedIn): ?>
-      <a href="/sobre"><?= t('nav.about') ?></a>
-      <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>"><?= t('nav.profile') ?></a>
-      <a href="/logout" style="color:rgba(201,107,90,0.85);"><?= t('nav.logout') ?></a>
+      <a href="/sobre" data-i18n="nav.about"><?= t('nav.about') ?></a>
+      <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" data-i18n="nav.profile"><?= t('nav.profile') ?></a>
+      <a href="/logout" style="color:rgba(201,107,90,0.85);" data-i18n="nav.logout"><?= t('nav.logout') ?></a>
     <?php else: ?>
-      <a href="/login"><?= t('nav.login') ?></a>
-      <a href="/register"><?= t('nav.register') ?></a>
+      <a href="/login" data-i18n="nav.login"><?= t('nav.login') ?></a>
+      <a href="/register" data-i18n="nav.register"><?= t('nav.register') ?></a>
     <?php endif; ?>
     <div class="mobile-lang-row" style="display:flex;gap:6px;padding:10px 18px 4px;justify-content:center;">
       <?php foreach(['en','pt','es'] as $l): ?>
-      <a href="/api/set_lang?lang=<?= $l ?>" onclick="event.preventDefault();setLang('<?= $l ?>')" class="lang-btn<?= getLang()===$l?' active':'' ?>" style="flex:1;text-align:center;"><?= strtoupper($l) ?></a>
+      <a href="/api/set_lang?lang=<?= $l ?>" onclick="event.preventDefault();setLang('<?= $l ?>')" class="lang-btn<?= getLang()===$l?' active':'' ?>" data-lang="<?= $l ?>" style="flex:1;text-align:center;"><?= strtoupper($l) ?></a>
       <?php endforeach; ?>
     </div>
     <?php if ($isLoggedIn): ?>
     <div class="mobile-theme-row">
-      <button class="theme-btn" data-theme-set="dark"><?= t('drawer.dark') ?></button>
-      <button class="theme-btn" data-theme-set="light"><?= t('drawer.light') ?></button>
+      <button class="theme-btn" data-theme-set="dark" data-i18n="drawer.dark"><?= t('drawer.dark') ?></button>
+      <button class="theme-btn" data-theme-set="light" data-i18n="drawer.light"><?= t('drawer.light') ?></button>
     </div>
     <?php endif; ?>
   </div>
@@ -316,8 +317,8 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     </div>
     <p class="sylora-confirm-msg" id="sylora-confirm-msg"></p>
     <div class="sylora-confirm-actions">
-      <button class="btn btn-secondary btn-sm" id="sylora-confirm-cancel"><?= t('confirm.cancel') ?></button>
-      <button class="btn btn-danger btn-sm" id="sylora-confirm-ok"><?= t('confirm.confirm') ?></button>
+      <button class="btn btn-secondary btn-sm" id="sylora-confirm-cancel" data-i18n="confirm.cancel"><?= t('confirm.cancel') ?></button>
+      <button class="btn btn-danger btn-sm" id="sylora-confirm-ok" data-i18n="confirm.confirm"><?= t('confirm.confirm') ?></button>
     </div>
   </div>
 </div>
@@ -325,9 +326,30 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <script>
 
 function setLang(lang) {
+  var allowed = ['en','pt','es'];
+  if (allowed.indexOf(lang) === -1) return;
   var sec = location.protocol === 'https:' ? '; Secure' : '';
   document.cookie = 'sylora_lang=' + lang + '; path=/; max-age=31536000; SameSite=Lax' + sec;
-  location.reload();
+  var dict = window.SYLORA_I18N && window.SYLORA_I18N[lang];
+  if (!dict) { location.reload(); return; }
+  document.querySelectorAll('[data-i18n]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n');
+    if (dict[k] !== undefined) el.textContent = dict[k];
+  });
+  document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n-html');
+    if (dict[k] !== undefined) el.innerHTML = dict[k];
+  });
+  document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n-placeholder');
+    if (dict[k] !== undefined) el.placeholder = dict[k];
+  });
+  document.documentElement.lang = lang;
+  if (dict['site.title']) document.title = dict['site.title'];
+  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+    btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
+  });
+  document.dispatchEvent(new CustomEvent('sylora:langchange', { detail: { lang: lang, dict: dict } }));
 }
 
 function showToast(msg, type) {
