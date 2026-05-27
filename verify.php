@@ -4,10 +4,11 @@ require_once __DIR__ . '/includes/mailer.php';
 
 if (isLoggedIn()) redirect('/');
 
-$pendingEmail = $_SESSION['verify_for'] ?? '';
-$codeError    = '';
-$resent       = false;
-$resendErrors = [];
+$pendingEmail    = $_SESSION['verify_for'] ?? '';
+$codeError       = '';
+$resent          = false;
+$resendErrors    = [];
+$recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf = $_POST['_csrf'] ?? '';
@@ -40,8 +41,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         // ── Reenvio de código ──────────────────────────────
         $email = sanitize($_POST['email'] ?? '');
+        $ip    = $_SERVER['REMOTE_ADDR'];
         if (!isValidEmail($email)) {
             $resendErrors[] = 'Email inválido.';
+        } elseif (!empty($_POST['hp_website'])) {
+            // Honeypot: bot detetado — fingir sucesso
+            $resent = true;
+        } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'resend')) {
+            $resendErrors[] = 'Verificação de segurança falhou. Tenta novamente.';
+        } elseif (!checkEmailRateLimit($ip, 'verify-resend', 5)) {
+            $resendErrors[] = 'Demasiadas tentativas. Aguarda uns minutos.';
         } else {
             $stmt = $conn->prepare('SELECT username, password_hash FROM pending_registrations WHERE email = ?');
             $stmt->bind_param('s', $email);
@@ -52,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             if ($pending) {
                 $code = createPendingRegistration($email, $pending['username'], $pending['password_hash']);
                 mailVerification($email, $pending['username'], $code);
+                recordEmailAttempt($ip, 'verify-resend');
                 $_SESSION['verify_for'] = $email;
                 $pendingEmail = $email;
             }
@@ -74,6 +84,9 @@ $csrfToken = generateCSRFToken();
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=<?php echo @filemtime('css/style.css') ?: '1'; ?>">
   <link rel="icon" type="image/png" href="assets/img/FavIcon-Sylora.png">
+  <?php if ($recaptchaSiteKey): ?>
+  <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>" async defer></script>
+  <?php endif; ?>
   <style>
     @media (max-width: 767px) {
       .auth-split { flex-direction: column; min-height: 100dvh; }
@@ -217,9 +230,11 @@ $csrfToken = generateCSRFToken();
         </form>
 
         <p style="color:var(--text-muted,#7a6a4a);font-size:13px;text-align:center;margin-top:24px;margin-bottom:10px;">Não recebeste o código?</p>
-        <form method="POST" action="/verify" style="text-align:center;">
+        <form method="POST" action="/verify" style="text-align:center;" id="resend-form">
           <input type="hidden" name="_csrf"  value="<?php echo e($csrfToken); ?>">
           <input type="hidden" name="email"  value="<?php echo e($pendingEmail); ?>">
+          <input type="hidden" id="g-recaptcha-resend" name="g_recaptcha_token">
+          <input type="text" name="hp_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:1px;width:1px;overflow:hidden;">
           <button type="submit" class="btn btn-ghost btn-block">Reenviar código</button>
         </form>
         <div style="text-align:center;margin-top:14px;">
@@ -242,8 +257,10 @@ $csrfToken = generateCSRFToken();
           </div>
         <?php endif; ?>
 
-        <form method="POST" action="/verify" class="auth-form" novalidate>
+        <form method="POST" action="/verify" class="auth-form" novalidate id="verify-email-form">
           <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
+          <input type="hidden" id="g-recaptcha-verify" name="g_recaptcha_token">
+          <input type="text" name="hp_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:1px;width:1px;overflow:hidden;">
           <div class="form-group">
             <label for="email">E-mail da conta</label>
             <input type="email" id="email" name="email" placeholder="o-teu@email.com" autocomplete="email" required>
@@ -341,6 +358,33 @@ $csrfToken = generateCSRFToken();
       n.addEventListener('mouseenter', function() { el.classList.add('hovering'); });
       n.addEventListener('mouseleave', function() { el.classList.remove('hovering'); });
     });
+  })();
+
+  /* ── reCAPTCHA v3 ── */
+  (function() {
+    var siteKey = <?= json_encode($recaptchaSiteKey) ?>;
+    if (!siteKey) return;
+
+    function protect(formId, tokenInputId, action) {
+      var form       = document.getElementById(formId);
+      var tokenInput = document.getElementById(tokenInputId);
+      if (!form || !tokenInput) return;
+      form.addEventListener('submit', function(e) {
+        if (tokenInput.value) return;
+        e.preventDefault();
+        var btn = form.querySelector('[type=submit]');
+        if (btn) { btn.disabled = true; btn.textContent = 'A verificar…'; }
+        grecaptcha.ready(function() {
+          grecaptcha.execute(siteKey, {action: action}).then(function(token) {
+            tokenInput.value = token;
+            form.submit();
+          }).catch(function() { form.submit(); });
+        });
+      });
+    }
+
+    protect('resend-form',       'g-recaptcha-resend', 'resend');
+    protect('verify-email-form', 'g-recaptcha-verify', 'resend');
   })();
 </script>
 

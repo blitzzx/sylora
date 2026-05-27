@@ -6,15 +6,24 @@ if (isLoggedIn()) {
     redirect('/');
 }
 
-$sent   = false;
-$errors = [];
+$sent            = false;
+$errors          = [];
+$recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf  = $_POST['_csrf'] ?? '';
     $email = sanitize($_POST['email'] ?? '');
+    $ip    = $_SERVER['REMOTE_ADDR'];
 
     if (!verifyCSRFToken($csrf)) {
         $errors[] = 'Pedido inválido. Tenta novamente.';
+    } elseif (!empty($_POST['hp_website'])) {
+        // Honeypot preenchido: bot detetado — fingir sucesso
+        $sent = true;
+    } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'forgot')) {
+        $errors[] = 'Verificação de segurança falhou. Tenta novamente.';
+    } elseif (!checkEmailRateLimit($ip, 'forgot', 3)) {
+        $errors[] = 'Demasiadas tentativas. Aguarda uns minutos.';
     } elseif (!isValidEmail($email)) {
         $errors[] = 'Endereço de e-mail inválido.';
     } else {
@@ -28,6 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $token = createPasswordResetToken((int)$user['id']);
             mailPasswordReset($email, $user['username'], $token);
         }
+        recordEmailAttempt($ip, 'forgot');
         // Always show success to prevent e-mail enumeration
         $sent = true;
     }
@@ -46,6 +56,9 @@ $csrfToken = generateCSRFToken();
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Crimson+Pro:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css?v=<?php echo @filemtime('css/style.css') ?: '1'; ?>">
   <link rel="icon" type="image/png" href="assets/img/FavIcon-Sylora.png">
+  <?php if ($recaptchaSiteKey): ?>
+  <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>" async defer></script>
+  <?php endif; ?>
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){
         c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
@@ -115,6 +128,7 @@ $csrfToken = generateCSRFToken();
       <?php if (!$sent): ?>
         <form method="POST" action="/forgot" class="auth-form" novalidate>
           <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
+          <input type="hidden" id="g-recaptcha-token" name="g_recaptcha_token">
 
           <div class="form-group">
             <label for="email">Email</label>
@@ -127,6 +141,8 @@ $csrfToken = generateCSRFToken();
               required
             >
           </div>
+
+          <input type="text" name="hp_website" id="hp_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:1px;width:1px;overflow:hidden;">
 
           <button type="submit" class="btn btn-primary btn-block auth-submit-btn">
             Enviar link de recuperação
@@ -160,6 +176,27 @@ $csrfToken = generateCSRFToken();
     document.querySelectorAll('a, button, input, textarea, select, label').forEach(function(n) {
       n.addEventListener('mouseenter', function() { el.classList.add('hovering'); });
       n.addEventListener('mouseleave', function() { el.classList.remove('hovering'); });
+    });
+  })();
+
+  /* ── reCAPTCHA v3 ── */
+  (function() {
+    var siteKey = <?= json_encode($recaptchaSiteKey) ?>;
+    if (!siteKey) return;
+    var form       = document.querySelector('form.auth-form');
+    var tokenInput = document.getElementById('g-recaptcha-token');
+    var submitBtn  = form ? form.querySelector('[type=submit]') : null;
+    if (!form || !tokenInput) return;
+    form.addEventListener('submit', function(e) {
+      if (tokenInput.value) return;
+      e.preventDefault();
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'A verificar…'; }
+      grecaptcha.ready(function() {
+        grecaptcha.execute(siteKey, {action: 'forgot'}).then(function(token) {
+          tokenInput.value = token;
+          form.submit();
+        }).catch(function() { form.submit(); });
+      });
     });
   })();
 </script>

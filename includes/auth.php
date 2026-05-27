@@ -334,6 +334,28 @@ function createPendingRegistration(string $email, string $username, string $pass
     return $code;
 }
 
+function checkEmailRateLimit(string $ip, string $action, int $max = 5): bool {
+    global $conn;
+    $key = 'em:' . $action;
+    $stmt = $conn->prepare(
+        "SELECT COUNT(*) AS c FROM login_attempts WHERE ip = ? AND username = ? AND attempted_at > DATE_SUB(NOW(), INTERVAL 1 HOUR)"
+    );
+    $stmt->bind_param('ss', $ip, $key);
+    $stmt->execute();
+    $c = (int)$stmt->get_result()->fetch_assoc()['c'];
+    $stmt->close();
+    return $c < $max;
+}
+
+function recordEmailAttempt(string $ip, string $action): void {
+    global $conn;
+    $key = 'em:' . $action;
+    $stmt = $conn->prepare("INSERT INTO login_attempts (ip, username, success) VALUES (?, ?, 0)");
+    $stmt->bind_param('ss', $ip, $key);
+    $stmt->execute();
+    $stmt->close();
+}
+
 function verifyPendingCode(string $email, string $code) {
     global $conn;
 

@@ -19,6 +19,27 @@ function isValidPassword($password) {
     return strlen($password) >= 8;
 }
 
+function verifyRecaptchaV3(string $token, string $action = ''): bool {
+    $secret = getenv('RECAPTCHA_SECRET_KEY') ?: '';
+    if (!$secret) return true; // não configurado — passar sempre
+
+    if (!$token) return false;
+
+    $ctx = stream_context_create(['http' => [
+        'method'        => 'POST',
+        'header'        => "Content-Type: application/x-www-form-urlencoded\r\n",
+        'content'       => http_build_query(['secret' => $secret, 'response' => $token]),
+        'timeout'       => 5,
+        'ignore_errors' => true,
+    ]]);
+    $res  = @file_get_contents('https://www.google.com/recaptcha/api/siteverify', false, $ctx);
+    $data = $res ? json_decode($res, true) : null;
+
+    if (!$data || empty($data['success'])) return false;
+    if ($action && ($data['action'] ?? '') !== $action) return false;
+    return ($data['score'] ?? 0) >= 0.5;
+}
+
 function redirect($url, $message = '', $type = 'info') {
     if (!empty($message)) {
         $_SESSION['flash_message'] = $message;

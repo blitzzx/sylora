@@ -6,13 +6,24 @@ if (isLoggedIn()) {
     redirect('/');
 }
 
-$errors   = [];
-$formData = ['username' => '', 'email' => ''];
+$errors          = [];
+$formData        = ['username' => '', 'email' => ''];
+$recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf = $_POST['_csrf'] ?? '';
+    $ip   = $_SERVER['REMOTE_ADDR'];
+
     if (!verifyCSRFToken($csrf)) {
         $errors[] = 'Pedido inválido. Tenta novamente.';
+    } elseif (!empty($_POST['hp_website'])) {
+        // Honeypot preenchido: bot detetado — fingir sucesso
+        $_SESSION['verify_for'] = sanitize($_POST['email'] ?? '') ?: 'bot@sylora.lol';
+        redirect('/verify?sent=1');
+    } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'register')) {
+        $errors[] = 'Verificação de segurança falhou. Tenta novamente.';
+    } elseif (!checkEmailRateLimit($ip, 'register')) {
+        $errors[] = 'Demasiadas tentativas. Aguarda uns minutos e tenta novamente.';
     } else {
         $username        = sanitize($_POST['username'] ?? '');
         $email           = sanitize($_POST['email'] ?? '');
@@ -80,6 +91,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $code = createPendingRegistration($email, $username, $hash);
                     $emailSent = mailVerification($email, $username, $code);
+                    recordEmailAttempt($ip, 'register');
                     $_SESSION['verify_for'] = $email;
                     if (!$emailSent) {
                         error_log('[Sylora Register] Email falhou para ' . $email);
@@ -105,6 +117,9 @@ $csrfToken = generateCSRFToken();
   <link rel="stylesheet" href="css/style.css?v=<?php echo @filemtime('css/style.css') ?: '1'; ?>">
   <link rel="icon" type="image/png" href="assets/img/FavIcon-Sylora.png">
   <link rel="apple-touch-icon" href="assets/img/FavIcon-Sylora.png">
+  <?php if ($recaptchaSiteKey): ?>
+  <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>" async defer></script>
+  <?php endif; ?>
   <style>
     /* ── Mobile: auth-split stacks vertically ── */
     @media (max-width: 767px) {
@@ -292,6 +307,8 @@ $csrfToken = generateCSRFToken();
 
       <form method="POST" action="/register" class="auth-form" novalidate>
         <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
+        <input type="hidden" id="g-recaptcha-token" name="g_recaptcha_token">
+        <input type="text" name="hp_website" id="hp_website" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;opacity:0;height:1px;width:1px;overflow:hidden;">
 
         <div class="form-row-two">
           <div class="form-group">
@@ -580,6 +597,27 @@ $csrfToken = generateCSRFToken();
     document.querySelectorAll('a, button, input, textarea, select, label').forEach(function(n) {
       n.addEventListener('mouseenter', function() { el.classList.add('hovering'); });
       n.addEventListener('mouseleave', function() { el.classList.remove('hovering'); });
+    });
+  })();
+
+  /* ── reCAPTCHA v3 ── */
+  (function() {
+    var siteKey = <?= json_encode($recaptchaSiteKey) ?>;
+    if (!siteKey) return;
+    var form       = document.querySelector('form.auth-form');
+    var tokenInput = document.getElementById('g-recaptcha-token');
+    var submitBtn  = form ? form.querySelector('[type=submit]') : null;
+    if (!form || !tokenInput) return;
+    form.addEventListener('submit', function(e) {
+      if (tokenInput.value) return;
+      e.preventDefault();
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'A verificar…'; }
+      grecaptcha.ready(function() {
+        grecaptcha.execute(siteKey, {action: 'register'}).then(function(token) {
+          tokenInput.value = token;
+          form.submit();
+        }).catch(function() { form.submit(); });
+      });
     });
   })();
 </script>
