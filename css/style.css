@@ -3705,6 +3705,18 @@ footer {
   background: linear-gradient(160deg, #d9a84a, #c9953a);
 }
 
+[data-theme="light"] .btn-danger {
+  background: rgba(185, 60, 42, 0.10);
+  border-color: rgba(185, 60, 42, 0.40);
+  color: #b03424;
+}
+
+[data-theme="light"] .btn-danger:hover {
+  background: rgba(185, 60, 42, 0.18);
+  border-color: rgba(185, 60, 42, 0.58);
+  color: #8f2419;
+}
+
 [data-theme="light"] .user-pill:hover {
   border-color: rgba(201,149,58,0.5);
 }
@@ -6502,6 +6514,12 @@ footer {
 .sylora-confirm-msg { font-size: 15px; font-weight: 500; color: var(--text); text-align: center; margin: 0; line-height: 1.5; }
 .sylora-confirm-actions { display: flex; gap: 10px; margin-top: 4px; }
 .sylora-confirm-box .btn { backdrop-filter: none; -webkit-backdrop-filter: none; background: rgba(15,12,9,0.92); }
+
+[data-theme="light"] .sylora-confirm-box { box-shadow: 0 12px 40px rgba(0,0,0,0.12); border-color: rgba(138,95,16,0.22); }
+[data-theme="light"] .sylora-confirm-box .btn { background: rgba(255,255,255,0.80); border-color: rgba(24,22,15,0.14); color: rgba(24,22,15,0.80); }
+[data-theme="light"] .sylora-confirm-box .btn:hover { background: rgba(255,255,255,0.95); border-color: rgba(24,22,15,0.22); color: rgba(24,22,15,0.90); }
+[data-theme="light"] .sylora-confirm-box .btn-danger { background: rgba(185,60,42,0.10); border-color: rgba(185,60,42,0.40); color: #b03424; }
+[data-theme="light"] .sylora-confirm-box .btn-danger:hover { background: rgba(185,60,42,0.18); border-color: rgba(185,60,42,0.58); color: #8f2419; }
 
 
 #music-vol-slider,
