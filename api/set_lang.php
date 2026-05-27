@@ -1,7 +1,10 @@
 <?php
+
+require_once __DIR__ . '/../includes/config.php';
+
 $allowed = ['en', 'pt', 'es'];
-$lang = $_GET['lang'] ?? 'en';
-if (!in_array($lang, $allowed)) $lang = 'en';
+$lang    = $_GET['lang'] ?? $_POST['lang'] ?? '';
+if (!in_array($lang, $allowed, true)) $lang = 'en';
 
 $secure = (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
        || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
@@ -14,7 +17,20 @@ setcookie('sylora_lang', $lang, [
     'samesite' => 'Lax',
 ]);
 
+$accept = $_SERVER['HTTP_ACCEPT'] ?? '';
+$isJson = stripos($accept, 'application/json') !== false
+       || (!empty($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest');
+
+if ($isJson) {
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['ok' => true, 'lang' => $lang]);
+    exit;
+}
+
 $ref = $_SERVER['HTTP_REFERER'] ?? '/';
-if (!preg_match('#^https?://#', $ref)) $ref = '/';
+$refHost = parse_url($ref, PHP_URL_HOST);
+$selfHost = $_SERVER['HTTP_HOST'] ?? '';
+if (!$refHost || $refHost !== $selfHost) $ref = '/';
+
 header('Location: ' . $ref);
 exit;

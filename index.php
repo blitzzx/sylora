@@ -143,7 +143,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
       document.body.appendChild(a);
       a.click();
       a.remove();
-      if (typeof showToast === 'function') showToast('Download iniciado!', 'success');
+      if (typeof showToast === 'function') showToast(window.SYLORA_T('toast.download_started'), 'success');
     });
   })();
   </script>

@@ -5,7 +5,7 @@ require_once __DIR__ . '/config.php';
 $isPjax = !empty($_SERVER['HTTP_X_PJAX']);
 
 $isLoggedIn  = isset($_SESSION['user_id']);
-$username    = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
+$username    = $isLoggedIn ? e($_SESSION['username'] ?? t('profile.role_user')) : null;
 $userInitial = $isLoggedIn ? strtoupper(mb_substr($_SESSION['username'] ?? 'A', 0, 1)) : null;
 
 
@@ -44,7 +44,14 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       document.documentElement.setAttribute('data-theme', theme);
     })();
   </script>
-  <script>window.SYLORA_I18N=<?= json_encode(['en'=>require __DIR__.'/../lang/en.php','pt'=>require __DIR__.'/../lang/pt.php','es'=>require __DIR__.'/../lang/es.php'],JSON_HEX_TAG|JSON_HEX_AMP) ?>;</script>
+  <script>window.SYLORA_I18N=<?= json_encode(['en'=>require __DIR__.'/../lang/en.php','pt'=>require __DIR__.'/../lang/pt.php','es'=>require __DIR__.'/../lang/es.php'],JSON_HEX_TAG|JSON_HEX_AMP) ?>;
+  window.SYLORA_LANG=<?= json_encode(getLang()) ?>;
+  window.SYLORA_T=function(key,vars){
+    var dict=(window.SYLORA_I18N&&window.SYLORA_I18N[window.SYLORA_LANG])||{};
+    var val=(dict[key]!==undefined)?dict[key]:key;
+    if(vars){for(var k in vars){val=val.split('{'+k+'}').join(vars[k]);}}
+    return val;
+  };</script>
 </head>
 <body>
 
@@ -212,7 +219,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
       
       <div class="music-ctrl" id="music-ctrl">
-        <button class="nav-icon-btn music-btn" id="music-toggle" aria-label="Ligar/desligar música">
+        <button class="nav-icon-btn music-btn" id="music-toggle" aria-label="<?= e(t('common.toggle_music')) ?>" data-i18n-aria="common.toggle_music">
           <svg id="music-icon-on" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>
           <svg id="music-icon-muted" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="1" y1="1" x2="23" y2="23" stroke="currentColor" stroke-width="2"/></svg>
           <svg id="music-icon-off" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/><line x1="2" y1="2" x2="22" y2="22" stroke="currentColor" stroke-width="2"/></svg>
@@ -228,15 +235,35 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       </div>
 
       
-      <button class="nav-icon-btn" id="theme-toggle-nav" aria-label="Alternar tema">
+      <button class="nav-icon-btn" id="theme-toggle-nav" aria-label="<?= e(t('common.toggle_theme')) ?>" data-i18n-aria="common.toggle_theme">
         <svg id="theme-icon-dark" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
         <svg id="theme-icon-light" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="display:none;"><circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
       </button>
 
+      <?php
+      $langNames = ['en' => 'English', 'pt' => 'Português', 'es' => 'Español'];
+      $curLang = getLang();
+      ?>
       <div class="lang-switcher" id="lang-switcher">
-        <?php foreach(['en','pt','es'] as $l): ?>
-        <a href="/api/set_lang?lang=<?= $l ?>" onclick="event.preventDefault();setLang('<?= $l ?>')" class="lang-btn<?= getLang()===$l?' active':'' ?>" data-lang="<?= $l ?>"><?= strtoupper($l) ?></a>
-        <?php endforeach; ?>
+        <button type="button" class="nav-icon-btn lang-trigger" id="lang-trigger" aria-haspopup="listbox" aria-expanded="false" aria-label="<?= e(t('common.change_lang')) ?>" data-i18n-aria="common.change_lang">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="2" y1="12" x2="22" y2="12"/>
+            <path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/>
+          </svg>
+          <span class="lang-trigger-code" id="lang-trigger-code"><?= strtoupper($curLang) ?></span>
+        </button>
+        <ul class="lang-menu" id="lang-menu" role="listbox" aria-label="Idiomas disponíveis">
+          <?php foreach($langNames as $code => $name): ?>
+          <li role="presentation">
+            <button type="button" class="lang-option<?= $curLang===$code?' active':'' ?>" data-lang="<?= $code ?>" role="option" aria-selected="<?= $curLang===$code?'true':'false' ?>">
+              <span class="lang-option-code"><?= strtoupper($code) ?></span>
+              <span class="lang-option-name"><?= $name ?></span>
+              <svg class="lang-option-check" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+          </li>
+          <?php endforeach; ?>
+        </ul>
       </div>
 
       <?php if ($isLoggedIn): ?>
@@ -266,7 +293,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <?php endif; ?>
 
       
-      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile-menu" aria-label="Abrir menu">
+      <button class="nav-toggle" id="nav-toggle" aria-expanded="false" aria-controls="nav-mobile-menu" aria-label="<?= e(t('common.open_menu')) ?>" data-i18n-aria="common.open_menu">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
       </button>
     </div>
@@ -285,9 +312,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
       <a href="/login" data-i18n="nav.login"><?= t('nav.login') ?></a>
       <a href="/register" data-i18n="nav.register"><?= t('nav.register') ?></a>
     <?php endif; ?>
-    <div class="mobile-lang-row" style="display:flex;gap:6px;padding:10px 18px 4px;justify-content:center;">
-      <?php foreach(['en','pt','es'] as $l): ?>
-      <a href="/api/set_lang?lang=<?= $l ?>" onclick="event.preventDefault();setLang('<?= $l ?>')" class="lang-btn<?= getLang()===$l?' active':'' ?>" data-lang="<?= $l ?>" style="flex:1;text-align:center;"><?= strtoupper($l) ?></a>
+    <div class="mobile-lang-row">
+      <?php foreach($langNames as $code => $name): ?>
+      <button type="button" class="lang-btn-mobile<?= $curLang===$code?' active':'' ?>" data-lang="<?= $code ?>" aria-label="<?= $name ?>">
+        <span class="lang-mobile-code"><?= strtoupper($code) ?></span>
+        <span class="lang-mobile-name"><?= $name ?></span>
+      </button>
       <?php endforeach; ?>
     </div>
     <?php if ($isLoggedIn): ?>
@@ -328,8 +358,10 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 function setLang(lang) {
   var allowed = ['en','pt','es'];
   if (allowed.indexOf(lang) === -1) return;
+  if (window.SYLORA_LANG === lang) return;
   var sec = location.protocol === 'https:' ? '; Secure' : '';
   document.cookie = 'sylora_lang=' + lang + '; path=/; max-age=31536000; SameSite=Lax' + sec;
+  window.SYLORA_LANG = lang;
   var dict = window.SYLORA_I18N && window.SYLORA_I18N[lang];
   if (!dict) { location.reload(); return; }
   document.querySelectorAll('[data-i18n]').forEach(function(el) {
@@ -344,13 +376,69 @@ function setLang(lang) {
     var k = el.getAttribute('data-i18n-placeholder');
     if (dict[k] !== undefined) el.placeholder = dict[k];
   });
+  document.querySelectorAll('[data-i18n-title]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n-title');
+    if (dict[k] !== undefined) el.title = dict[k];
+  });
+  document.querySelectorAll('[data-i18n-aria]').forEach(function(el) {
+    var k = el.getAttribute('data-i18n-aria');
+    if (dict[k] !== undefined) el.setAttribute('aria-label', dict[k]);
+  });
   document.documentElement.lang = lang;
   if (dict['site.title']) document.title = dict['site.title'];
-  document.querySelectorAll('.lang-btn').forEach(function(btn) {
+  var trigger = document.getElementById('lang-trigger-code');
+  if (trigger) trigger.textContent = lang.toUpperCase();
+  document.querySelectorAll('.lang-option').forEach(function(btn) {
+    var on = btn.getAttribute('data-lang') === lang;
+    btn.classList.toggle('active', on);
+    btn.setAttribute('aria-selected', on ? 'true' : 'false');
+  });
+  document.querySelectorAll('.lang-btn-mobile').forEach(function(btn) {
     btn.classList.toggle('active', btn.getAttribute('data-lang') === lang);
   });
   document.dispatchEvent(new CustomEvent('sylora:langchange', { detail: { lang: lang, dict: dict } }));
 }
+
+(function(){
+  var trigger = document.getElementById('lang-trigger');
+  var menu    = document.getElementById('lang-menu');
+  var wrap    = document.getElementById('lang-switcher');
+  if (!trigger || !menu || !wrap) return;
+
+  function close() {
+    wrap.classList.remove('open');
+    trigger.setAttribute('aria-expanded', 'false');
+  }
+  function open() {
+    wrap.classList.add('open');
+    trigger.setAttribute('aria-expanded', 'true');
+  }
+  trigger.addEventListener('click', function(e){
+    e.stopPropagation();
+    wrap.classList.contains('open') ? close() : open();
+  });
+  document.addEventListener('click', function(e){
+    if (!wrap.contains(e.target)) close();
+  });
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape' && wrap.classList.contains('open')) {
+      close();
+      trigger.focus();
+    }
+  });
+  menu.querySelectorAll('.lang-option').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var l = btn.getAttribute('data-lang');
+      close();
+      setLang(l);
+    });
+  });
+  document.querySelectorAll('.lang-btn-mobile').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      setLang(btn.getAttribute('data-lang'));
+    });
+  });
+})();
 
 function showToast(msg, type) {
   const t = document.getElementById('sylora-toast');

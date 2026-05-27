@@ -15,15 +15,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ip   = $_SERVER['REMOTE_ADDR'];
 
     if (!verifyCSRFToken($csrf)) {
-        $errors[] = 'Pedido inválido. Tenta novamente.';
+        $errors[] = t('err.invalid_request');
     } elseif (!empty($_POST['hp_website'])) {
         // Honeypot preenchido: bot detetado — fingir sucesso
         $_SESSION['verify_for'] = sanitize($_POST['email'] ?? '') ?: 'bot@sylora.lol';
         redirect('/verify?sent=1');
     } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'register')) {
-        $errors[] = 'Verificação de segurança falhou. Tenta novamente.';
+        $errors[] = t('err.security_failed');
     } elseif (!checkEmailRateLimit($ip, 'register')) {
-        $errors[] = 'Demasiadas tentativas. Aguarda uns minutos e tenta novamente.';
+        $errors[] = t('err.too_many_min');
     } else {
         $username        = sanitize($_POST['username'] ?? '');
         $email           = sanitize($_POST['email'] ?? '');
@@ -35,21 +35,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         $termsAccepted = !empty($_POST['terms']);
 
-        
+
         if (!checkActionRateLimit('register', $ip, 5, 60)) {
-            $errors[] = 'Demasiadas tentativas de registo. Aguarda uma hora.';
+            $errors[] = t('err.too_many_hour');
         } elseif (empty($username) || empty($email) || empty($password) || empty($confirmPassword)) {
-            $errors[] = 'Preenche todos os campos.';
+            $errors[] = t('err.fill_all');
         } elseif (!$termsAccepted) {
-            $errors[] = 'Tens de aceitar os termos de utilização.';
+            $errors[] = t('err.terms_required');
         } elseif (!isValidUsername($username)) {
-            $errors[] = 'Username deve ter entre 3 e 20 caracteres (letras, números e _).';
+            $errors[] = t('err.username_format');
         } elseif (!isValidEmail($email)) {
-            $errors[] = 'Email inválido.';
+            $errors[] = t('err.invalid_email');
         } elseif (!isValidPassword($password)) {
-            $errors[] = 'A password deve ter pelo menos 8 caracteres.';
+            $errors[] = t('err.pw_short');
         } elseif ($password !== $confirmPassword) {
-            $errors[] = 'As passwords não coincidem.';
+            $errors[] = t('err.pw_mismatch');
         } else {
             
             $stmt = $conn->prepare('DELETE FROM users WHERE email = ? AND is_active = 0 AND email_verified_at IS NULL');
@@ -63,12 +63,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $stmt->store_result();
 
             if ($stmt->num_rows > 0) {
-                $errors[] = 'Este email ou username já está em uso.';
+                $errors[] = t('err.username_taken');
                 $stmt->close();
             } else {
                 $stmt->close();
 
-                
+
                 $stmt = $conn->prepare('SELECT id FROM pending_registrations WHERE username = ? AND email != ? AND expires_at > NOW() LIMIT 1');
                 $stmt->bind_param('ss', $username, $email);
                 $stmt->execute();
@@ -77,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->close();
 
                 if ($usernamePending) {
-                    $errors[] = 'Este username já está em uso.';
+                    $errors[] = t('err.username_pending');
                 } else {
                     $hash = password_hash($password, PASSWORD_DEFAULT);
 
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         $newId = $conn->insert_id;
                         $stmt->close();
                         loginUser($newId, $username, $email, 'user');
-                        redirect('/', 'Conta criada! Bem-vindo, ' . e($username) . '!', 'success');
+                        redirect('/', t('flash.account_created', ['name' => e($username)]), 'success');
                     }
 
                     $code = createPendingRegistration($email, $username, $hash);
@@ -238,6 +238,9 @@ $csrfToken = generateCSRFToken();
       document.documentElement.setAttribute('data-theme', s || d);
     })();
   </script>
+  <script>window.SYLORA_I18N=<?= json_encode(['en'=>require __DIR__.'/lang/en.php','pt'=>require __DIR__.'/lang/pt.php','es'=>require __DIR__.'/lang/es.php'],JSON_HEX_TAG|JSON_HEX_AMP) ?>;
+  window.SYLORA_LANG=<?= json_encode(getLang()) ?>;
+  window.SYLORA_T=function(key,vars){var dict=(window.SYLORA_I18N&&window.SYLORA_I18N[window.SYLORA_LANG])||{};var val=(dict[key]!==undefined)?dict[key]:key;if(vars){for(var k in vars){val=val.split('{'+k+'}').join(vars[k]);}}return val;};</script>
 </head>
 <body class="auth-page">
 
@@ -501,13 +504,14 @@ $csrfToken = generateCSRFToken();
       if (/[0-9]/.test(val)) score++;
       if (/[^a-zA-Z0-9]/.test(val)) score++;
 
+      var T = (window.SYLORA_T) || (function(k){return k;});
       const levels = [
         { pct: '0%',   color: 'transparent', text: '' },
-        { pct: '25%',  color: '#c96b5a',     text: 'Fraca' },
-        { pct: '50%',  color: '#d4955a',     text: 'Razoável' },
-        { pct: '75%',  color: '#c9993a',     text: 'Boa' },
-        { pct: '90%',  color: '#7aad6e',     text: 'Forte' },
-        { pct: '100%', color: '#4e8c3d',     text: 'Muito forte' },
+        { pct: '25%',  color: '#c96b5a',     text: T('pw.weak') },
+        { pct: '50%',  color: '#d4955a',     text: T('pw.fair') },
+        { pct: '75%',  color: '#c9993a',     text: T('pw.good') },
+        { pct: '90%',  color: '#7aad6e',     text: T('pw.strong') },
+        { pct: '100%', color: '#4e8c3d',     text: T('pw.very_strong') },
       ];
       const lvl = levels[Math.min(score, 5)];
       fill.style.width      = val.length ? lvl.pct : '0%';
@@ -519,16 +523,17 @@ $csrfToken = generateCSRFToken();
   (function() {
     var SVG_EYE     = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
     var SVG_EYE_OFF = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    var T = (window.SYLORA_T) || (function(k){return k;});
     document.querySelectorAll('.pw-toggle').forEach(function(btn) {
       btn.innerHTML = SVG_EYE;
-      btn.setAttribute('aria-label', 'Mostrar password');
+      btn.setAttribute('aria-label', T('common.show_pw'));
       btn.addEventListener('click', function() {
         var input = btn.closest('.pw-wrap').querySelector('input');
         if (!input) return;
         var show = input.type === 'password';
         input.type = show ? 'text' : 'password';
         btn.innerHTML = show ? SVG_EYE_OFF : SVG_EYE;
-        btn.setAttribute('aria-label', show ? 'Esconder password' : 'Mostrar password');
+        btn.setAttribute('aria-label', show ? T('common.hide_pw') : T('common.show_pw'));
       });
     });
   })();
@@ -580,7 +585,7 @@ $csrfToken = generateCSRFToken();
       }
       if (submitBtn) {
         submitBtn.disabled = true;
-        submitBtn.textContent = 'A criar conta…';
+        submitBtn.textContent = (window.SYLORA_T ? window.SYLORA_T('common.creating') : 'A criar conta…');
       }
     });
   })();
@@ -615,7 +620,7 @@ $csrfToken = generateCSRFToken();
     form.addEventListener('submit', function(e) {
       if (tokenInput.value) return;
       e.preventDefault();
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'A verificar…'; }
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = (window.SYLORA_T ? window.SYLORA_T('common.verifying') : 'A verificar…'); }
       var done = false;
       function proceed(token) {
         if (done) return; done = true;

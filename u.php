@@ -21,8 +21,8 @@ if (!$profile) {
     http_response_code(404);
     include 'includes/header.php';
     echo '<main class="container" style="padding:80px 20px;text-align:center;">
-        <h2 style="color:var(--muted)">Aventureiro não encontrado</h2>
-        <a href="index.php" class="btn btn-primary" style="margin-top:24px">Voltar ao início</a>
+        <h2 style="color:var(--muted)">' . e(t('profile.not_found')) . '</h2>
+        <a href="index.php" class="btn btn-primary" style="margin-top:24px">' . e(t('profile.go_home')) . '</a>
     </main>';
     include 'includes/footer.php';
     exit;
@@ -34,7 +34,7 @@ $isGuest     = !isLoggedIn();
 $csrfToken   = isLoggedIn() ? generateCSRFToken() : '';
 $memberSince = $profile['created_at'] ? date('d/m/Y', strtotime($profile['created_at'])) : '-';
 $lastLogin   = $profile['last_login_at'] ? date('d/m/Y \à\s H:i', strtotime($profile['last_login_at'])) : '-';
-$roleLabel   = $profile['role'] === 'admin' ? 'Admin' : 'Aventureiro';
+$roleLabel   = $profile['role'] === 'admin' ? t('profile.role_admin') : t('profile.role_user');
 $roleColor   = $profile['role'] === 'admin' ? 'role-admin' : 'role-user';
 $hasAvatar   = !empty($profile['avatar']);
 
@@ -219,16 +219,16 @@ include 'includes/header.php';
         <div class="up-info">
           <div class="up-name-row">
             <h1><?php echo e($profile['username']); ?></h1>
-            <span class="profile-role-badge <?php echo $roleColor; ?>"><?php echo $roleLabel; ?></span>
+            <span class="profile-role-badge <?php echo $roleColor; ?>"><?php echo e($roleLabel); ?></span>
           </div>
           <p class="up-since">
-            Aventureiro desde <?php echo $memberSince; ?>
-            <?php if ($isSelf): ?> &middot; Último login: <?php echo $lastLogin; ?><?php endif; ?>
+            <?php echo e(t('profile.since', ['date' => $memberSince])); ?>
+            <?php if ($isSelf): ?> &middot; <?php echo e(t('profile.last_login', ['date' => $lastLogin])); ?><?php endif; ?>
           </p>
           <?php if (!empty($profile['bio'])): ?>
             <p class="up-bio"><?php echo nl2br(e($profile['bio'])); ?></p>
           <?php elseif ($isSelf): ?>
-            <p class="up-bio up-bio-placeholder">Sem bio ainda. <button class="up-add-bio-btn" type="button">Adicionar bio</button></p>
+            <p class="up-bio up-bio-placeholder"><span data-i18n="profile.bio_empty"><?= t('profile.bio_empty') ?></span> <button class="up-add-bio-btn" type="button" data-i18n="profile.add_bio"><?= t('profile.add_bio') ?></button></p>
           <?php endif; ?>
         </div>
 
@@ -237,32 +237,32 @@ include 'includes/header.php';
           <?php if ($isSelf): ?>
             <button class="btn btn-secondary btn-sm" id="edit-profile-btn" type="button">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 013 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>
-              Editar Perfil
+              <span data-i18n="profile.edit"><?= t('profile.edit') ?></span>
             </button>
           <?php elseif (!$isGuest): ?>
             <?php if ($friendStatus === 'none'): ?>
               <button class="btn btn-primary btn-sm" data-user-id="<?php echo $profileId; ?>" data-action="add">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="19" y1="8" x2="19" y2="14"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-                Adicionar Amigo
+                <span data-i18n="profile.add_friend"><?= t('profile.add_friend') ?></span>
               </button>
             <?php elseif ($friendStatus === 'pending' && $iRequested): ?>
               <button class="btn btn-secondary btn-sm" data-user-id="<?php echo $profileId; ?>" data-action="cancel">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-                Pedido Enviado &middot; Cancelar
+                <span data-i18n="profile.request_sent"><?= t('profile.request_sent') ?></span>
               </button>
             <?php elseif ($friendStatus === 'pending' && !$iRequested): ?>
               <div class="friend-pending-actions">
-                <button class="btn btn-primary btn-sm" data-user-id="<?php echo $profileId; ?>" data-action="accept">Aceitar</button>
-                <button class="btn btn-ghost btn-sm" data-user-id="<?php echo $profileId; ?>" data-action="decline">Recusar</button>
+                <button class="btn btn-primary btn-sm" data-user-id="<?php echo $profileId; ?>" data-action="accept" data-i18n="profile.accept"><?= t('profile.accept') ?></button>
+                <button class="btn btn-ghost btn-sm" data-user-id="<?php echo $profileId; ?>" data-action="decline" data-i18n="profile.decline"><?= t('profile.decline') ?></button>
               </div>
             <?php elseif ($friendStatus === 'accepted'): ?>
               <button class="btn btn-secondary btn-sm" data-user-id="<?php echo $profileId; ?>" data-action="remove">
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 00-4-4H6a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><line x1="22" y1="11" x2="16" y2="11"/></svg>
-                Amigos
+                <span data-i18n="profile.friends_btn"><?= t('profile.friends_btn') ?></span>
               </button>
             <?php endif; ?>
           <?php else: ?>
-            <a href="login.php" class="btn btn-primary btn-sm">Entrar para adicionar</a>
+            <a href="login.php" class="btn btn-primary btn-sm" data-i18n="profile.login_to_add"><?= t('profile.login_to_add') ?></a>
           <?php endif; ?>
         </div>
       </div>
@@ -276,23 +276,23 @@ include 'includes/header.php';
           <div class="up-edit-tabs" role="tablist">
             <button class="up-edit-tab active" role="tab" data-tab="ep-username">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
-              Username
+              <span data-i18n="profile.tab_username"><?= t('profile.tab_username') ?></span>
             </button>
             <button class="up-edit-tab" role="tab" data-tab="ep-email">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,12 2,6"/></svg>
-              Email
+              <span data-i18n="profile.tab_email"><?= t('profile.tab_email') ?></span>
             </button>
             <button class="up-edit-tab" role="tab" data-tab="ep-bio">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-              Bio
+              <span data-i18n="profile.tab_bio"><?= t('profile.tab_bio') ?></span>
             </button>
             <button class="up-edit-tab" role="tab" data-tab="ep-password">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-              Password
+              <span data-i18n="profile.tab_password"><?= t('profile.tab_password') ?></span>
             </button>
             <button class="up-edit-tab up-edit-tab-danger" role="tab" data-tab="ep-danger">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-              Zona de Risco
+              <span data-i18n="profile.tab_danger"><?= t('profile.tab_danger') ?></span>
             </button>
           </div>
 
@@ -300,98 +300,98 @@ include 'includes/header.php';
 
             
             <div class="up-edit-panel-content active" id="ep-username" role="tabpanel">
-              <h3>Alterar Username</h3>
-              <p>O teu username é público e identificado por outros jogadores.</p>
+              <h3 data-i18n="profile.username_h"><?= t('profile.username_h') ?></h3>
+              <p data-i18n="profile.username_sub"><?= t('profile.username_sub') ?></p>
               <form method="POST" action="/profile" class="profile-form">
                 <input type="hidden" name="action" value="change_username">
                 <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
                 <div class="form-group">
-                  <label for="ep_new_username">Novo Username</label>
+                  <label for="ep_new_username" data-i18n="profile.username_label"><?= t('profile.username_label') ?></label>
                   <input type="text" id="ep_new_username" name="new_username" value="<?php echo e($profile['username']); ?>" minlength="3" maxlength="20" placeholder="aventureiro_123" required>
-                  <span class="form-hint">3–20 caracteres. Letras, números e _</span>
+                  <span class="form-hint" data-i18n="profile.username_hint"><?= t('profile.username_hint') ?></span>
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm">Guardar Username</button>
+                <button type="submit" class="btn btn-primary btn-sm" data-i18n="profile.username_save"><?= t('profile.username_save') ?></button>
               </form>
             </div>
 
-            
+
             <div class="up-edit-panel-content" id="ep-email" role="tabpanel">
-              <h3>Alterar Email</h3>
-              <p>Usa um email válido para recuperação de conta.</p>
+              <h3 data-i18n="profile.email_h"><?= t('profile.email_h') ?></h3>
+              <p data-i18n="profile.email_sub"><?= t('profile.email_sub') ?></p>
               <form method="POST" action="/profile" class="profile-form">
                 <input type="hidden" name="action" value="change_email">
                 <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
                 <div class="form-group">
-                  <label for="ep_new_email">Novo Email</label>
+                  <label for="ep_new_email" data-i18n="profile.email_label"><?= t('profile.email_label') ?></label>
                   <input type="email" id="ep_new_email" name="new_email" value="<?php echo e($profile['email'] ?? ''); ?>" placeholder="novo@email.com" required>
                 </div>
                 <div class="form-group">
-                  <label for="ep_email_current_pw">Password atual</label>
+                  <label for="ep_email_current_pw" data-i18n="profile.email_current_pw"><?= t('profile.email_current_pw') ?></label>
                   <input type="password" id="ep_email_current_pw" name="current_password" placeholder="••••••••" autocomplete="current-password" required>
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm">Guardar Email</button>
+                <button type="submit" class="btn btn-primary btn-sm" data-i18n="profile.email_save"><?= t('profile.email_save') ?></button>
               </form>
             </div>
 
-            
+
             <div class="up-edit-panel-content" id="ep-bio" role="tabpanel">
-              <h3>Bio Pública</h3>
-              <p>Apresenta-te à comunidade. Aparece no teu perfil.</p>
+              <h3 data-i18n="profile.bio_h"><?= t('profile.bio_h') ?></h3>
+              <p data-i18n="profile.bio_sub"><?= t('profile.bio_sub') ?></p>
               <form method="POST" action="/profile" class="profile-form">
                 <input type="hidden" name="action" value="change_bio">
                 <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
                 <div class="form-group">
-                  <label for="ep_bio">Bio</label>
-                  <textarea id="ep_bio" name="bio" rows="3" maxlength="300" placeholder="Conta-nos algo sobre ti como aventureiro..."><?php echo e($profile['bio'] ?? ''); ?></textarea>
-                  <span class="form-hint">Máx. 300 caracteres · Sem linguagem ofensiva</span>
+                  <label for="ep_bio" data-i18n="profile.bio_label"><?= t('profile.bio_label') ?></label>
+                  <textarea id="ep_bio" name="bio" rows="3" maxlength="300" data-i18n-placeholder="profile.bio_ph" placeholder="<?= e(t('profile.bio_ph')) ?>"><?php echo e($profile['bio'] ?? ''); ?></textarea>
+                  <span class="form-hint" data-i18n="profile.bio_hint"><?= t('profile.bio_hint') ?></span>
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm">Guardar Bio</button>
+                <button type="submit" class="btn btn-primary btn-sm" data-i18n="profile.bio_save"><?= t('profile.bio_save') ?></button>
               </form>
             </div>
 
-            
+
             <div class="up-edit-panel-content" id="ep-password" role="tabpanel">
-              <h3>Alterar Password</h3>
-              <p>Escolhe uma password forte com pelo menos 8 caracteres.</p>
+              <h3 data-i18n="profile.pw_h"><?= t('profile.pw_h') ?></h3>
+              <p data-i18n="profile.pw_sub"><?= t('profile.pw_sub') ?></p>
               <form method="POST" action="/profile" class="profile-form">
                 <input type="hidden" name="action" value="change_password">
                 <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
                 <div class="form-group">
-                  <label for="ep_current_password">Password Atual</label>
+                  <label for="ep_current_password" data-i18n="profile.pw_current"><?= t('profile.pw_current') ?></label>
                   <input type="password" id="ep_current_password" name="current_password" placeholder="••••••••" required>
                 </div>
                 <div class="form-row-two">
                   <div class="form-group">
-                    <label for="ep_new_pw">Nova Password</label>
+                    <label for="ep_new_pw" data-i18n="profile.pw_new"><?= t('profile.pw_new') ?></label>
                     <input type="password" id="ep_new_pw" name="new_password" placeholder="••••••••" required minlength="8">
                   </div>
                   <div class="form-group">
-                    <label for="ep_confirm_pw">Confirmar</label>
+                    <label for="ep_confirm_pw" data-i18n="profile.pw_confirm"><?= t('profile.pw_confirm') ?></label>
                     <input type="password" id="ep_confirm_pw" name="confirm_new_password" placeholder="••••••••" required>
                   </div>
                 </div>
-                <button type="submit" class="btn btn-primary btn-sm">Alterar Password</button>
+                <button type="submit" class="btn btn-primary btn-sm" data-i18n="profile.pw_save"><?= t('profile.pw_save') ?></button>
               </form>
             </div>
 
-            
+
             <div class="up-edit-panel-content" id="ep-danger" role="tabpanel">
-              <h3>Zona de Risco</h3>
-              <p>Estas ações são irreversíveis. Procede com cuidado.</p>
+              <h3 data-i18n="profile.danger_h"><?= t('profile.danger_h') ?></h3>
+              <p data-i18n="profile.danger_sub"><?= t('profile.danger_sub') ?></p>
               <div class="danger-card">
                 <div class="danger-card-text">
-                  <h3>Terminar todas as sessões</h3>
-                  <p>Faz logout em todos os dispositivos onde tens sessão iniciada.</p>
+                  <h3 data-i18n="profile.revoke_h"><?= t('profile.revoke_h') ?></h3>
+                  <p data-i18n="profile.revoke_sub"><?= t('profile.revoke_sub') ?></p>
                 </div>
                 <form method="POST" action="/profile">
                   <input type="hidden" name="action" value="revoke_sessions">
                   <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
-                  <button type="submit" class="btn btn-danger-outline">Terminar sessões</button>
+                  <button type="submit" class="btn btn-danger-outline" data-i18n="profile.revoke_btn"><?= t('profile.revoke_btn') ?></button>
                 </form>
               </div>
             </div>
 
-            <button class="up-edit-close" id="edit-panel-close" type="button">↑ Fechar configurações</button>
+            <button class="up-edit-close" id="edit-panel-close" type="button" data-i18n="profile.close_settings"><?= t('profile.close_settings') ?></button>
 
           </div>
         </div>
@@ -403,11 +403,11 @@ include 'includes/header.php';
     <div class="up-content-tabs" role="tablist">
       <button class="up-content-tab active" role="tab" data-panel="panel-stats">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-        Estatísticas
+        <span data-i18n="profile.tab_stats"><?= t('profile.tab_stats') ?></span>
       </button>
       <button class="up-content-tab" role="tab" data-panel="panel-friends">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-        Amigos<?php if ($isSelf && !empty($pendingIn)): ?>
+        <span data-i18n="profile.tab_friends"><?= t('profile.tab_friends') ?></span><?php if ($isSelf && !empty($pendingIn)): ?>
           <span class="up-tab-badge"><?php echo count($pendingIn); ?></span>
         <?php elseif (!$isSelf && !empty($friendsList)): ?>
           <span class="up-tab-badge-neutral up-tab-badge"><?php echo count($friendsList); ?></span>
@@ -420,7 +420,7 @@ include 'includes/header.php';
       <div class="up-card">
         <div class="up-card-title">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
-          Estatísticas do Jogo
+          <span data-i18n="profile.stats_game"><?= t('profile.stats_game') ?></span>
         </div>
 
         <?php if ($bestSave):
@@ -429,7 +429,7 @@ include 'includes/header.php';
         ?>
           <div class="up-stat-level">
             <span class="up-stat-number"><?php echo (int)$bestSave['level']; ?></span>
-            <span class="up-stat-sub">Nível</span>
+            <span class="up-stat-sub" data-i18n="profile.stat_level"><?= t('profile.stat_level') ?></span>
           </div>
 
           <div class="up-stat-row">
@@ -453,20 +453,20 @@ include 'includes/header.php';
           <div class="up-stat-divider"></div>
 
           <div class="up-stat-row">
-            <span class="up-stat-label">Capítulo</span>
+            <span class="up-stat-label" data-i18n="profile.stat_chapter"><?= t('profile.stat_chapter') ?></span>
             <span class="up-stat-val" style="font-size:11px;text-align:right"><?php echo e($bestSave['chapter']); ?></span>
           </div>
           <div class="up-stat-row">
-            <span class="up-stat-label">Dano</span>
+            <span class="up-stat-label" data-i18n="profile.stat_damage"><?= t('profile.stat_damage') ?></span>
             <span class="up-stat-val"><?php echo number_format($bestSave['damage'], 1); ?></span>
           </div>
           <div class="up-stat-row">
-            <span class="up-stat-label">Progresso</span>
+            <span class="up-stat-label" data-i18n="profile.stat_progress"><?= t('profile.stat_progress') ?></span>
             <span class="up-stat-val"><?php echo (int)$bestSave['story_progress']; ?>%</span>
           </div>
           <?php if ($bestSave['last_saved']): ?>
             <div class="up-stat-row">
-              <span class="up-stat-label" style="color:var(--faint)">Último save</span>
+              <span class="up-stat-label" style="color:var(--faint)" data-i18n="profile.stat_last_save"><?= t('profile.stat_last_save') ?></span>
               <span class="up-stat-val" style="color:var(--faint);font-size:11px"><?php echo date('d/m/Y', strtotime($bestSave['last_saved'])); ?></span>
             </div>
           <?php endif; ?>
@@ -474,7 +474,7 @@ include 'includes/header.php';
         <?php else: ?>
           <div class="up-card-empty">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--faint)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-            <p>Nenhum save carregado ainda</p>
+            <p data-i18n="profile.no_save"><?= t('profile.no_save') ?></p>
           </div>
         <?php endif; ?>
       </div>
@@ -489,23 +489,23 @@ include 'includes/header.php';
         <div class="up-section">
           <div class="up-section-title">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-            Encontrar Aventureiros
+            <span data-i18n="profile.find_adventurers"><?= t('profile.find_adventurers') ?></span>
           </div>
           <div class="up-friend-search">
             <div class="up-friend-search-wrap">
               <svg class="up-friend-search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
-              <input type="text" class="up-friend-search-input" id="friend-search-input" placeholder="Pesquisar por username..." autocomplete="off">
+              <input type="text" class="up-friend-search-input" id="friend-search-input" data-i18n-placeholder="profile.search_ph" placeholder="<?= e(t('profile.search_ph')) ?>" autocomplete="off">
             </div>
             <div class="up-search-results" id="friend-search-results"></div>
           </div>
         </div>
 
-        
+
         <?php if (!empty($pendingIn)): ?>
           <div class="up-section">
             <div class="up-section-title">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-              Pedidos Pendentes (<?php echo count($pendingIn); ?>)
+              <?php echo e(t('profile.pending', ['n' => count($pendingIn)])); ?>
             </div>
             <div class="up-pending-list">
               <?php foreach ($pendingIn as $req): ?>
@@ -515,8 +515,8 @@ include 'includes/header.php';
                     <a href="u.php?u=<?php echo urlencode($req['username']); ?>" style="font-weight:600;font-size:13px"><?php echo e($req['username']); ?></a>
                   </div>
                   <div class="up-pending-actions">
-                    <button class="btn btn-primary btn-sm" data-action="accept" data-user-id="<?php echo (int)$req['id']; ?>">Aceitar</button>
-                    <button class="btn btn-ghost btn-sm" data-action="decline" data-user-id="<?php echo (int)$req['id']; ?>">Recusar</button>
+                    <button class="btn btn-primary btn-sm" data-action="accept" data-user-id="<?php echo (int)$req['id']; ?>" data-i18n="profile.accept"><?= t('profile.accept') ?></button>
+                    <button class="btn btn-ghost btn-sm" data-action="decline" data-user-id="<?php echo (int)$req['id']; ?>" data-i18n="profile.decline"><?= t('profile.decline') ?></button>
                   </div>
                 </div>
               <?php endforeach; ?>
@@ -524,11 +524,11 @@ include 'includes/header.php';
           </div>
         <?php endif; ?>
 
-        
+
         <div class="up-section">
           <div class="up-section-title">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-            Os meus Amigos (<?php echo count($friendsList); ?>)
+            <?php echo e(t('profile.my_friends', ['n' => count($friendsList)])); ?>
           </div>
           <?php if (!empty($friendsList)): ?>
             <div class="up-friends-grid">
@@ -543,26 +543,26 @@ include 'includes/header.php';
                   </div>
                   <div class="up-friend-info">
                     <div class="up-friend-name"><?php echo e($f['username']); ?></div>
-                    <div class="up-friend-level"><?php echo $f['best_level'] ? 'Nv. ' . (int)$f['best_level'] : 'Sem save'; ?></div>
+                    <div class="up-friend-level"><?php echo $f['best_level'] ? e(t('toast.level_short')) . ' ' . (int)$f['best_level'] : e(t('profile.no_save_short')); ?></div>
                   </div>
                 </a>
               <?php endforeach; ?>
             </div>
           <?php else: ?>
             <div class="up-empty-state">
-              <p>Ainda não tens amigos. Pesquisa aventureiros acima!</p>
+              <p data-i18n="profile.no_friends_yet"><?= t('profile.no_friends_yet') ?></p>
             </div>
           <?php endif; ?>
         </div>
 
       <?php else: ?>
 
-        
+
         <?php if (!empty($mutualFriends) && isLoggedIn()): ?>
           <div class="up-section">
             <div class="up-section-title">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-              Amigos em comum
+              <span data-i18n="profile.mutual_friends"><?= t('profile.mutual_friends') ?></span>
             </div>
             <div class="up-friends-grid">
               <?php foreach ($mutualFriends as $mf): ?>
@@ -575,11 +575,11 @@ include 'includes/header.php';
           </div>
         <?php endif; ?>
 
-        
+
         <div class="up-section">
           <div class="up-section-title">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
-            Amigos de <?php echo e($profile['username']); ?>
+            <?php echo e(t('profile.friends_of', ['name' => $profile['username']])); ?>
           </div>
           <?php if (!empty($friendsList)): ?>
             <div class="up-friends-grid">
@@ -594,13 +594,13 @@ include 'includes/header.php';
                   </div>
                   <div class="up-friend-info">
                     <div class="up-friend-name"><?php echo e($f['username']); ?></div>
-                    <div class="up-friend-level"><?php echo $f['best_level'] ? 'Nv. ' . (int)$f['best_level'] : 'Sem save'; ?></div>
+                    <div class="up-friend-level"><?php echo $f['best_level'] ? e(t('toast.level_short')) . ' ' . (int)$f['best_level'] : e(t('profile.no_save_short')); ?></div>
                   </div>
                 </a>
               <?php endforeach; ?>
             </div>
           <?php else: ?>
-            <div class="up-empty-state"><p>Nenhum amigo ainda.</p></div>
+            <div class="up-empty-state"><p data-i18n="profile.no_friends"><?= t('profile.no_friends') ?></p></div>
           <?php endif; ?>
         </div>
 
@@ -612,22 +612,22 @@ include 'includes/header.php';
       <div class="up-card">
         <div class="up-card-title">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
-          Comentários da Comunidade
+          <span data-i18n="profile.community_comments"><?= t('profile.community_comments') ?></span>
           <span class="up-comment-count"><?php echo $totalComments; ?></span>
         </div>
 
         <?php if (isLoggedIn() && !$isSelf): ?>
           <form class="up-comment-form" id="comment-form" data-user-id="<?php echo $profileId; ?>">
             <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
-            <textarea name="content" class="up-comment-textarea" placeholder="Deixa um comentário respeitoso..." maxlength="500" rows="3" required></textarea>
+            <textarea name="content" class="up-comment-textarea" data-i18n-placeholder="profile.comment_ph" placeholder="<?= e(t('profile.comment_ph')) ?>" maxlength="500" rows="3" required></textarea>
             <div class="up-comment-form-footer">
-              <span class="up-comment-hint">Máx. 500 caracteres · Respeita a comunidade</span>
-              <button type="submit" class="btn btn-primary btn-sm">Comentar</button>
+              <span class="up-comment-hint" data-i18n="profile.comment_hint"><?= t('profile.comment_hint') ?></span>
+              <button type="submit" class="btn btn-primary btn-sm" data-i18n="profile.comment_submit"><?= t('profile.comment_submit') ?></button>
             </div>
             <div class="up-comment-error" id="comment-error" style="display:none"></div>
           </form>
         <?php elseif ($isGuest): ?>
-          <p class="up-comment-login-hint"><a href="login.php">Entra</a> para deixar um comentário.</p>
+          <p class="up-comment-login-hint" data-i18n-html="profile.comment_login"><?= t('profile.comment_login') ?></p>
         <?php endif; ?>
 
         <div class="up-comments-list" id="comments-list">
@@ -646,13 +646,13 @@ include 'includes/header.php';
             </div>
           <?php endforeach; ?>
           <?php if (empty($comments)): ?>
-            <p class="up-no-comments">Ainda sem comentários. Sê o primeiro!</p>
+            <p class="up-no-comments" data-i18n="profile.no_comments"><?= t('profile.no_comments') ?></p>
           <?php endif; ?>
         </div>
 
         <?php if ($totalComments > 10): ?>
           <button class="btn btn-ghost btn-sm up-load-more" id="load-more-btn" data-page="2" data-user-id="<?php echo $profileId; ?>">
-            Ver mais comentários (<?php echo $totalComments - 10; ?> restantes)
+            <?php echo e(t('profile.see_more', ['n' => $totalComments - 10])); ?>
           </button>
         <?php endif; ?>
       </div>
@@ -793,7 +793,7 @@ include 'includes/header.php';
     })
     .then(r => r.json())
     .then(d => { if (d.error) { showToast(d.error, 'error'); return; } location.reload(); })
-    .catch(() => showToast('Erro de ligação.', 'error'));
+    .catch(() => showToast(window.SYLORA_T('toast.connection_error'), 'error'));
   }
 
   document.querySelectorAll('[data-action]').forEach(btn => {
@@ -801,7 +801,7 @@ include 'includes/header.php';
       const { action } = btn.dataset;
       const userId = parseInt(btn.dataset.userId, 10);
       if (action === 'remove') {
-        showConfirm('Remover amigo?', () => friendAction(action, userId));
+        showConfirm(window.SYLORA_T('toast.confirm_remove_friend'), () => friendAction(action, userId));
         return;
       }
       friendAction(action, userId);
@@ -826,9 +826,11 @@ include 'includes/header.php';
             .then(data => {
               searchResults.innerHTML = '';
               if (!data.length) {
-                searchResults.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">Nenhum aventureiro encontrado.</p>';
+                searchResults.innerHTML = '<p style="color:var(--muted);font-size:13px;padding:8px 0">'+esc(window.SYLORA_T('toast.no_users_found'))+'</p>';
                 return;
               }
+              const lvlPrefix = window.SYLORA_T('toast.level_short');
+              const viewLabel = window.SYLORA_T('profile.view_profile');
               data.forEach(user => {
                 const el = document.createElement('div');
                 el.className = 'up-search-result-item';
@@ -837,10 +839,10 @@ include 'includes/header.php';
                     <div class="up-mutual-avatar">${esc(user.username.charAt(0).toUpperCase())}</div>
                     <div>
                       <span style="font-weight:600;font-size:13px">${esc(user.username)}</span>
-                      ${user.level ? `<span style="color:var(--muted);font-size:11px;display:block">Nv. ${esc(String(user.level))}</span>` : ''}
+                      ${user.level ? `<span style="color:var(--muted);font-size:11px;display:block">${esc(lvlPrefix)} ${esc(String(user.level))}</span>` : ''}
                     </div>
                   </div>
-                  <a href="u.php?u=${encodeURIComponent(user.username)}" class="btn btn-secondary btn-sm">Ver Perfil</a>
+                  <a href="u.php?u=${encodeURIComponent(user.username)}" class="btn btn-secondary btn-sm">${esc(viewLabel)}</a>
                 `;
                 searchResults.appendChild(el);
               });
@@ -875,7 +877,7 @@ include 'includes/header.php';
             errEl.textContent = d.error;
             errEl.style.display = 'block';
             btn.disabled = false;
-            btn.textContent = btn.dataset.originalText || 'Comentar';
+            btn.textContent = btn.dataset.originalText || window.SYLORA_T('profile.comment_submit');
             return;
           }
           const list = document.getElementById('comments-list');
@@ -902,14 +904,14 @@ include 'includes/header.php';
           list.insertAdjacentElement('afterbegin', el);
           textarea.value = '';
           btn.disabled = false;
-          btn.textContent = btn.dataset.originalText || 'Comentar';
+          btn.textContent = btn.dataset.originalText || window.SYLORA_T('profile.comment_submit');
           el.querySelector('.up-comment-delete')?.addEventListener('click', deleteComment);
         })
         .catch(() => {
-          errEl.textContent = 'Erro de ligação. Tenta de novo.';
+          errEl.textContent = window.SYLORA_T('toast.connecting');
           errEl.style.display = 'block';
           btn.disabled = false;
-          btn.textContent = btn.dataset.originalText || 'Comentar';
+          btn.textContent = btn.dataset.originalText || window.SYLORA_T('profile.comment_submit');
         });
     });
   }
@@ -919,7 +921,7 @@ include 'includes/header.php';
     const btn = e.currentTarget;
     const commentId = parseInt(btn.dataset.commentId, 10);
     const csrf = btn.dataset.csrf;
-    showConfirm('Apagar comentário?', () => {
+    showConfirm(window.SYLORA_T('toast.confirm_delete_comment'), () => {
       fetch('/api/comments', {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
@@ -943,7 +945,7 @@ include 'includes/header.php';
       const page   = parseInt(this.dataset.page, 10);
       const userId = this.dataset.userId;
       this.disabled = true;
-      this.textContent = 'A carregar...';
+      this.textContent = window.SYLORA_T('common.loading');
 
       fetch(`api/comments.php?user_id=${userId}&page=${page}`, { credentials: 'same-origin' })
         .then(r => r.json())
@@ -969,14 +971,14 @@ include 'includes/header.php';
 
           if (page < d.total_pages) {
             this.dataset.page = page + 1;
-            const remaining = d.total - (page * 10);
-            this.textContent = `Ver mais comentários (${Math.max(0, remaining)} restantes)`;
+            const remaining = Math.max(0, d.total - (page * 10));
+            this.textContent = window.SYLORA_T('profile.see_more', { n: String(remaining) });
             this.disabled = false;
           } else {
             this.remove();
           }
         })
-        .catch(() => { this.disabled = false; this.textContent = 'Tentar novamente'; });
+        .catch(() => { this.disabled = false; this.textContent = window.SYLORA_T('common.try_again'); });
     });
   }
 })();

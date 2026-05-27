@@ -16,16 +16,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $ip    = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 
     if (!verifyCSRFToken($csrf)) {
-        $errors[] = 'Pedido inválido. Tenta novamente.';
+        $errors[] = t('err.invalid_request');
     } elseif (!empty($_POST['hp_website'])) {
         // Honeypot preenchido: bot detetado — fingir sucesso
         $sent = true;
     } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'forgot')) {
-        $errors[] = 'Verificação de segurança falhou. Tenta novamente.';
+        $errors[] = t('err.security_failed');
     } elseif (!checkEmailRateLimit($ip, 'forgot', 3)) {
-        $errors[] = 'Demasiadas tentativas. Aguarda uns minutos.';
+        $errors[] = t('err.too_many_min');
     } elseif (!isValidEmail($email)) {
-        $errors[] = 'Endereço de e-mail inválido.';
+        $errors[] = t('err.invalid_email');
     } else {
         
         
@@ -80,6 +80,9 @@ $csrfToken = generateCSRFToken();
       document.documentElement.setAttribute('data-theme', s || d);
     })();
   </script>
+  <script>window.SYLORA_I18N=<?= json_encode(['en'=>require __DIR__.'/lang/en.php','pt'=>require __DIR__.'/lang/pt.php','es'=>require __DIR__.'/lang/es.php'],JSON_HEX_TAG|JSON_HEX_AMP) ?>;
+  window.SYLORA_LANG=<?= json_encode(getLang()) ?>;
+  window.SYLORA_T=function(key,vars){var dict=(window.SYLORA_I18N&&window.SYLORA_I18N[window.SYLORA_LANG])||{};var val=(dict[key]!==undefined)?dict[key]:key;if(vars){for(var k in vars){val=val.split('{'+k+'}').join(vars[k]);}}return val;};</script>
 </head>
 <body class="auth-page">
 
@@ -198,7 +201,7 @@ $csrfToken = generateCSRFToken();
     form.addEventListener('submit', function(e) {
       if (tokenInput.value) return;
       e.preventDefault();
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'A verificar…'; }
+      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = (window.SYLORA_T ? window.SYLORA_T('common.verifying') : 'A verificar…'); }
       var done = false;
       function proceed(token) {
         if (done) return; done = true;

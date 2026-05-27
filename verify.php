@@ -14,20 +14,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf = $_POST['_csrf'] ?? '';
 
     if (!verifyCSRFToken($csrf)) {
-        $codeError = 'Pedido inválido. Tenta novamente.';
+        $codeError = t('err.invalid_request');
     } elseif (array_key_exists('code', $_POST)) {
-        
+
         $code  = preg_replace('/\D/', '', $_POST['code'] ?? '');
         $email = sanitize($_POST['email'] ?? '');
         $pendingEmail = $email;
 
         if (strlen($code) !== 6) {
-            $codeError = 'Introduz os 6 dígitos do código.';
+            $codeError = t('err.code_6_digits');
         } elseif (!checkActionRateLimit('verify_code', strtolower($email), 5, 15)) {
-            
-            
-            
-            $codeError = 'Demasiadas tentativas. Aguarda 15 minutos.';
+            $codeError = t('err.too_many');
         } else {
             $userId = verifyPendingCode($email, $code);
             if ($userId) {
@@ -39,24 +36,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->close();
                 loginUser($userId, $user['username'], $user['email'], $user['role']);
                 unset($_SESSION['verify_for']);
-                redirect('/', 'Conta criada! Bem-vindo ao Sylora, ' . e($user['username']) . '!', 'success');
+                redirect('/', t('flash.account_created', ['name' => e($user['username'])]), 'success');
             }
             recordActionAttempt('verify_code', strtolower($email), 0);
-            $codeError = 'Código incorreto ou expirado. Tenta novamente.';
+            $codeError = t('err.code_invalid');
         }
     } else {
-        
+
         $email = sanitize($_POST['email'] ?? '');
         $ip    = $_SERVER['REMOTE_ADDR'];
         if (!isValidEmail($email)) {
-            $resendErrors[] = 'Email inválido.';
+            $resendErrors[] = t('err.invalid_email');
         } elseif (!empty($_POST['hp_website'])) {
             // Honeypot: bot detetado — fingir sucesso
             $resent = true;
         } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'resend')) {
-            $resendErrors[] = 'Verificação de segurança falhou. Tenta novamente.';
+            $resendErrors[] = t('err.security_failed');
         } elseif (!checkEmailRateLimit($ip, 'verify-resend', 5) || !checkActionRateLimit('verify_resend', strtolower($email), 3, 60)) {
-            $resendErrors[] = 'Demasiadas tentativas. Aguarda uns minutos.';
+            $resendErrors[] = t('err.too_many_min');
         } else {
             recordActionAttempt('verify_resend', strtolower($email), 1);
             $stmt = $conn->prepare('SELECT username, password_hash FROM pending_registrations WHERE email = ?');
@@ -159,6 +156,9 @@ $csrfToken = generateCSRFToken();
       document.documentElement.setAttribute('data-theme', s || d);
     })();
   </script>
+  <script>window.SYLORA_I18N=<?= json_encode(['en'=>require __DIR__.'/lang/en.php','pt'=>require __DIR__.'/lang/pt.php','es'=>require __DIR__.'/lang/es.php'],JSON_HEX_TAG|JSON_HEX_AMP) ?>;
+  window.SYLORA_LANG=<?= json_encode(getLang()) ?>;
+  window.SYLORA_T=function(key,vars){var dict=(window.SYLORA_I18N&&window.SYLORA_I18N[window.SYLORA_LANG])||{};var val=(dict[key]!==undefined)?dict[key]:key;if(vars){for(var k in vars){val=val.split('{'+k+'}').join(vars[k]);}}return val;};</script>
 </head>
 <body class="auth-page">
 
@@ -342,7 +342,7 @@ $csrfToken = generateCSRFToken();
     var otpForm = document.getElementById('otp-form');
     if (otpForm) {
       otpForm.addEventListener('submit', function() {
-        if (submit) { submit.disabled = true; submit.textContent = 'A verificar…'; }
+        if (submit) { submit.disabled = true; submit.textContent = (window.SYLORA_T ? window.SYLORA_T('common.verifying') : 'A verificar…'); }
       });
     }
   })();
@@ -379,7 +379,7 @@ $csrfToken = generateCSRFToken();
         if (tokenInput.value) return;
         e.preventDefault();
         var btn = form.querySelector('[type=submit]');
-        if (btn) { btn.disabled = true; btn.textContent = 'A verificar…'; }
+        if (btn) { btn.disabled = true; btn.textContent = (window.SYLORA_T ? window.SYLORA_T('common.verifying') : 'A verificar…'); }
         var done = false;
         function proceed(token) {
           if (done) return; done = true;

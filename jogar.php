@@ -241,7 +241,7 @@ include 'includes/header.php';
                     </svg>
                 </button>
             </div>
-            <p class="save-preview-subtitle">A guardar para o <strong>Slot <span id="save-preview-slot-num">?</span></strong></p>
+            <p class="save-preview-subtitle" id="save-preview-subtitle" data-i18n-html="jogar.preview_slot"><?= t('jogar.preview_slot', ['slot' => '<span id="save-preview-slot-num">?</span>']) ?></p>
 
             <div class="save-preview-warning" id="save-preview-warning" role="alert" style="display:none;">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
@@ -249,7 +249,7 @@ include 'includes/header.php';
                     <line x1="12" y1="9" x2="12" y2="13"/>
                     <line x1="12" y1="17" x2="12.01" y2="17"/>
                 </svg>
-                <span>Este slot já tem uma save (<span id="save-preview-warning-detail"></span>). Será substituída.</span>
+                <span id="save-preview-warning-text"></span>
             </div>
 
             <div class="save-preview-body" id="save-preview-body"></div>
@@ -266,19 +266,6 @@ include 'includes/header.php';
 <script>
 
 window.SAVE_CSRF = <?= json_encode($csrfToken) ?>;
-document.addEventListener('sylora:langchange', function(e) {
-  var d = e.detail.dict;
-  window.JOGAR_LANG = {
-    confirm_delete: d['jogar.confirm_delete'] || window.JOGAR_LANG.confirm_delete,
-    preview_slot:   d['jogar.preview_slot']   || window.JOGAR_LANG.preview_slot,
-    preview_warn:   d['jogar.preview_warn']   || window.JOGAR_LANG.preview_warn,
-  };
-});
-window.JOGAR_LANG = <?= json_encode([
-    'confirm_delete' => t('jogar.confirm_delete'),
-    'preview_slot'   => t('jogar.preview_slot'),
-    'preview_warn'   => t('jogar.preview_warn'),
-]) ?>;
 window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
     return [
         'slot'    => (int) $s['slot'],
@@ -376,8 +363,8 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         card.appendChild(tag);
 
         const stats = el('div', 'save-stats');
-        stats.appendChild(buildStatBox('Nível', String(parsed.level), 'lvl'));
-        stats.appendChild(buildStatBox('Dano', String(Math.round(parsed.damage * 10) / 10), 'dmg'));
+        stats.appendChild(buildStatBox(window.SYLORA_T('jogar.level'), String(parsed.level), 'lvl'));
+        stats.appendChild(buildStatBox(window.SYLORA_T('jogar.damage'), String(Math.round(parsed.damage * 10) / 10), 'dmg'));
         card.appendChild(stats);
 
         card.appendChild(buildBar('HP', Math.round(parsed.hp), Math.round(parsed.hpTotal), hpPct, 'save-bar-fill-hp'));
@@ -413,29 +400,29 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
     async function openPreview(file, slot) {
         if (!file) return;
         if (!file.name.toLowerCase().endsWith('.sav')) {
-            showToast('Apenas ficheiros .sav são aceites.', 'error');
+            showToast(window.SYLORA_T('toast.save_invalid'), 'error');
             return;
         }
         if (file.size > MAX_SIZE) {
-            showToast('Ficheiro demasiado grande (máx. 2 MB).', 'error');
+            showToast(window.SYLORA_T('toast.save_too_big'), 'error');
             return;
         }
 
         let raw;
         try { raw = await file.text(); }
-        catch (e) { showToast('Não foi possível ler o ficheiro.', 'error'); return; }
+        catch (e) { showToast(window.SYLORA_T('toast.save_unreadable'), 'error'); return; }
 
         const clean = raw.replace(/\x00/g, '').trim();
         let data;
         try { data = JSON.parse(clean); }
         catch (e) {
-            showToast('Ficheiro corrompido ou não é um save da Sylora.', 'error');
+            showToast(window.SYLORA_T('toast.save_corrupt'), 'error');
             return;
         }
 
         const parsed = parseSafeSave(data);
         if (!parsed) {
-            showToast('Ficheiro corrompido ou não é um save da Sylora.', 'error');
+            showToast(window.SYLORA_T('toast.save_corrupt'), 'error');
             return;
         }
 
@@ -444,28 +431,34 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         showPreviewModal(parsed, slot);
     }
 
+    function updateSubtitleSlot(slot) {
+        const sub = document.getElementById('save-preview-subtitle');
+        if (!sub) return;
+        sub.innerHTML = window.SYLORA_T('jogar.preview_slot', { slot: '<span id="save-preview-slot-num">' + String(slot) + '</span>' });
+    }
+
     function showPreviewModal(parsed, slot) {
         const overlay     = document.getElementById('save-preview-overlay');
         const body        = document.getElementById('save-preview-body');
-        const slotNum     = document.getElementById('save-preview-slot-num');
         const confirmBtn  = document.getElementById('save-preview-confirm');
         const warning     = document.getElementById('save-preview-warning');
-        const warnDetail  = document.getElementById('save-preview-warning-detail');
+        const warnText    = document.getElementById('save-preview-warning-text');
         if (!overlay) return;
 
-        slotNum.textContent = String(slot);
+        updateSubtitleSlot(slot);
         body.innerHTML = '';
         body.appendChild(buildPreviewCard(parsed));
 
         const arr = Array.isArray(window.SAVES_DATA) ? window.SAVES_DATA : [];
         const current = arr.find(s => Number(s.slot) === Number(slot));
         if (current) {
-            warnDetail.textContent = 'Nível ' + current.level + ' · ' + current.chapter;
+            const detail = window.SYLORA_T('toast.level_short') + ' ' + current.level + ' · ' + current.chapter;
+            warnText.textContent = window.SYLORA_T('jogar.preview_warn', { detail: detail });
             warning.style.display = 'flex';
-            confirmBtn.textContent = 'Substituir save';
+            confirmBtn.textContent = window.SYLORA_T('toast.preview_replace');
         } else {
             warning.style.display = 'none';
-            confirmBtn.textContent = 'Confirmar upload';
+            confirmBtn.textContent = window.SYLORA_T('toast.preview_confirm');
         }
         confirmBtn.disabled = false;
         confirmBtn.classList.remove('btn-loading');
@@ -504,16 +497,16 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
             const res  = await fetch('/api/save_upload', { method: 'POST', body: form, credentials: 'same-origin' });
             const data = await res.json();
             if (data.success) {
-                showToast(data.message || 'Save guardado!', 'success');
+                showToast(data.message || window.SYLORA_T('toast.save_uploaded'), 'success');
                 closePreview();
                 setTimeout(() => location.reload(), 900);
             } else {
-                showToast(data.error || 'Erro ao guardar.', 'error');
+                showToast(data.error || window.SYLORA_T('toast.save_error'), 'error');
                 confirmBtn.classList.remove('btn-loading');
                 confirmBtn.disabled = false;
             }
         } catch (e) {
-            showToast('Erro de ligação.', 'error');
+            showToast(window.SYLORA_T('toast.connection_error'), 'error');
             confirmBtn.classList.remove('btn-loading');
             confirmBtn.disabled = false;
         }
@@ -537,7 +530,7 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
     };
 
     window.deleteSave = function (slot, btn) {
-        var msg = window.JOGAR_LANG.confirm_delete.replace('{slot}', slot);
+        var msg = window.SYLORA_T('toast.confirm_delete', { slot: slot });
         showConfirm(msg, async () => {
             btn.classList.add('btn-loading');
             const form = new FormData();
@@ -547,13 +540,13 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
                 const res  = await fetch('/api/save_delete', { method: 'POST', body: form, credentials: 'same-origin' });
                 const data = await res.json();
                 if (data.success) {
-                    showToast('Save ' + slot + ' apagada.', 'success');
+                    showToast(window.SYLORA_T('toast.save_deleted', { slot: slot }), 'success');
                     setTimeout(() => location.reload(), 800);
                 } else {
-                    showToast(data.error || 'Erro ao apagar.', 'error');
+                    showToast(data.error || window.SYLORA_T('toast.delete_error'), 'error');
                 }
             } catch (e) {
-                showToast('Erro de ligação.', 'error');
+                showToast(window.SYLORA_T('toast.connection_error'), 'error');
             } finally {
                 btn.classList.remove('btn-loading');
             }
@@ -567,7 +560,7 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         document.body.appendChild(a);
         a.click();
         a.remove();
-        if (typeof showToast === 'function') showToast('Download iniciado!', 'success');
+        if (typeof showToast === 'function') showToast(window.SYLORA_T('toast.download_started'), 'success');
     });
 
     const helper = document.getElementById('save-helper');
@@ -607,13 +600,13 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
                     document.body.removeChild(ta);
                 }
                 copyBtn.classList.add('copied');
-                if (label) label.textContent = 'Copiado!';
+                if (label) label.textContent = window.SYLORA_T('common.copied');
                 setTimeout(() => {
                     copyBtn.classList.remove('copied');
                     if (label) label.textContent = original;
                 }, 1800);
             } catch (e) {
-                showToast('Não foi possível copiar. Seleciona o caminho manualmente.', 'info');
+                showToast(window.SYLORA_T('toast.copy_failed'), 'info');
             }
         });
     }

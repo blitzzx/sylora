@@ -16,22 +16,22 @@ include 'includes/header.php';
 
   <div class="about-hero">
     <div class="about-hero-runes" aria-hidden="true">⊕ ✦ ◈ ⟡ ✦</div>
-    <p class="about-overline">Sylora · Bastidores</p>
-    <h1>Quem está por trás do mundo</h1>
-    <p class="about-lead">Dois alunos da Escola Secundária de Mem Martins que decidiram criar um jogo completo como Prova de Aptidão Profissional, com tudo o que isso implica: código, história, arte e infraestrutura web.</p>
+    <p class="about-overline" data-i18n="sobre.overline"><?= t('sobre.overline') ?></p>
+    <h1 data-i18n="sobre.title"><?= t('sobre.title') ?></h1>
+    <p class="about-lead" data-i18n="sobre.lead"><?= t('sobre.lead') ?></p>
 
     <div class="about-hero-tags">
-      <span class="about-hero-tag"><strong><?= $monthsActive ?></strong> meses ativos</span>
-      <span class="about-hero-tag"><strong>2</strong> developers</span>
-      <span class="about-hero-tag"><strong>1</strong> mundo grego</span>
-      <span class="about-hero-tag"><strong>PAP 2025/2026</strong></span>
+      <span class="about-hero-tag" data-i18n-html="sobre.tag_months"><?= t('sobre.tag_months', ['n' => $monthsActive]) ?></span>
+      <span class="about-hero-tag" data-i18n-html="sobre.tag_devs"><?= t('sobre.tag_devs') ?></span>
+      <span class="about-hero-tag" data-i18n-html="sobre.tag_world"><?= t('sobre.tag_world') ?></span>
+      <span class="about-hero-tag" data-i18n-html="sobre.tag_pap"><?= t('sobre.tag_pap') ?></span>
     </div>
   </div>
 
   <section class="about-section">
     <div class="about-section-header">
-      <span class="about-badge">Projeto</span>
-      <h2>O projeto até hoje</h2>
+      <span class="about-badge" data-i18n="sobre.proj_badge"><?= t('sobre.proj_badge') ?></span>
+      <h2 data-i18n="sobre.proj_title"><?= t('sobre.proj_title') ?></h2>
     </div>
 
     <div class="about-stats-grid">
@@ -40,8 +40,8 @@ include 'includes/header.php';
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
         </div>
         <div class="about-stat-value"><?= $monthsActive ?></div>
-        <div class="about-stat-label">Meses de Desenvolvimento</div>
-        <div class="about-stat-sub">Desde setembro 2025</div>
+        <div class="about-stat-label" data-i18n="sobre.stat_months"><?= t('sobre.stat_months') ?></div>
+        <div class="about-stat-sub" data-i18n="sobre.stat_months_sub"><?= t('sobre.stat_months_sub') ?></div>
       </div>
 
       <div class="about-stat-card">
@@ -49,8 +49,8 @@ include 'includes/header.php';
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h6a4 4 0 014 4v14a3 3 0 00-3-3H2z"/><path d="M22 3h-6a4 4 0 00-4 4v14a3 3 0 013-3h7z"/></svg>
         </div>
         <div class="about-stat-value">1</div>
-        <div class="about-stat-label">Atos Jogáveis</div>
-        <div class="about-stat-sub">Ato I jogável</div>
+        <div class="about-stat-label" data-i18n="sobre.stat_acts"><?= t('sobre.stat_acts') ?></div>
+        <div class="about-stat-sub" data-i18n="sobre.stat_acts_sub"><?= t('sobre.stat_acts_sub') ?></div>
       </div>
 
       <div class="about-stat-card">
@@ -58,8 +58,8 @@ include 'includes/header.php';
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
         </div>
         <div class="about-stat-value">~16k</div>
-        <div class="about-stat-label">Linhas de Código</div>
-        <div class="about-stat-sub">Site + jogo combinados</div>
+        <div class="about-stat-label" data-i18n="sobre.stat_code"><?= t('sobre.stat_code') ?></div>
+        <div class="about-stat-sub" data-i18n="sobre.stat_code_sub"><?= t('sobre.stat_code_sub') ?></div>
       </div>
 
       <div class="about-stat-card">
@@ -67,16 +67,16 @@ include 'includes/header.php';
           <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.7 6.3a1 1 0 000 1.4l1.6 1.6a1 1 0 001.4 0l3.77-3.77a6 6 0 01-7.94 7.94l-6.91 6.91a2.12 2.12 0 01-3-3l6.91-6.91a6 6 0 017.94-7.94l-3.76 3.76z"/></svg>
         </div>
         <div class="about-stat-value">12+</div>
-        <div class="about-stat-label">Sistemas Implementados</div>
-        <div class="about-stat-sub">Jogo e site</div>
+        <div class="about-stat-label" data-i18n="sobre.stat_systems"><?= t('sobre.stat_systems') ?></div>
+        <div class="about-stat-sub" data-i18n="sobre.stat_systems_sub"><?= t('sobre.stat_systems_sub') ?></div>
       </div>
     </div>
   </section>
 
   <section class="about-section">
     <div class="about-section-header">
-      <span class="about-badge">Equipa</span>
-      <h2>Quem somos</h2>
+      <span class="about-badge" data-i18n="sobre.team_badge"><?= t('sobre.team_badge') ?></span>
+      <h2 data-i18n="sobre.team_title"><?= t('sobre.team_title') ?></h2>
     </div>
 
     <div class="about-team-grid">
@@ -92,16 +92,16 @@ include 'includes/header.php';
             <strong class="about-member-name">Márcio Sousa</strong>
             <span class="about-member-role">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              Game Developer
+              <span data-i18n="sobre.role_gd"><?= t('sobre.role_gd') ?></span>
             </span>
           </div>
         </header>
 
         <ul class="about-member-tasks">
-          <li>Programação das mecânicas de jogo em GameMaker (GML)</li>
-          <li>Design de níveis e ilhas</li>
-          <li>Criação de sprites e animações</li>
-          <li>Implementação de sistemas de combate e inimigos</li>
+          <li data-i18n="sobre.tasks_marcio_1"><?= t('sobre.tasks_marcio_1') ?></li>
+          <li data-i18n="sobre.tasks_marcio_2"><?= t('sobre.tasks_marcio_2') ?></li>
+          <li data-i18n="sobre.tasks_marcio_3"><?= t('sobre.tasks_marcio_3') ?></li>
+          <li data-i18n="sobre.tasks_marcio_4"><?= t('sobre.tasks_marcio_4') ?></li>
         </ul>
 
         <div class="about-member-stack">
@@ -123,16 +123,16 @@ include 'includes/header.php';
             <strong class="about-member-name">Samuel Meixieira</strong>
             <span class="about-member-role">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-              Full-Stack &amp; UX
+              <span data-i18n-html="sobre.role_fs"><?= t('sobre.role_fs') ?></span>
             </span>
           </div>
         </header>
 
         <ul class="about-member-tasks">
-          <li>Desenvolvimento do site completo (PHP, MySQL, HTML/CSS/JS)</li>
-          <li>Sistema de autenticação, perfis e avatares</li>
-          <li>Design de interface e experiência de utilizador</li>
-          <li>Narrativa e world-building do universo Sylora</li>
+          <li data-i18n="sobre.tasks_samuel_1"><?= t('sobre.tasks_samuel_1') ?></li>
+          <li data-i18n="sobre.tasks_samuel_2"><?= t('sobre.tasks_samuel_2') ?></li>
+          <li data-i18n="sobre.tasks_samuel_3"><?= t('sobre.tasks_samuel_3') ?></li>
+          <li data-i18n="sobre.tasks_samuel_4"><?= t('sobre.tasks_samuel_4') ?></li>
         </ul>
 
         <div class="about-member-stack">
@@ -149,8 +149,8 @@ include 'includes/header.php';
 
   <section class="about-section">
     <div class="about-section-header">
-      <span class="about-badge">Desenvolvimento</span>
-      <h2>A nossa jornada</h2>
+      <span class="about-badge" data-i18n="sobre.dev_badge"><?= t('sobre.dev_badge') ?></span>
+      <h2 data-i18n="sobre.dev_title"><?= t('sobre.dev_title') ?></h2>
     </div>
 
     <ol class="about-timeline" id="about-timeline">
@@ -160,45 +160,45 @@ include 'includes/header.php';
       <li class="about-timeline-item">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
-          <div class="about-timeline-meta">Setembro 2025</div>
-          <h3>Ideia inicial e arranque</h3>
-          <p>Decidimos desenvolver um jogo como Prova de Aptidão Profissional. A ambição era clara: um RPG narrativo ambientado na Grécia Antiga, com história, combate e exploração próprios.</p>
+          <div class="about-timeline-meta" data-i18n="sobre.tl_sep"><?= t('sobre.tl_sep') ?></div>
+          <h3 data-i18n="sobre.tl_sep_h"><?= t('sobre.tl_sep_h') ?></h3>
+          <p data-i18n="sobre.tl_sep_p"><?= t('sobre.tl_sep_p') ?></p>
         </div>
       </li>
 
       <li class="about-timeline-item">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
-          <div class="about-timeline-meta">Outubro 2025</div>
-          <h3>Escolha do GameMaker</h3>
-          <p>O GameMaker foi escolhido pela sua curva de aprendizagem acessível para jogos 2D. Rapidamente descobrimos que os seus recursos têm limites que nos obrigaram a repensar vários objetivos iniciais.</p>
+          <div class="about-timeline-meta" data-i18n="sobre.tl_oct"><?= t('sobre.tl_oct') ?></div>
+          <h3 data-i18n="sobre.tl_oct_h"><?= t('sobre.tl_oct_h') ?></h3>
+          <p data-i18n="sobre.tl_oct_p"><?= t('sobre.tl_oct_p') ?></p>
         </div>
       </li>
 
       <li class="about-timeline-item">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
-          <div class="about-timeline-meta">Dezembro 2025</div>
-          <h3>Site de suporte</h3>
-          <p>Em paralelo ao jogo, foi desenvolvido um site completo: sistema de contas, perfis, avatares com crop, página de história, área de jogo e saves na cloud. O volume de trabalho multiplicou, e a aprendizagem em desenvolvimento web full-stack também.</p>
+          <div class="about-timeline-meta" data-i18n="sobre.tl_dec"><?= t('sobre.tl_dec') ?></div>
+          <h3 data-i18n="sobre.tl_dec_h"><?= t('sobre.tl_dec_h') ?></h3>
+          <p data-i18n="sobre.tl_dec_p"><?= t('sobre.tl_dec_p') ?></p>
         </div>
       </li>
 
       <li class="about-timeline-item">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
-          <div class="about-timeline-meta">Março 2026</div>
-          <h3>Iteração e polish</h3>
-          <p>Funcionalidades que pareciam simples transformaram-se em pesadelos técnicos. Sistemas que imaginávamos implementar em dias levaram semanas. Aprendemos a adaptar, a simplificar sem perder a essência, e a encontrar soluções criativas dentro das limitações da engine.</p>
+          <div class="about-timeline-meta" data-i18n="sobre.tl_mar"><?= t('sobre.tl_mar') ?></div>
+          <h3 data-i18n="sobre.tl_mar_h"><?= t('sobre.tl_mar_h') ?></h3>
+          <p data-i18n="sobre.tl_mar_p"><?= t('sobre.tl_mar_p') ?></p>
         </div>
       </li>
 
       <li class="about-timeline-item about-timeline-item-current">
         <div class="about-timeline-marker"></div>
         <div class="about-timeline-body">
-          <div class="about-timeline-meta">Hoje</div>
-          <h3>A caminho da entrega</h3>
-          <p>O projeto Sylora representa mais do que uma PAP. É a prova de que dois estudantes conseguem, com determinação e muitas horas de trabalho, construir algo do zero, desde a narrativa até ao código, desde o pixel art até à base de dados.</p>
+          <div class="about-timeline-meta" data-i18n="sobre.tl_today"><?= t('sobre.tl_today') ?></div>
+          <h3 data-i18n="sobre.tl_today_h"><?= t('sobre.tl_today_h') ?></h3>
+          <p data-i18n="sobre.tl_today_p"><?= t('sobre.tl_today_p') ?></p>
         </div>
       </li>
     </ol>
@@ -206,91 +206,51 @@ include 'includes/header.php';
 
   <section class="about-section">
     <div class="about-section-header">
-      <span class="about-badge">Tecnologias</span>
-      <h2>Ferramentas utilizadas</h2>
+      <span class="about-badge" data-i18n="sobre.tech_badge"><?= t('sobre.tech_badge') ?></span>
+      <h2 data-i18n="sobre.tech_title"><?= t('sobre.tech_title') ?></h2>
     </div>
 
     <div class="about-tools-grid">
+      <?php
+      $tools = [
+          ['gm', '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg>'],
+          ['gml', '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>'],
+          ['php', '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>'],
+          ['web', '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>'],
+          ['aseprite', '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h3v3H7zM14 14h3v3h-3zM7 14h3v3H7zM14 7h3v3h-3z"/></svg>'],
+          ['git', '<svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>'],
+      ];
+      foreach ($tools as [$slug, $svg]):
+      ?>
       <div class="about-tool-item">
-        <div class="about-tool-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="6" width="20" height="12" rx="2"/><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><circle cx="15" cy="11" r="1"/><circle cx="18" cy="13" r="1"/></svg>
-        </div>
+        <div class="about-tool-icon"><?= $svg ?></div>
         <div>
-          <span class="about-tool-name">GameMaker Studio 2</span>
-          <span class="about-tool-desc">Motor do jogo, lógica, física e renderização 2D</span>
+          <span class="about-tool-name" data-i18n-html="sobre.tool_<?= $slug ?>"><?= t('sobre.tool_' . $slug) ?></span>
+          <span class="about-tool-desc" data-i18n="sobre.tool_<?= $slug ?>_d"><?= t('sobre.tool_' . $slug . '_d') ?></span>
         </div>
       </div>
-
-      <div class="about-tool-item">
-        <div class="about-tool-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
-        </div>
-        <div>
-          <span class="about-tool-name">GML</span>
-          <span class="about-tool-desc">Linguagem de programação nativa do GameMaker</span>
-        </div>
-      </div>
-
-      <div class="about-tool-item">
-        <div class="about-tool-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"/><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"/></svg>
-        </div>
-        <div>
-          <span class="about-tool-name">PHP &amp; MySQL</span>
-          <span class="about-tool-desc">Backend do site, autenticação, base de dados, perfis</span>
-        </div>
-      </div>
-
-      <div class="about-tool-item">
-        <div class="about-tool-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 014 10 15.3 15.3 0 01-4 10 15.3 15.3 0 01-4-10 15.3 15.3 0 014-10z"/></svg>
-        </div>
-        <div>
-          <span class="about-tool-name">HTML / CSS / JavaScript</span>
-          <span class="about-tool-desc">Frontend do site, interface, animações, interatividade</span>
-        </div>
-      </div>
-
-      <div class="about-tool-item">
-        <div class="about-tool-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M7 7h3v3H7zM14 14h3v3h-3zM7 14h3v3H7zM14 7h3v3h-3z"/></svg>
-        </div>
-        <div>
-          <span class="about-tool-name">Aseprite</span>
-          <span class="about-tool-desc">Criação de sprites e animações em pixel art</span>
-        </div>
-      </div>
-
-      <div class="about-tool-item">
-        <div class="about-tool-icon">
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>
-        </div>
-        <div>
-          <span class="about-tool-name">Git &amp; GitHub</span>
-          <span class="about-tool-desc">Controlo de versões e colaboração</span>
-        </div>
-      </div>
+      <?php endforeach; ?>
     </div>
   </section>
 
   <section class="about-section">
     <div class="about-section-header">
-      <span class="about-badge">Reflexão</span>
-      <h2>O que aprendemos</h2>
+      <span class="about-badge" data-i18n="sobre.ref_badge"><?= t('sobre.ref_badge') ?></span>
+      <h2 data-i18n="sobre.ref_title"><?= t('sobre.ref_title') ?></h2>
     </div>
     <div class="about-text-block">
-      <p>Este projeto ensinou-nos que o desenvolvimento de software raramente corre como planeado, e que isso não é um fracasso, é parte do processo. Cada obstáculo técnico tornou-se uma oportunidade de aprender algo que os livros não ensinam.</p>
-      <p>Aprendemos a trabalhar em equipa sob pressão, a dividir responsabilidades, a comunicar problemas e a tomar decisões difíceis sobre o que era viável dentro do tempo disponível. Acima de tudo, ficámos com a certeza de que escolhemos a área certa.</p>
+      <p data-i18n="sobre.ref_p1"><?= t('sobre.ref_p1') ?></p>
+      <p data-i18n="sobre.ref_p2"><?= t('sobre.ref_p2') ?></p>
     </div>
   </section>
 
   <section class="about-section" id="contacto">
     <div class="about-section-header">
-      <span class="about-badge">Contacto</span>
-      <h2>Fala connosco</h2>
+      <span class="about-badge" data-i18n="sobre.ct_badge"><?= t('sobre.ct_badge') ?></span>
+      <h2 data-i18n="sobre.ct_title"><?= t('sobre.ct_title') ?></h2>
     </div>
 
-    <p class="about-contact-intro">Tens uma sugestão, encontraste um bug ou queres dizer olá? Envia uma mensagem e respondemos por email.</p>
+    <p class="about-contact-intro" data-i18n="sobre.ct_intro"><?= t('sobre.ct_intro') ?></p>
 
     <form class="about-contact-form" id="contact-form" novalidate>
       <input type="hidden" name="_csrf" value="<?= e($csrfToken) ?>">
@@ -298,29 +258,29 @@ include 'includes/header.php';
 
       <div class="about-contact-row">
         <div class="form-group">
-          <label for="contact-name">Nome</label>
-          <input type="text" id="contact-name" name="name" placeholder="Como te chamas?" required minlength="2" maxlength="80" autocomplete="name">
+          <label for="contact-name" data-i18n="sobre.ct_name"><?= t('sobre.ct_name') ?></label>
+          <input type="text" id="contact-name" name="name" data-i18n-placeholder="sobre.ct_name_ph" placeholder="<?= e(t('sobre.ct_name_ph')) ?>" required minlength="2" maxlength="80" autocomplete="name">
         </div>
         <div class="form-group">
-          <label for="contact-email">Email</label>
-          <input type="email" id="contact-email" name="email" placeholder="o-teu@email.com" required autocomplete="email">
+          <label for="contact-email" data-i18n="sobre.ct_email"><?= t('sobre.ct_email') ?></label>
+          <input type="email" id="contact-email" name="email" data-i18n-placeholder="sobre.ct_email_ph" placeholder="<?= e(t('sobre.ct_email_ph')) ?>" required autocomplete="email">
         </div>
       </div>
 
       <div class="form-group">
-        <label for="contact-subject">Assunto</label>
-        <input type="text" id="contact-subject" name="subject" placeholder="Sobre o que queres falar?" required minlength="4" maxlength="120">
+        <label for="contact-subject" data-i18n="sobre.ct_subject"><?= t('sobre.ct_subject') ?></label>
+        <input type="text" id="contact-subject" name="subject" data-i18n-placeholder="sobre.ct_subject_ph" placeholder="<?= e(t('sobre.ct_subject_ph')) ?>" required minlength="4" maxlength="120">
       </div>
 
       <div class="form-group">
-        <label for="contact-message">Mensagem</label>
-        <textarea id="contact-message" name="message" rows="6" placeholder="Conta-nos." required minlength="20" maxlength="2000"></textarea>
+        <label for="contact-message" data-i18n="sobre.ct_message"><?= t('sobre.ct_message') ?></label>
+        <textarea id="contact-message" name="message" rows="6" data-i18n-placeholder="sobre.ct_message_ph" placeholder="<?= e(t('sobre.ct_message_ph')) ?>" required minlength="20" maxlength="2000"></textarea>
         <div class="about-contact-counter"><span id="contact-msg-count">0</span> / 2000</div>
       </div>
 
       <button type="submit" class="btn btn-primary about-contact-submit" id="contact-submit-btn">
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-        Enviar mensagem
+        <span data-i18n="sobre.ct_submit"><?= t('sobre.ct_submit') ?></span>
       </button>
     </form>
   </section>
@@ -330,8 +290,8 @@ include 'includes/header.php';
       <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><polyline points="8.21 13.89 7 22 12 19 17 22 15.79 13.88"/></svg>
     </div>
     <div class="about-credential-body">
-      <div class="about-credential-label">Escola Secundária de Mem Martins · PAP 2025/2026</div>
-      <p>Sylora: Ecos dos Deuses foi desenvolvido como Prova de Aptidão Profissional no Curso Profissional de Gestão e Programação de Sistemas Informáticos. O jogo, o site e a narrativa foram trabalhados pelos elementos da equipa ao longo do ano letivo.</p>
+      <div class="about-credential-label" data-i18n="sobre.credential_label"><?= t('sobre.credential_label') ?></div>
+      <p data-i18n="sobre.credential_p"><?= t('sobre.credential_p') ?></p>
     </div>
   </div>
 
@@ -406,14 +366,14 @@ include 'includes/header.php';
       const data = await res.json();
 
       if (data.success) {
-        showToast(data.message || 'Mensagem enviada com sucesso.', 'success');
+        showToast(data.message || window.SYLORA_T('toast.contact_sent'), 'success');
         form.reset();
         if (countEl) countEl.textContent = '0';
       } else {
-        showToast(data.error || 'Erro ao enviar a mensagem.', 'error');
+        showToast(data.error || window.SYLORA_T('toast.contact_error'), 'error');
       }
     } catch (err) {
-      showToast('Erro de ligação. Tenta novamente.', 'error');
+      showToast(window.SYLORA_T('toast.connecting'), 'error');
     } finally {
       submit.classList.remove('btn-loading');
       submit.disabled = false;

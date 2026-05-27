@@ -13,12 +13,12 @@ $GLOBALS['_mem_reserve'] = str_repeat(' ', 512 * 1024);
 
 
 register_shutdown_function(function () use ($profileUrl) {
-    $GLOBALS['_mem_reserve'] = null; 
+    $GLOBALS['_mem_reserve'] = null;
     $err = error_get_last();
     if ($err && in_array($err['type'], [E_ERROR, E_CORE_ERROR, E_COMPILE_ERROR])) {
         while (ob_get_level() > 0) ob_end_clean();
         if (!headers_sent()) {
-            $_SESSION['flash_message'] = 'A imagem é demasiado grande para processar. Usa uma foto mais pequena (máx. 5MB).';
+            $_SESSION['flash_message'] = t('err.avatar_huge');
             $_SESSION['flash_type']    = 'error';
             header('Location: ' . $profileUrl);
             exit;
@@ -27,17 +27,17 @@ register_shutdown_function(function () use ($profileUrl) {
 });
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-    redirect($profileUrl, 'Ação inválida.', 'error');
+    redirect($profileUrl, t('err.invalid_action'), 'error');
 }
 
 
 if (empty($_POST) && !empty($_SERVER['CONTENT_LENGTH'])) {
-    redirect($profileUrl, 'A imagem excede o limite permitido (máx. 5MB).', 'error');
+    redirect($profileUrl, t('err.avatar_size'), 'error');
 }
 
 $csrf = $_POST['_csrf'] ?? '';
 if (!verifyCSRFToken($csrf)) {
-    redirect($profileUrl, 'Pedido inválido. Tenta novamente.', 'error');
+    redirect($profileUrl, t('err.invalid_request'), 'error');
 }
 
 
@@ -58,8 +58,8 @@ switch ($action) {
         $uploadErr = $_FILES['avatar']['error'] ?? UPLOAD_ERR_NO_FILE;
         if ($uploadErr !== UPLOAD_ERR_OK) {
             $msg = in_array($uploadErr, [UPLOAD_ERR_INI_SIZE, UPLOAD_ERR_FORM_SIZE])
-                ? 'A imagem excede o limite permitido (máx. 5MB).'
-                : 'Erro ao carregar imagem. Tenta novamente.';
+                ? t('err.avatar_size')
+                : t('err.avatar_upload');
             avatarRespond($profileUrl, $msg, 'error');
         }
 
@@ -68,25 +68,25 @@ switch ($action) {
         $allowed = ['image/jpeg', 'image/png', 'image/webp'];
 
         if ($file['size'] > $maxSize) {
-            avatarRespond($profileUrl, 'A imagem excede o limite permitido (máx. 5MB).', 'error');
+            avatarRespond($profileUrl, t('err.avatar_size'), 'error');
         }
 
         $finfo    = new finfo(FILEINFO_MIME_TYPE);
         $mimeType = $finfo->file($file['tmp_name']);
 
         if (!in_array($mimeType, $allowed)) {
-            avatarRespond($profileUrl, 'Formato inválido. Usa JPG, PNG ou WebP.', 'error');
+            avatarRespond($profileUrl, t('err.avatar_format'), 'error');
         }
 
-        
+
         $imgInfo = @getimagesize($file['tmp_name']);
         if (!$imgInfo) {
-            avatarRespond($profileUrl, 'Ficheiro de imagem inválido.', 'error');
+            avatarRespond($profileUrl, t('err.avatar_bad'), 'error');
         }
-        
+
         $estimatedBytes = $imgInfo[0] * $imgInfo[1] * 4 * 2;
         if ($estimatedBytes > 200 * 1024 * 1024) {
-            avatarRespond($profileUrl, 'Imagem demasiado grande. Usa uma foto com menos de ~6000×6000px.', 'error');
+            avatarRespond($profileUrl, t('err.avatar_too_big'), 'error');
         }
 
         $src = match($mimeType) {
@@ -97,7 +97,7 @@ switch ($action) {
         };
 
         if (!$src) {
-            avatarRespond($profileUrl, 'Não foi possível processar a imagem.', 'error');
+            avatarRespond($profileUrl, t('err.avatar_process'), 'error');
         }
 
         
@@ -162,13 +162,13 @@ switch ($action) {
         $stmt->close();
 
         $_SESSION['avatar'] = true;
-        avatarRespond($profileUrl, 'Foto de perfil atualizada!', 'success');
+        avatarRespond($profileUrl, t('flash.avatar_updated'), 'success');
         break;
 
     case 'change_username':
         $newUsername = sanitize($_POST['new_username'] ?? '');
         if (!isValidUsername($newUsername)) {
-            redirect($profileUrl, 'Username inválido.', 'error');
+            redirect($profileUrl, t('err.username_invalid'), 'error');
         }
 
         $stmt = $conn->prepare("SELECT id FROM users WHERE username = ? AND id != ?");
@@ -176,7 +176,7 @@ switch ($action) {
         $stmt->execute();
         if ($stmt->get_result()->num_rows > 0) {
             $stmt->close();
-            redirect($profileUrl, 'Username já está em uso.', 'error');
+            redirect($profileUrl, t('err.username_used'), 'error');
         }
         $stmt->close();
 
@@ -186,7 +186,7 @@ switch ($action) {
         $stmt->close();
 
         $_SESSION['username'] = $newUsername;
-        redirect('u.php?u=' . urlencode($newUsername), 'Username alterado!', 'success');
+        redirect('u.php?u=' . urlencode($newUsername), t('flash.username_changed'), 'success');
         break;
 
     case 'change_email':
@@ -194,21 +194,19 @@ switch ($action) {
         $currentPassword = $_POST['current_password'] ?? '';
 
         if (!isValidEmail($newEmail)) {
-            redirect($profileUrl, 'Email inválido.', 'error');
+            redirect($profileUrl, t('err.invalid_email'), 'error');
         }
         if ($currentPassword === '') {
-            redirect($profileUrl, 'Tens de introduzir a password atual para alterar o email.', 'error');
+            redirect($profileUrl, t('err.email_pw_required'), 'error');
         }
 
-        
-        
         $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
         $stmt->bind_param("i", $user['id']);
         $stmt->execute();
         $row = $stmt->get_result()->fetch_assoc();
         $stmt->close();
         if (!$row || !password_verify($currentPassword, $row['password'])) {
-            redirect($profileUrl, 'Password atual incorreta.', 'error');
+            redirect($profileUrl, t('err.pw_current_wrong'), 'error');
         }
 
         $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? AND id != ?");
@@ -216,7 +214,7 @@ switch ($action) {
         $stmt->execute();
         if ($stmt->get_result()->num_rows > 0) {
             $stmt->close();
-            redirect($profileUrl, 'Email já está em uso.', 'error');
+            redirect($profileUrl, t('err.email_used'), 'error');
         }
         $stmt->close();
 
@@ -226,7 +224,7 @@ switch ($action) {
         $stmt->close();
 
         $_SESSION['email'] = $newEmail;
-        redirect($profileUrl, 'Email alterado!', 'success');
+        redirect($profileUrl, t('flash.email_changed'), 'success');
         break;
 
     case 'change_password':
@@ -235,10 +233,10 @@ switch ($action) {
         $confirmNewPassword = $_POST['confirm_new_password'] ?? '';
 
         if (!isValidPassword($newPassword)) {
-            redirect($profileUrl, 'Password deve ter no mínimo 8 caracteres.', 'error');
+            redirect($profileUrl, t('err.pw_short'), 'error');
         }
         if ($newPassword !== $confirmNewPassword) {
-            redirect($profileUrl, 'As passwords não coincidem.', 'error');
+            redirect($profileUrl, t('err.pw_mismatch'), 'error');
         }
 
         $stmt = $conn->prepare("SELECT password FROM users WHERE id = ?");
@@ -248,7 +246,7 @@ switch ($action) {
         $stmt->close();
 
         if (!password_verify($currentPassword, $row['password'])) {
-            redirect($profileUrl, 'Password atual incorreta.', 'error');
+            redirect($profileUrl, t('err.pw_current_wrong'), 'error');
         }
 
         $newHashed = password_hash($newPassword, PASSWORD_DEFAULT);
@@ -257,34 +255,30 @@ switch ($action) {
         $stmt->execute();
         $stmt->close();
 
-        
-        
-        
-        
         revokeAllUserSessions($user['id']);
         logoutUser();
-        redirect('login.php', 'Password alterada! Faz login novamente.', 'success');
+        redirect('login.php', t('flash.pw_changed'), 'success');
         break;
 
     case 'change_bio':
         $newBio = trim($_POST['bio'] ?? '');
         if (mb_strlen($newBio) > 300) {
-            redirect($profileUrl, 'Bio demasiado longa (máx. 300 caracteres).', 'error');
+            redirect($profileUrl, t('err.bio_too_long'), 'error');
         }
         $stmtBio = $conn->prepare("UPDATE users SET bio = ? WHERE id = ?");
         $stmtBio->bind_param("si", $newBio, $user['id']);
         $stmtBio->execute();
         $stmtBio->close();
-        redirect($profileUrl, 'Bio atualizada!', 'success');
+        redirect($profileUrl, t('flash.bio_updated'), 'success');
         break;
 
     case 'revoke_sessions':
         revokeAllUserSessions($user['id']);
         clearRememberMeCookies();
-        redirect($profileUrl, 'Todas as sessões foram terminadas.', 'success');
+        redirect($profileUrl, t('flash.sessions_ended'), 'success');
         break;
 
     default:
-        redirect($profileUrl, 'Ação desconhecida.', 'error');
+        redirect($profileUrl, t('err.unknown_action'), 'error');
 }
 ?>

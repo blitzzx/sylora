@@ -10,7 +10,7 @@ $errors    = [];
 $resetData = $rawToken ? verifyPasswordResetToken($rawToken) : false;
 
 if (!$rawToken || !$resetData) {
-    redirect('/forgot', 'Link inválido ou expirado. Pede um novo.', 'error');
+    redirect('/forgot', t('err.reset_link_bad'), 'error');
 }
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -19,19 +19,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password  = $_POST['password'] ?? '';
     $confirm   = $_POST['confirm_password'] ?? '';
 
-    
+
     $expectedCsrf = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
 
     if (!hash_equals($expectedCsrf, $csrf)) {
-        $errors[] = 'Pedido inválido. Tenta novamente.';
+        $errors[] = t('err.invalid_request');
     } elseif (!isValidPassword($password)) {
-        $errors[] = 'A password deve ter pelo menos 8 caracteres.';
+        $errors[] = t('err.pw_short');
     } elseif ($password !== $confirm) {
-        $errors[] = 'As passwords não coincidem.';
+        $errors[] = t('err.pw_mismatch');
     } else {
         $rd = verifyPasswordResetToken($postToken);
         if (!$rd) {
-            $errors[]  = 'Link expirado. Pede um novo no formulário de recuperação.';
+            $errors[]  = t('err.reset_expired');
             $showLinkToForgot = true;
         } else {
             $hash = password_hash($password, PASSWORD_DEFAULT);
@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             consumePasswordResetToken($rd['reset_id']);
             revokeAllUserSessions($rd['user_id']);
 
-            redirect('/login', 'Password alterada com sucesso! Faz login com a nova password.', 'success');
+            redirect('/login', t('flash.pw_reset_ok'), 'success');
         }
     }
 }
@@ -75,6 +75,9 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
       document.documentElement.setAttribute('data-theme', s || d);
     })();
   </script>
+  <script>window.SYLORA_I18N=<?= json_encode(['en'=>require __DIR__.'/lang/en.php','pt'=>require __DIR__.'/lang/pt.php','es'=>require __DIR__.'/lang/es.php'],JSON_HEX_TAG|JSON_HEX_AMP) ?>;
+  window.SYLORA_LANG=<?= json_encode(getLang()) ?>;
+  window.SYLORA_T=function(key,vars){var dict=(window.SYLORA_I18N&&window.SYLORA_I18N[window.SYLORA_LANG])||{};var val=(dict[key]!==undefined)?dict[key]:key;if(vars){for(var k in vars){val=val.split('{'+k+'}').join(vars[k]);}}return val;};</script>
 </head>
 <body class="auth-page">
 
@@ -121,7 +124,7 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
             <p><?php echo e($err); ?></p>
           <?php endforeach; ?>
           <?php if (!empty($showLinkToForgot)): ?>
-            <p><a href="/forgot">Pedir um novo link</a></p>
+            <p><a href="/forgot" data-i18n="common.new_link"><?= t('common.new_link') ?></a></p>
           <?php endif; ?>
         </div>
       <?php endif; ?>
@@ -193,13 +196,14 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
       if (/[A-Z]/.test(val)) score++;
       if (/[0-9]/.test(val)) score++;
       if (/[^a-zA-Z0-9]/.test(val)) score++;
+      var T = (window.SYLORA_T) || (function(k){return k;});
       const levels = [
         { pct: '0%',   color: 'transparent', text: '' },
-        { pct: '25%',  color: '#c96b5a',     text: 'Fraca' },
-        { pct: '50%',  color: '#d4955a',     text: 'Razoável' },
-        { pct: '75%',  color: '#c9993a',     text: 'Boa' },
-        { pct: '90%',  color: '#7aad6e',     text: 'Forte' },
-        { pct: '100%', color: '#4e8c3d',     text: 'Muito forte' },
+        { pct: '25%',  color: '#c96b5a',     text: T('pw.weak') },
+        { pct: '50%',  color: '#d4955a',     text: T('pw.fair') },
+        { pct: '75%',  color: '#c9993a',     text: T('pw.good') },
+        { pct: '90%',  color: '#7aad6e',     text: T('pw.strong') },
+        { pct: '100%', color: '#4e8c3d',     text: T('pw.very_strong') },
       ];
       const lvl = levels[Math.min(score, 5)];
       fill.style.width      = val.length ? lvl.pct : '0%';
@@ -211,14 +215,16 @@ $csrfToken = hash_hmac('sha256', $rawToken, 'sylora-reset-csrf-v1');
   (function() {
     var SVG_EYE     = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
     var SVG_EYE_OFF = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    var T2 = (window.SYLORA_T) || (function(k){return k;});
     document.querySelectorAll('.pw-toggle').forEach(function(btn) {
       btn.innerHTML = SVG_EYE;
+      btn.setAttribute('aria-label', T2('common.show_pw'));
       btn.addEventListener('click', function() {
         var input = btn.closest('.pw-wrap').querySelector('input');
         var show = input.type === 'password';
         input.type = show ? 'text' : 'password';
         btn.innerHTML = show ? SVG_EYE_OFF : SVG_EYE;
-        btn.setAttribute('aria-label', show ? 'Esconder password' : 'Mostrar password');
+        btn.setAttribute('aria-label', show ? T2('common.hide_pw') : T2('common.show_pw'));
       });
     });
   })();

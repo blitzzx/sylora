@@ -11,7 +11,7 @@ $emailValue = '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf = $_POST['_csrf'] ?? '';
     if (!verifyCSRFToken($csrf)) {
-        $errors[] = 'Pedido inválido. Tenta novamente.';
+        $errors[] = t('err.invalid_request');
     } else {
         $email    = sanitize($_POST['email'] ?? '');
         $password = $_POST['password'] ?? '';
@@ -21,11 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $emailValue = $email;
 
         if (empty($email) || empty($password)) {
-            $errors[] = 'Preenche todos os campos.';
+            $errors[] = t('err.fill_all');
         } elseif (!isValidEmail($email)) {
-            $errors[] = 'Email inválido.';
+            $errors[] = t('err.invalid_email');
         } elseif (!checkLoginRateLimit($ip)) {
-            $errors[] = 'Demasiadas tentativas. Aguarda 15 minutos e tenta novamente.';
+            $errors[] = t('err.too_many');
         } else {
             $stmt = $conn->prepare('SELECT id, username, email, password, role, is_active, email_verified_at FROM users WHERE email = ? LIMIT 1');
             $stmt->bind_param('s', $email);
@@ -37,10 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (empty($user['is_active'])) {
                     recordLoginAttempt($ip, $email, 0);
                     if (empty($user['email_verified_at'])) {
-                        $errors[]      = 'Precisas de verificar o teu e-mail antes de entrar.';
+                        $errors[]      = t('err.verify_required');
                         $showVerifyLink = true;
                     } else {
-                        $errors[] = 'Conta desativada. Contacta o suporte.';
+                        $errors[] = t('err.account_disabled');
                     }
                 } else {
                     recordLoginAttempt($ip, $email, 1);
@@ -50,11 +50,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         createRememberMeToken($user['id']);
                     }
 
-                    redirect('/', 'Bem-vindo de volta, ' . e($user['username']) . '!', 'success');
+                    redirect('/', t('flash.welcome_back', ['name' => e($user['username'])]), 'success');
                 }
             } else {
                 recordLoginAttempt($ip, $email, 0);
-                $errors[] = 'Email ou password incorretos.';
+                $errors[] = t('err.bad_credentials');
             }
         }
     }
@@ -88,6 +88,9 @@ $csrfToken = generateCSRFToken();
       document.documentElement.setAttribute('data-theme', s || d);
     })();
   </script>
+  <script>window.SYLORA_I18N=<?= json_encode(['en'=>require __DIR__.'/lang/en.php','pt'=>require __DIR__.'/lang/pt.php','es'=>require __DIR__.'/lang/es.php'],JSON_HEX_TAG|JSON_HEX_AMP) ?>;
+  window.SYLORA_LANG=<?= json_encode(getLang()) ?>;
+  window.SYLORA_T=function(key,vars){var dict=(window.SYLORA_I18N&&window.SYLORA_I18N[window.SYLORA_LANG])||{};var val=(dict[key]!==undefined)?dict[key]:key;if(vars){for(var k in vars){val=val.split('{'+k+'}').join(vars[k]);}}return val;};</script>
 </head>
 <body class="auth-page">
 
@@ -231,15 +234,16 @@ $csrfToken = generateCSRFToken();
   (function() {
     var SVG_EYE     = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>';
     var SVG_EYE_OFF = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>';
+    var T = (window.SYLORA_T) || (function(k){return k;});
     document.querySelectorAll('.pw-toggle').forEach(function(btn) {
       btn.innerHTML = SVG_EYE;
-      btn.setAttribute('aria-label', 'Mostrar password');
+      btn.setAttribute('aria-label', T('common.show_pw'));
       btn.addEventListener('click', function() {
         var input = btn.closest('.pw-wrap').querySelector('input');
         var show = input.type === 'password';
         input.type = show ? 'text' : 'password';
         btn.innerHTML = show ? SVG_EYE_OFF : SVG_EYE;
-        btn.setAttribute('aria-label', show ? 'Esconder password' : 'Mostrar password');
+        btn.setAttribute('aria-label', show ? T('common.hide_pw') : T('common.show_pw'));
       });
     });
   })();

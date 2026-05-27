@@ -22,8 +22,9 @@ document.addEventListener("DOMContentLoaded", () => {
         if (submit) {
           submit.disabled = true;
           submit.dataset.originalText = submit.textContent || submit.value || "";
-          if (submit.tagName.toLowerCase() === "button") submit.textContent = "A enviar...";
-          else submit.value = "A enviar...";
+          const txt = (window.SYLORA_T ? window.SYLORA_T("common.sending") : "A enviar...");
+          if (submit.tagName.toLowerCase() === "button") submit.textContent = txt;
+          else submit.value = txt;
         }
       });
     });
@@ -31,6 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const SVG_EYE     = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
     const SVG_EYE_OFF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
+    const TPW = (k) => (window.SYLORA_T ? window.SYLORA_T(k) : k);
     $$('input[type="password"]', root).forEach((input) => {
       if (input.closest(".pw-wrap")) return;
       const wrap = document.createElement("div");
@@ -41,12 +43,12 @@ document.addEventListener("DOMContentLoaded", () => {
       toggle.type = "button";
       toggle.className = "pw-toggle";
       toggle.innerHTML = SVG_EYE;
-      toggle.setAttribute("aria-label", "Mostrar password");
+      toggle.setAttribute("aria-label", TPW("common.show_pw"));
       toggle.addEventListener("click", () => {
         const isPassword = input.type === "password";
         input.type = isPassword ? "text" : "password";
         toggle.innerHTML = isPassword ? SVG_EYE_OFF : SVG_EYE;
-        toggle.setAttribute("aria-label", isPassword ? "Esconder password" : "Mostrar password");
+        toggle.setAttribute("aria-label", isPassword ? TPW("common.hide_pw") : TPW("common.show_pw"));
         input.focus();
       });
       wrap.appendChild(toggle);
@@ -58,7 +60,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pw && confirmPw) {
       const validate = () => {
         confirmPw.setCustomValidity(
-          confirmPw.value && pw.value !== confirmPw.value ? "As passwords não coincidem." : ""
+          confirmPw.value && pw.value !== confirmPw.value ? TPW("err.pw_mismatch") : ""
         );
       };
       pw.addEventListener("input", validate);
@@ -74,6 +76,15 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener("pjax:loaded", () => {
     const pjaxRoot = document.getElementById("pjax-root");
     if (pjaxRoot) initPageContent(pjaxRoot);
+  });
+
+  // Refresh dynamic aria-labels on language change
+  document.addEventListener("sylora:langchange", (e) => {
+    const T = (k) => (e.detail.dict[k] !== undefined ? e.detail.dict[k] : k);
+    $$(".pw-toggle").forEach((btn) => {
+      const isShown = btn.closest(".pw-wrap")?.querySelector("input")?.type === "text";
+      btn.setAttribute("aria-label", isShown ? T("common.hide_pw") : T("common.show_pw"));
+    });
   });
 
 
@@ -184,7 +195,7 @@ document.addEventListener("DOMContentLoaded", () => {
       const file = fileInput.files[0];
       if (!file) return;
       if (file.size > 10 * 1024 * 1024) {
-        showToast("Imagem demasiado grande (máx. 10MB).", "error");
+        showToast(window.SYLORA_T("toast.avatar_too_big"), "error");
         fileInput.value = "";
         return;
       }
@@ -374,7 +385,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const origLabel = confirmBtn.innerHTML;
         confirmBtn.disabled    = true;
-        confirmBtn.textContent = "A guardar…";
+        confirmBtn.textContent = window.SYLORA_T("common.saving");
 
         out.toBlob(async (blob) => {
           const form = new FormData();
@@ -389,14 +400,14 @@ document.addEventListener("DOMContentLoaded", () => {
             });
             const data = await res.json();
             if (data.success) {
-              showToast("Avatar atualizado!", "success");
+              showToast(window.SYLORA_T("toast.avatar_saved"), "success");
               closeModal();
               setTimeout(() => location.reload(), 900);
             } else {
-              showToast(data.message || "Erro ao guardar avatar.", "error");
+              showToast(data.message || window.SYLORA_T("toast.avatar_error"), "error");
             }
           } catch {
-            showToast("Erro de ligação.", "error");
+            showToast(window.SYLORA_T("toast.connection_error"), "error");
           } finally {
             confirmBtn.disabled  = false;
             confirmBtn.innerHTML = origLabel;
