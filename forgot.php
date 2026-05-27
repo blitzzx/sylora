@@ -64,7 +64,7 @@ $csrfToken = generateCSRFToken();
   <link rel="stylesheet" href="css/style.css?v=<?php echo @filemtime('css/style.css') ?: '1'; ?>">
   <link rel="icon" type="image/png" href="assets/img/FavIcon-Sylora.png">
   <?php if ($recaptchaSiteKey): ?>
-  <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>"></script>
   <?php endif; ?>
   <script type="text/javascript">
     (function(c,l,a,r,i,t,y){

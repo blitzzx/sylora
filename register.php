@@ -121,7 +121,7 @@ $csrfToken = generateCSRFToken();
   <link rel="icon" type="image/png" href="assets/img/FavIcon-Sylora.png">
   <link rel="apple-touch-icon" href="assets/img/FavIcon-Sylora.png">
   <?php if ($recaptchaSiteKey): ?>
-  <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>" async defer></script>
+  <script src="https://www.google.com/recaptcha/api.js?render=<?= e($recaptchaSiteKey) ?>"></script>
   <?php endif; ?>
   <style>
     
