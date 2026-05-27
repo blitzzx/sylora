@@ -234,7 +234,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 
       <div class="lang-switcher" id="lang-switcher">
         <?php foreach(['en','pt','es'] as $l): ?>
-        <a href="/api/set_lang?lang=<?= $l ?>" class="lang-btn<?= getLang()===$l?' active':'' ?>"><?= strtoupper($l) ?></a>
+        <a href="/api/set_lang?lang=<?= $l ?>" onclick="event.preventDefault();setLang('<?= $l ?>')" class="lang-btn<?= getLang()===$l?' active':'' ?>"><?= strtoupper($l) ?></a>
         <?php endforeach; ?>
       </div>
 
@@ -286,7 +286,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
     <?php endif; ?>
     <div class="mobile-lang-row" style="display:flex;gap:6px;padding:10px 18px 4px;justify-content:center;">
       <?php foreach(['en','pt','es'] as $l): ?>
-      <a href="/api/set_lang?lang=<?= $l ?>" class="lang-btn<?= getLang()===$l?' active':'' ?>" style="flex:1;text-align:center;"><?= strtoupper($l) ?></a>
+      <a href="/api/set_lang?lang=<?= $l ?>" onclick="event.preventDefault();setLang('<?= $l ?>')" class="lang-btn<?= getLang()===$l?' active':'' ?>" style="flex:1;text-align:center;"><?= strtoupper($l) ?></a>
       <?php endforeach; ?>
     </div>
     <?php if ($isLoggedIn): ?>
@@ -323,6 +323,12 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 </div>
 
 <script>
+
+function setLang(lang) {
+  var sec = location.protocol === 'https:' ? '; Secure' : '';
+  document.cookie = 'sylora_lang=' + lang + '; path=/; max-age=31536000; SameSite=Lax' + sec;
+  location.reload();
+}
 
 function showToast(msg, type) {
   const t = document.getElementById('sylora-toast');
