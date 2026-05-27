@@ -4,9 +4,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const prefersReducedMotion = () =>
     window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  // ===== initPageContent: executado em cada navegação PJAX
+
   function initPageContent(root) {
-    // Auto-dismiss de alerts
+
     $$(".alert", root).forEach((a) => {
       window.setTimeout(() => {
         a.style.transition = prefersReducedMotion() ? "none" : "opacity 200ms ease";
@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
       }, 5000);
     });
 
-    // Evitar double submit
+
     $$("form", root).forEach((form) => {
       form.addEventListener("submit", () => {
         const submit = form.querySelector('button[type="submit"], input[type="submit"]');
@@ -28,7 +28,7 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     });
 
-    // Password visibility toggle
+
     const SVG_EYE     = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>`;
     const SVG_EYE_OFF = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.94 17.94A10.07 10.07 0 0112 20c-7 0-11-8-11-8a18.45 18.45 0 015.06-5.94M9.9 4.24A9.12 9.12 0 0112 4c7 0 11 8 11 8a18.5 18.5 0 01-2.16 3.19m-6.72-1.07a3 3 0 11-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>`;
     $$('input[type="password"]', root).forEach((input) => {
@@ -52,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
       wrap.appendChild(toggle);
     });
 
-    // Validação: confirmar password
+
     const pw        = $('[id="password"]', root);
     const confirmPw = $('[id="confirm_password"]', root);
     if (pw && confirmPw) {
@@ -67,16 +67,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
   }
 
-  // Primeira inicialização
+
   initPageContent(document);
 
-  // Re-init depois de cada navegação PJAX
+
   window.addEventListener("pjax:loaded", () => {
     const pjaxRoot = document.getElementById("pjax-root");
     if (pjaxRoot) initPageContent(pjaxRoot);
   });
 
-  // ===== 1) Mobile nav toggle
+
   const navMenu = $(".nav-mobile-menu");
   const navBtn  = $(".nav-toggle");
   if (navMenu && navBtn) {
@@ -99,7 +99,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== 2) User Drawer
+
   const pillBtn     = document.getElementById("drawer-trigger");
   const drawer      = document.getElementById("user-drawer");
   const overlay     = document.getElementById("drawer-overlay");
@@ -141,7 +141,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // ===== 3) Drawer accordion
+
   $$(".drawer-section-title").forEach((title) => {
     title.addEventListener("click", () => {
       const section    = title.closest(".drawer-section");
@@ -151,7 +151,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ===== 4) Avatar crop modal
+
   (function () {
     const trigger    = document.getElementById("drawer-avatar-trigger");
     const fileInput  = document.getElementById("avatar-file-input");
@@ -164,14 +164,21 @@ document.addEventListener("DOMContentLoaded", () => {
     const zoomFill   = document.getElementById("crop-zoom-fill");
     const zoomThumb  = document.getElementById("crop-zoom-thumb");
 
-    if (!trigger || !fileInput || !modal || !canvas) return;
+    if (!fileInput || !modal || !canvas) return;
 
-    const ctx  = canvas.getContext("2d");
-    const SIZE = 280;
+    const ctx = canvas.getContext("2d");
+    let SIZE = 280;
 
-    let img = null, zoom = 1, offsetX = 0, offsetY = 0, dragStart = null;
+    let img = null, zoom = 1, offsetX = 0, offsetY = 0;
+    let dragStart = null, pinchStart = null, pinchZoomStart = 1;
 
-    trigger.addEventListener("click", () => fileInput.click());
+    function computeSize() {
+      SIZE = Math.min(380, Math.max(200, window.innerWidth - 76));
+      canvas.width  = SIZE;
+      canvas.height = SIZE;
+    }
+
+    if (trigger) trigger.addEventListener("click", () => fileInput.click());
 
     fileInput.addEventListener("change", () => {
       const file = fileInput.files[0];
@@ -186,6 +193,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const image = new Image();
         image.onload = () => {
           img = image;
+          computeSize();
           resetView();
           modal.setAttribute("aria-hidden", "false");
           modal.classList.add("open");
@@ -231,7 +239,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.clearRect(0, 0, SIZE, SIZE);
       ctx.drawImage(img, offsetX, offsetY, img.width * zoom, img.height * zoom);
 
-      // Dark overlay only outside the preview circle (nonzero winding: CW rect + CCW arc)
+
       ctx.save();
       ctx.beginPath();
       ctx.rect(0, 0, SIZE, SIZE);
@@ -240,7 +248,7 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.fill();
       ctx.restore();
 
-      // Gold ring
+
       ctx.save();
       ctx.strokeStyle = "rgba(201,153,58,0.85)";
       ctx.lineWidth   = 2;
@@ -250,18 +258,26 @@ document.addEventListener("DOMContentLoaded", () => {
       ctx.restore();
     }
 
+    function applyZoom(newZoom, pivotCanvasX, pivotCanvasY) {
+      const min = zoomSlider ? parseFloat(zoomSlider.min) : zoom;
+      const max = zoomSlider ? parseFloat(zoomSlider.max) : zoom * 4;
+      newZoom = Math.min(max, Math.max(min, newZoom));
+      const ratio = newZoom / zoom;
+      offsetX = pivotCanvasX - (pivotCanvasX - offsetX) * ratio;
+      offsetY = pivotCanvasY - (pivotCanvasY - offsetY) * ratio;
+      zoom = newZoom;
+      if (zoomSlider) { zoomSlider.value = zoom; updateZoomTrack(); }
+      clampOffset();
+      drawCrop();
+    }
+
     if (zoomSlider) {
       zoomSlider.addEventListener("input", () => {
         const newZoom = parseFloat(zoomSlider.value);
-        const ratio   = newZoom / zoom;
-        offsetX = SIZE / 2 - (SIZE / 2 - offsetX) * ratio;
-        offsetY = SIZE / 2 - (SIZE / 2 - offsetY) * ratio;
-        zoom = newZoom;
-        clampOffset();
-        drawCrop();
-        updateZoomTrack();
+        applyZoom(newZoom, SIZE / 2, SIZE / 2);
       });
     }
+
 
     canvas.addEventListener("mousedown", (e) => {
       dragStart = { x: e.clientX - offsetX, y: e.clientY - offsetY };
@@ -279,20 +295,61 @@ document.addEventListener("DOMContentLoaded", () => {
       canvas.style.cursor = "grab";
     });
 
-    canvas.addEventListener("touchstart", (e) => {
-      const t = e.touches[0];
-      dragStart = { x: t.clientX - offsetX, y: t.clientY - offsetY };
-    }, { passive: true });
-    canvas.addEventListener("touchmove", (e) => {
-      if (!dragStart) return;
-      const t = e.touches[0];
-      offsetX = t.clientX - dragStart.x;
-      offsetY = t.clientY - dragStart.y;
-      clampOffset();
-      drawCrop();
+
+    canvas.addEventListener("wheel", (e) => {
       e.preventDefault();
+      const rect      = canvas.getBoundingClientRect();
+      const scaleX    = SIZE / rect.width;
+      const scaleY    = SIZE / rect.height;
+      const pivotX    = (e.clientX - rect.left) * scaleX;
+      const pivotY    = (e.clientY - rect.top)  * scaleY;
+      const delta     = e.deltaY > 0 ? -0.08 : 0.08;
+      applyZoom(zoom * (1 + delta), pivotX, pivotY);
     }, { passive: false });
-    canvas.addEventListener("touchend", () => { dragStart = null; });
+
+
+    canvas.addEventListener("touchstart", (e) => {
+      if (e.touches.length === 2) {
+        const t1 = e.touches[0], t2 = e.touches[1];
+        pinchStart     = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        pinchZoomStart = zoom;
+        dragStart      = null;
+      } else {
+        const t = e.touches[0];
+        dragStart  = { x: t.clientX - offsetX, y: t.clientY - offsetY };
+        pinchStart = null;
+      }
+    }, { passive: true });
+
+    canvas.addEventListener("touchmove", (e) => {
+      if (e.touches.length === 2 && pinchStart !== null) {
+        const t1   = e.touches[0], t2 = e.touches[1];
+        const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = SIZE / rect.width;
+        const scaleY = SIZE / rect.height;
+        const midX   = ((t1.clientX + t2.clientX) / 2 - rect.left) * scaleX;
+        const midY   = ((t1.clientY + t2.clientY) / 2 - rect.top)  * scaleY;
+        applyZoom(pinchZoomStart * (dist / pinchStart), midX, midY);
+        e.preventDefault();
+      } else if (e.touches.length === 1 && dragStart !== null) {
+        const t = e.touches[0];
+        offsetX = t.clientX - dragStart.x;
+        offsetY = t.clientY - dragStart.y;
+        clampOffset();
+        drawCrop();
+        e.preventDefault();
+      }
+    }, { passive: false });
+
+    canvas.addEventListener("touchend", (e) => {
+      if (e.touches.length < 2) pinchStart = null;
+      if (e.touches.length === 1) {
+        const t = e.touches[0];
+        dragStart = { x: t.clientX - offsetX, y: t.clientY - offsetY };
+      }
+      if (e.touches.length === 0) dragStart = null;
+    });
 
     function closeModal() {
       modal.setAttribute("aria-hidden", "true");
@@ -349,7 +406,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   })();
 
-  // ===== 4b) Avatar fallback — imagens quebradas mostram a inicial com estilos corretos
+
   (function () {
     function installAvatarFallback(img) {
       img.addEventListener("error", function onErr() {
@@ -374,7 +431,7 @@ document.addEventListener("DOMContentLoaded", () => {
     document.querySelectorAll(".nav-avatar-img, .drawer-avatar-img").forEach(installAvatarFallback);
   })();
 
-  // ===== 5) Tema
+
   const html           = document.documentElement;
   const themeToggleNav = document.getElementById("theme-toggle-nav");
   const themeIconDark  = document.getElementById("theme-icon-dark");
@@ -410,7 +467,7 @@ document.addEventListener("DOMContentLoaded", () => {
     b.addEventListener("click", () => applyTheme(b.dataset.themeSet));
   });
 
-  // ===== 6) Música ambiente: persiste sem pause via PJAX
+
   const audio        = document.getElementById("bg-music");
   const musicToggle  = document.getElementById("music-toggle");
   const iconOn       = document.getElementById("music-icon-on");
@@ -466,18 +523,23 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!musicOn) { setMusicState(true); return; }
     musicMuted = !musicMuted;
     audio.muted = musicMuted;
+    if (!musicMuted && audio.volume === 0) {
+      applyVolume(0.5);
+      localStorage.setItem(VOL_KEY, "0.5");
+    }
     localStorage.setItem(MUTE_KEY, musicMuted ? "true" : "false");
     updateMusicIcon();
   }
 
   if (audio) {
-    const savedOn     = localStorage.getItem(MUSIC_KEY) === "true";
-    const savedMuted  = localStorage.getItem(MUTE_KEY) === "true";
-    const savedTime   = parseFloat(localStorage.getItem(TIME_KEY) || "0");
-    const savedVol    = parseFloat(localStorage.getItem(VOL_KEY) || "0.5");
-    const safeVol     = isFinite(savedVol) ? Math.max(0, Math.min(1, savedVol)) : 0.5;
+    const savedOn    = localStorage.getItem(MUSIC_KEY) === "true";
+    const savedTime  = parseFloat(localStorage.getItem(TIME_KEY) || "0");
+    const savedVol   = parseFloat(localStorage.getItem(VOL_KEY) || "0.5");
+    const savedMuted = localStorage.getItem(MUTE_KEY) === "true";
+    const rawVol     = isFinite(savedVol) ? Math.max(0, Math.min(1, savedVol)) : 0.5;
+    const safeVol    = rawVol === 0 ? 0.5 : rawVol;
 
-    musicMuted = savedMuted;
+    musicMuted  = savedMuted;
     audio.muted = savedMuted;
 
     if (savedOn && savedTime > 0 && isFinite(savedTime)) {
@@ -504,60 +566,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setMusicState(savedOn);
 
-    const musicCtrl   = document.getElementById("music-ctrl");
-    const volPopup    = document.getElementById("music-vol-popup");
-    const isTouchOnly = window.matchMedia("(hover: none)").matches;
-    let volPopupOpen  = false;
-
-    function closeVolPopup() {
-      volPopupOpen = false;
-      if (volPopup) volPopup.classList.remove("music-vol-open");
-    }
-
     if (musicToggle) {
-      musicToggle.addEventListener("click", (e) => {
-        if (isTouchOnly) {
-          if (!musicOn) {
-            setMusicState(true);
-            return;
-          }
-          e.stopPropagation();
-          volPopupOpen = !volPopupOpen;
-          if (volPopup) volPopup.classList.toggle("music-vol-open", volPopupOpen);
-        } else {
-          toggleMute();
-        }
-      });
-    }
-
-    if (isTouchOnly) {
-      document.addEventListener("click", (e) => {
-        if (volPopupOpen && musicCtrl && !musicCtrl.contains(e.target)) {
-          closeVolPopup();
-        }
-      });
+      musicToggle.addEventListener("click", () => toggleMute());
     }
 
     if (volSlider) {
       volSlider.addEventListener("input", () => {
         const vol = parseInt(volSlider.value, 10) / 100;
+        musicMuted  = vol === 0;
+        audio.muted = musicMuted;
         applyVolume(vol);
         localStorage.setItem(VOL_KEY, String(vol));
-        if (vol === 0) {
-          musicMuted = true;
-          audio.muted = true;
-          localStorage.setItem(MUTE_KEY, "true");
-        } else if (musicMuted) {
-          musicMuted = false;
-          audio.muted = false;
-          localStorage.setItem(MUTE_KEY, "false");
-        }
+        localStorage.setItem(MUTE_KEY, musicMuted ? "true" : "false");
         updateMusicIcon();
       });
     }
   }
 
-  // ===== 7) Cursor circular com inversão de cores
+
   (function () {
     if (window.matchMedia("(hover: none)").matches) return;
     const el = document.createElement("div");
@@ -593,7 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   })();
 
-  // ===== 8) PJAX: navegação sem recarregar a página (música contínua)
+
   (function () {
     const PJAX_SKIP = new Set(["logout.php", "logout", "profile.php"]);
 
@@ -616,20 +642,41 @@ document.addEventListener("DOMContentLoaded", () => {
       });
     }
 
+    let pjaxController = null;
+
     function pjaxGo(url) {
       const root = document.getElementById("pjax-root");
       if (!root) { window.location.assign(url); return; }
 
+
+      if (pjaxController) pjaxController.abort();
+      pjaxController = new AbortController();
+
       root.classList.add("pjax-loading");
 
-      fetch(url, { headers: { "X-PJAX": "1" }, credentials: "same-origin" })
+
+      const safetyTimer = setTimeout(() => root.classList.remove("pjax-loading"), 8000);
+
+      fetch(url, {
+        headers: { "X-PJAX": "1" },
+        credentials: "same-origin",
+        signal: pjaxController.signal,
+      })
         .then((r) => r.text())
         .then((html) => {
+          clearTimeout(safetyTimer);
+          pjaxController = null;
+
           const doc     = new DOMParser().parseFromString(html, "text/html");
           const newRoot = doc.getElementById("pjax-root");
-          if (!newRoot) { window.location.assign(url); return; }
+          if (!newRoot) {
+            root.classList.remove("pjax-loading");
+            window.location.assign(url);
+            return;
+          }
 
           if (root.dataset.auth !== newRoot.dataset.auth) {
+            root.classList.remove("pjax-loading");
             window.location.assign(url);
             return;
           }
@@ -640,14 +687,36 @@ document.addEventListener("DOMContentLoaded", () => {
           if (siteFooter) siteFooter.style.display = root.querySelector("[data-no-footer]") ? "none" : "";
           closeDrawer();
 
-          history.pushState({ pjax: true, url }, "", url);
-          window.scrollTo({ top: 0, behavior: "instant" });
+
+          if (url !== location.href) {
+            history.pushState({ pjax: true, url }, "", url);
+          }
+
+
+          let targetHash = "";
+          try { targetHash = new URL(url, location.origin).hash; } catch {  }
+          if (targetHash) {
+            const el = document.getElementById(targetHash.slice(1));
+            if (el) {
+              requestAnimationFrame(() => el.scrollIntoView({ behavior: "smooth", block: "start" }));
+            } else {
+              window.scrollTo({ top: 0, behavior: "instant" });
+            }
+          } else {
+            window.scrollTo({ top: 0, behavior: "instant" });
+          }
 
           updateNavActive(url);
           reExecScripts(root);
           window.dispatchEvent(new Event("pjax:loaded"));
         })
-        .catch(() => window.location.assign(url));
+        .catch((err) => {
+          clearTimeout(safetyTimer);
+          pjaxController = null;
+          if (err.name === "AbortError") return;
+          root.classList.remove("pjax-loading");
+          window.location.assign(url);
+        });
     }
 
     document.addEventListener("click", (e) => {
@@ -667,13 +736,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
       e.preventDefault();
       if (link.href === location.href) return;
+
+
+      const curr = new URL(location.href);
+      if (url.pathname === curr.pathname && url.search === curr.search && url.hash) {
+        const el = document.getElementById(url.hash.slice(1));
+        if (el) {
+          history.pushState({ pjax: true, url: url.href }, "", url.href);
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+          return;
+        }
+      }
+
       pjaxGo(link.href);
     });
 
     window.addEventListener("popstate", () => pjaxGo(location.href));
   })();
 
-  // ===== Save helpers (jogar.php)
+
   function importSave(file) {
     const reader = new FileReader();
     reader.onload = (e) => {
@@ -702,7 +783,7 @@ document.addEventListener("DOMContentLoaded", () => {
     URL.revokeObjectURL(url);
   }
 
-  // ===== 9) Navbar transparente no hero: scroll reveal
+
   (function () {
     const nav = document.querySelector(".navbar");
     if (!nav) return;

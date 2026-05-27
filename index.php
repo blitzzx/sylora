@@ -42,7 +42,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
   <?php else: ?>
 
-  <!-- ===== HERO GUEST (NOVO) ===== -->
+  
   <section class="site-hero-full" id="hero-full">
     <video class="hero-video" id="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
       <source src="assets/video/trailer.mp4" type="video/mp4">
@@ -81,7 +81,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
 
   <script>
-  /* ── Canvas partículas do hero ── */
+  
   (function () {
     const canvas = document.getElementById('hero-canvas');
     if (!canvas) return;
@@ -137,19 +137,25 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     });
 
     document.getElementById('hero-download')?.addEventListener('click', () => {
-      if (typeof showToast === 'function') showToast('Download brevemente disponível.', 'info');
+      const a = document.createElement('a');
+      a.href = '/assets/download/Sylora%20Demo.exe';
+      a.download = 'Sylora Demo.exe';
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      if (typeof showToast === 'function') showToast('Download iniciado!', 'success');
     });
   })();
   </script>
 
   <?php endif; ?>
 
-  <!-- ===== MAPA DE ILHAS ===== -->
+  
   <section class="island-map-section container">
     <div class="ornament-divider"><span>As Ilhas de Sylora</span></div>
 
     <div class="island-map">
-      <!-- Ilha 1: Thalassos -->
+      
       <div class="island-card island-thalassos" data-act="I">
         <div class="island-card-bg">
           <div class="island-bg-ocean"></div>
@@ -176,7 +182,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <?php endif; ?>
       </div>
 
-      <!-- Ilha 2: Helion -->
+      
       <div class="island-card island-helion" data-act="II">
         <div class="island-card-bg">
           <div class="island-bg-fire"></div>
@@ -203,7 +209,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <?php endif; ?>
       </div>
 
-      <!-- Ilha 3: Zephyria -->
+      
       <div class="island-card island-zephyria" data-act="III">
         <div class="island-card-bg">
           <div class="island-bg-wind"></div>
@@ -223,7 +229,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <span class="island-cta island-cta-soon">Em breve</span>
       </div>
 
-      <!-- Ilha 4: Tártaro -->
+      
       <div class="island-card island-tartaro" data-act="IV">
         <div class="island-card-bg">
           <div class="island-bg-abyss"></div>
@@ -243,7 +249,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <span class="island-cta island-cta-soon">Em breve</span>
       </div>
 
-      <!-- Ilha 5: Olimpo -->
+      
       <div class="island-card island-olimpo island-wide" data-act="V">
         <div class="island-card-bg">
           <div class="island-bg-olympus"></div>
@@ -265,7 +271,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     </div>
   </section>
 
-  <!-- ===== FEATURES ===== -->
+  
   <section class="features-section container">
     <div class="ornament-divider"><span>O que te espera</span></div>
 
@@ -291,7 +297,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <p>Guarda o teu progresso na cloud e continua a aventura em qualquer dispositivo.</p>
         <span class="feature-card-arrow">→</span>
       </a>
-      <a href="sobrenos.php" class="feature-card">
+      <a href="sobre.php" class="feature-card">
         <div class="feature-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
         </div>
@@ -344,7 +350,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
       <?php endif; ?>
 
       <?php if ($isLoggedIn): ?>
-      <a href="u.php?u=<?php echo e($_SESSION['username'] ?? ''); ?>" class="feature-card">
+      <a href="u.php?u=<?php echo e($_SESSION['username'] ?? ''); ?>&tab=friends" class="feature-card">
         <div class="feature-card-icon">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg>
         </div>
@@ -369,7 +375,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     </div>
   </section>
 
-  <!-- ===== PERSONAGENS ===== -->
+  
   <section class="chars-section container">
     <div class="ornament-divider"><span>Figuras da Lenda</span></div>
     <div class="chars-grid">
@@ -405,7 +411,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
   </section>
 
   <?php if (!$isLoggedIn): ?>
-  <!-- ===== CTA FINAL ===== -->
+  
   <section class="cta-section container">
     <div class="cta-box">
       <div class="cta-box-deco" aria-hidden="true">

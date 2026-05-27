@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (!checkLoginRateLimit($ip)) {
             $errors[] = 'Demasiadas tentativas. Aguarda 15 minutos e tenta novamente.';
         } else {
-            $stmt = $conn->prepare('SELECT id, username, email, password, role, is_active, avatar, email_verified_at FROM users WHERE email = ? LIMIT 1');
+            $stmt = $conn->prepare('SELECT id, username, email, password, role, is_active, email_verified_at FROM users WHERE email = ? LIMIT 1');
             $stmt->bind_param('s', $email);
             $stmt->execute();
             $user = $stmt->get_result()->fetch_assoc();
@@ -37,14 +37,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 if (empty($user['is_active'])) {
                     recordLoginAttempt($ip, $email, 0);
                     if (empty($user['email_verified_at'])) {
-                        $errors[] = 'Precisas de verificar o teu e-mail antes de entrar. <a href="/verify">Reenviar link de verificação</a>.';
+                        $errors[]      = 'Precisas de verificar o teu e-mail antes de entrar.';
+                        $showVerifyLink = true;
                     } else {
                         $errors[] = 'Conta desativada. Contacta o suporte.';
                     }
                 } else {
                     recordLoginAttempt($ip, $email, 1);
                     loginUser($user['id'], $user['username'], $user['email'], $user['role']);
-                    $_SESSION['avatar'] = !empty($user['avatar']);
 
                     if ($remember) {
                         createRememberMeToken($user['id']);
@@ -93,7 +93,7 @@ $csrfToken = generateCSRFToken();
 
 <div class="auth-split">
 
-  <!-- ── Painel esquerdo decorativo ── -->
+  
   <div class="auth-deco" aria-hidden="true">
     <div class="auth-deco-bg"></div>
     <div class="auth-deco-content">
@@ -116,7 +116,7 @@ $csrfToken = generateCSRFToken();
     </div>
   </div>
 
-  <!-- ── Painel direito com formulário ── -->
+  
   <div class="auth-form-panel">
 
     <div class="auth-form-top">
@@ -142,6 +142,9 @@ $csrfToken = generateCSRFToken();
           <?php foreach ($errors as $err): ?>
             <p><?php echo e($err); ?></p>
           <?php endforeach; ?>
+          <?php if (!empty($showVerifyLink)): ?>
+            <p><a href="/verify">Reenviar código de verificação</a></p>
+          <?php endif; ?>
         </div>
       <?php endif; ?>
 
@@ -187,7 +190,7 @@ $csrfToken = generateCSRFToken();
           <label class="auth-checkbox-label">
             <input type="checkbox" name="remember" id="remember">
             <span class="auth-checkbox-custom"></span>
-            Lembrar-me durante 30 dias
+            Lembrar-me
           </label>
           <a href="/forgot" class="auth-forgot-link">Esqueceste a password?</a>
         </div>

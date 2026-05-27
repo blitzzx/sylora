@@ -9,14 +9,14 @@ $isJson  = !empty($_GET['json']);
 if ($q !== '' && mb_strlen($q) >= 2) {
     $like = '%' . $q . '%';
 
-    // Contagem total
+    
     $stmtCount = $conn->prepare("SELECT COUNT(*) FROM users WHERE username LIKE ? AND is_active = 1");
     $stmtCount->bind_param('s', $like);
     $stmtCount->execute();
     $total = (int) $stmtCount->get_result()->fetch_row()[0];
     $stmtCount->close();
 
-    // Resultados com melhor save
+    
     $stmt = $conn->prepare("
         SELECT u.id, u.username, u.role, u.created_at,
                (SELECT level FROM saves WHERE user_id = u.id ORDER BY level DESC LIMIT 1) AS best_level,
@@ -32,7 +32,7 @@ if ($q !== '' && mb_strlen($q) >= 2) {
     $stmt->close();
 }
 
-// JSON response for AJAX calls (e.g. friend search in profile)
+
 if ($isJson) {
     header('Content-Type: application/json; charset=utf-8');
     $out = [];
@@ -58,7 +58,7 @@ include 'includes/header.php';
       <p class="page-subtitle">Encontra outros jogadores da comunidade Sylora</p>
     </div>
 
-    <!-- Formulário de pesquisa -->
+    
     <form class="search-form" method="GET" action="search.php" role="search">
       <div class="search-input-wrap">
         <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -81,7 +81,7 @@ include 'includes/header.php';
 
     <?php if ($q !== ''): ?>
 
-      <!-- Resultados -->
+      
       <?php if ($total === 0): ?>
         <div class="search-empty">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--muted)">

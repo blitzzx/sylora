@@ -26,6 +26,13 @@ if (!$row) {
 }
 
 $output = $row['save_data'] . "\x00";
+
+
+
+while (ob_get_level() > 0) {
+    ob_end_clean();
+}
+
 header('Content-Type: application/octet-stream');
 header('Content-Disposition: attachment; filename="syloradata.sav"');
 header('Content-Length: ' . strlen($output));

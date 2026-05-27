@@ -33,7 +33,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
   <div class="sx-track" id="sxTrack">
 
-    <!-- INTRO -->
+    
     <div class="sx-panel sx-panel-intro">
       <div class="sx-intro-content">
         <div class="sx-hero-runes" aria-hidden="true">⊕ ✦ ◈ ⟡ ✦ ◈ ⊕</div>
@@ -47,7 +47,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-    <!-- PRÓLOGO -->
+    
     <div class="sx-panel" style="--hue:38">
       <div class="sx-panel-glow"></div>
       <div class="sx-content">
@@ -67,7 +67,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-    <!-- HERÓI -->
+    
     <div class="sx-panel" style="--hue:195">
       <div class="sx-panel-glow"></div>
       <div class="sx-content">
@@ -90,7 +90,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-    <!-- CLIO -->
+    
     <div class="sx-panel" style="--hue:265">
       <div class="sx-panel-glow"></div>
       <div class="sx-content">
@@ -115,7 +115,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-    <!-- ATO I -->
+    
     <div class="sx-panel" style="--hue:184">
       <div class="sx-panel-glow"></div>
       <div class="sx-content">
@@ -139,7 +139,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-    <!-- ATO II -->
+    
     <div class="sx-panel" style="--hue:24">
       <div class="sx-panel-glow"></div>
       <div class="sx-content">
@@ -163,7 +163,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-    <!-- ATO III -->
+    
     <div class="sx-panel" style="--hue:208">
       <div class="sx-panel-glow"></div>
       <div class="sx-content">
@@ -187,7 +187,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-    <!-- ATO IV -->
+    
     <div class="sx-panel" style="--hue:258">
       <div class="sx-panel-glow"></div>
       <div class="sx-content">
@@ -211,7 +211,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-    <!-- ATO V FINAL -->
+    
     <div class="sx-panel sx-panel-final" style="--hue:46">
       <div class="sx-panel-glow"></div>
       <div class="sx-content">
@@ -239,9 +239,9 @@ $isLoggedIn = isset($_SESSION['user_id']);
       </div>
     </div>
 
-  </div><!-- /sx-track -->
-</div><!-- /sx-wrap -->
-</div><!-- /sx-outer -->
+  </div>
+</div>
+</div>
 
 <script>
 (function(){
@@ -376,7 +376,7 @@ $isLoggedIn = isset($_SESSION['user_id']);
 <?php endif; ?>
 
 <?php
-// Suprimir o footer na experiência de história logada (ocupa espaço desnecessário no fullscreen)
+
 if ($isLoggedIn) { $noFooter = true; }
 include 'includes/footer.php';
 ?>

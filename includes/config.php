@@ -2,7 +2,7 @@
 
 ob_start();
 
-// Detetar ambiente e configurar erros
+
 $_is_production = (getenv('APP_ENV') === 'production');
 if ($_is_production) {
     ini_set('display_errors', 0);
@@ -12,7 +12,7 @@ if ($_is_production) {
     error_reporting(E_ALL);
 }
 
-// Detetar HTTPS (Railway usa proxy reverso com X-Forwarded-Proto)
+
 $_is_https = (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
           || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
 
@@ -38,8 +38,8 @@ require_once __DIR__ . '/db.php';
 require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/auth.php';
 
-// Auto-login via cookie "remember me" em todas as páginas, não só nas protegidas.
-// Garante que a navbar mostra sempre o estado correto independentemente da página.
+
+
 if (!isLoggedIn() && isset($_COOKIE['remember_selector'], $_COOKIE['remember_token'])) {
     tryRememberMeLogin();
 }

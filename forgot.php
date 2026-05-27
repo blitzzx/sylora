@@ -13,7 +13,7 @@ $recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf  = $_POST['_csrf'] ?? '';
     $email = sanitize($_POST['email'] ?? '');
-    $ip    = $_SERVER['REMOTE_ADDR'];
+    $ip    = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
 
     if (!verifyCSRFToken($csrf)) {
         $errors[] = 'Pedido inválido. Tenta novamente.';
@@ -27,18 +27,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!isValidEmail($email)) {
         $errors[] = 'Endereço de e-mail inválido.';
     } else {
-        $stmt = $conn->prepare('SELECT id, username FROM users WHERE email = ? AND is_active = 1 LIMIT 1');
-        $stmt->bind_param('s', $email);
-        $stmt->execute();
-        $user = $stmt->get_result()->fetch_assoc();
-        $stmt->close();
+        
+        
+        
+        $allowed = checkActionRateLimit('forgot_ip', $ip, 5, 60)
+                && checkActionRateLimit('forgot_email', strtolower($email), 3, 60);
+        if ($allowed) {
+            recordActionAttempt('forgot_ip', $ip, 1);
+            recordActionAttempt('forgot_email', strtolower($email), 1);
+            $stmt = $conn->prepare('SELECT id, username FROM users WHERE email = ? AND is_active = 1 LIMIT 1');
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $user = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
 
-        if ($user) {
-            $token = createPasswordResetToken((int)$user['id']);
-            mailPasswordReset($email, $user['username'], $token);
+            if ($user) {
+                $token = createPasswordResetToken((int)$user['id']);
+                mailPasswordReset($email, $user['username'], $token);
+            }
         }
-        recordEmailAttempt($ip, 'forgot');
-        // Always show success to prevent e-mail enumeration
         $sent = true;
     }
 }

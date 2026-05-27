@@ -5,7 +5,7 @@ function isLoggedIn() {
 
 function requireLogin() {
     if (!isLoggedIn()) {
-        // Tentar auto-login via cookie "remember me"
+        
         if (!tryRememberMeLogin()) {
             header('Location: login.php');
             exit();
@@ -13,19 +13,14 @@ function requireLogin() {
     }
 }
 
-function requireGuest() {
-    if (isLoggedIn()) {
-        header('Location: index.php');
-        exit();
-    }
-}
-
 function loginUser($userId, $username, $email, $role) {
+    global $conn;
+
     $csrfToken = $_SESSION['csrf_token'] ?? null;
 
-    session_regenerate_id(true); // apaga sessão antiga
+    session_regenerate_id(true); 
 
-    // Restaura o token após regenerar
+    
     if ($csrfToken) {
         $_SESSION['csrf_token'] = $csrfToken;
     }
@@ -35,21 +30,32 @@ function loginUser($userId, $username, $email, $role) {
     $_SESSION['email']    = $email;
     $_SESSION['role']     = $role;
 
+    
+    
+    
+    $stmt = $conn->prepare("SELECT LENGTH(avatar) > 0 FROM users WHERE id = ?");
+    $stmt->bind_param("i", $userId);
+    $stmt->execute();
+    $stmt->bind_result($hasAvatar);
+    $stmt->fetch();
+    $stmt->close();
+    $_SESSION['avatar'] = (bool) $hasAvatar;
+
     updateLastLogin($userId);
 }
 
 function createRememberMeToken($userId) {
     global $conn;
 
-    // Gerar selector e token aleatórios
-    $selector  = bin2hex(random_bytes(12)); // 24 chars
-    $token     = bin2hex(random_bytes(32)); // 64 chars
+    
+    $selector  = bin2hex(random_bytes(12)); 
+    $token     = bin2hex(random_bytes(32)); 
     $tokenHash = hash('sha256', $token);
-    $expiresAt = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); // 30 dias
+    $expiresAt = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60)); 
     $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
     $ip        = $_SERVER['REMOTE_ADDR'];
 
-    // Guardar na BD
+    
     $stmt = $conn->prepare("
         INSERT INTO user_sessions (user_id, selector, token_hash, user_agent, ip, expires_at)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -58,7 +64,7 @@ function createRememberMeToken($userId) {
     $stmt->execute();
     $stmt->close();
 
-    // Definir cookies (30 dias, HttpOnly, SameSite)
+    
     $cookieOptions = [
         'expires'  => time() + (30 * 24 * 60 * 60),
         'path'     => '/',
@@ -80,7 +86,7 @@ function tryRememberMeLogin() {
     $token     = $_COOKIE['remember_token'];
     $tokenHash = hash('sha256', $token);
 
-    // Buscar sessão válida (não expirada, não revogada)
+    
     $stmt = $conn->prepare("
         SELECT us.id, us.user_id, us.token_hash,
                u.username, u.email, u.role, u.is_active
@@ -103,23 +109,26 @@ function tryRememberMeLogin() {
     $session = $result->fetch_assoc();
     $stmt->close();
 
-    // Verificar conta ativa
+    
     if (!$session['is_active']) {
         clearRememberMeCookies();
         return false;
     }
 
-    // Comparar token com hash (timing-safe)
+    
     if (!hash_equals($session['token_hash'], $tokenHash)) {
-        // Token inválido - possível roubo - revogar TODAS as sessões deste utilizador
+        
+        
+        
+        revokeAllUserSessions((int) $session['user_id']);
         clearRememberMeCookies();
         return false;
     }
 
-    // Tudo OK - fazer login automático
+    
     loginUser($session['user_id'], $session['username'], $session['email'], $session['role']);
 
-    // Renovar token (rotation de token para mais segurança)
+    
     createRememberMeToken($session['user_id']);
 
     return true;
@@ -134,7 +143,7 @@ function clearRememberMeCookies() {
 function logoutUser() {
     global $conn;
 
-    // Revogar sessão persistente atual
+    
     if (isset($_COOKIE['remember_selector'])) {
         $selector = $_COOKIE['remember_selector'];
         $stmt = $conn->prepare("UPDATE user_sessions SET revoked_at = NOW() WHERE selector = ? AND revoked_at IS NULL");
@@ -216,55 +225,31 @@ function recordLoginAttempt($ip, $username, $success) {
     $stmt->close();
 }
 
-function createEmailVerificationToken(int $userId): string {
+
+function checkActionRateLimit(string $action, string $key, int $maxAttempts, int $windowMinutes): bool {
     global $conn;
-
-    $selector  = bin2hex(random_bytes(12));
-    $token     = bin2hex(random_bytes(32));
-    $tokenHash = hash('sha256', $token);
-    $expiresAt = date('Y-m-d H:i:s', time() + 86400); // 24h
-
-    $stmt = $conn->prepare("DELETE FROM email_verifications WHERE user_id = ?");
-    $stmt->bind_param("i", $userId);
+    $username = $action . ':' . $key;
+    $stmt = $conn->prepare("
+        SELECT COUNT(*) AS attempts
+        FROM login_attempts
+        WHERE username = ?
+          AND attempted_at > DATE_SUB(NOW(), INTERVAL ? MINUTE)
+    ");
+    $stmt->bind_param('si', $username, $windowMinutes);
     $stmt->execute();
+    $result = $stmt->get_result()->fetch_assoc();
     $stmt->close();
-
-    $stmt = $conn->prepare("INSERT INTO email_verifications (user_id, selector, token_hash, expires_at) VALUES (?, ?, ?, ?)");
-    $stmt->bind_param("isss", $userId, $selector, $tokenHash, $expiresAt);
-    $stmt->execute();
-    $stmt->close();
-
-    return $selector . ':' . $token;
+    return ((int) $result['attempts']) < $maxAttempts;
 }
 
-function verifyEmailToken(string $rawToken) {
+function recordActionAttempt(string $action, string $key, int $success = 0): void {
     global $conn;
-
-    $parts = explode(':', $rawToken, 2);
-    if (count($parts) !== 2) return false;
-    [$selector, $token] = $parts;
-
-    $stmt = $conn->prepare("SELECT user_id, token_hash FROM email_verifications WHERE selector = ? AND expires_at > NOW()");
-    $stmt->bind_param("s", $selector);
-    $stmt->execute();
-    $row = $stmt->get_result()->fetch_assoc();
-    $stmt->close();
-
-    if (!$row || !hash_equals($row['token_hash'], hash('sha256', $token))) return false;
-
-    $uid = (int)$row['user_id'];
-
-    $stmt = $conn->prepare("UPDATE users SET email_verified_at = NOW(), is_active = 1 WHERE id = ?");
-    $stmt->bind_param("i", $uid);
+    $username = $action . ':' . $key;
+    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $stmt = $conn->prepare("INSERT INTO login_attempts (ip, username, success) VALUES (?, ?, ?)");
+    $stmt->bind_param('ssi', $ip, $username, $success);
     $stmt->execute();
     $stmt->close();
-
-    $stmt = $conn->prepare("DELETE FROM email_verifications WHERE user_id = ?");
-    $stmt->bind_param("i", $uid);
-    $stmt->execute();
-    $stmt->close();
-
-    return $uid;
 }
 
 function createPasswordResetToken(int $userId): string {
@@ -278,7 +263,7 @@ function createPasswordResetToken(int $userId): string {
     $selector  = bin2hex(random_bytes(12));
     $token     = bin2hex(random_bytes(32));
     $tokenHash = hash('sha256', $token);
-    $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 1h
+    $expiresAt = date('Y-m-d H:i:s', time() + 3600); 
 
     $stmt = $conn->prepare("INSERT INTO password_resets (user_id, selector, token_hash, expires_at) VALUES (?, ?, ?, ?)");
     $stmt->bind_param("isss", $userId, $selector, $tokenHash, $expiresAt);
@@ -319,7 +304,7 @@ function createPendingRegistration(string $email, string $username, string $pass
 
     $code     = str_pad((string)random_int(100000, 999999), 6, '0', STR_PAD_LEFT);
     $codeHash = hash('sha256', $code);
-    $expiresAt = date('Y-m-d H:i:s', time() + 3600); // 1h
+    $expiresAt = date('Y-m-d H:i:s', time() + 3600); 
 
     $stmt = $conn->prepare("DELETE FROM pending_registrations WHERE email = ?");
     $stmt->bind_param("s", $email);
@@ -369,7 +354,7 @@ function verifyPendingCode(string $email, string $code) {
 
     if (!$row) return false;
 
-    // Race-condition guard: check users table before inserting
+    
     $stmt = $conn->prepare("SELECT id FROM users WHERE email = ? OR username = ? LIMIT 1");
     $stmt->bind_param("ss", $email, $row['username']);
     $stmt->execute();
@@ -398,4 +383,3 @@ function verifyPendingCode(string $email, string $code) {
 
     return $newId;
 }
-?>

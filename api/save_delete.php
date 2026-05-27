@@ -20,9 +20,18 @@ if ($slot < 1 || $slot > 3) {
     exit;
 }
 
+
+
+if (!checkActionRateLimit('save_delete', (string) $user_id, 30, 60)) {
+    http_response_code(429);
+    echo json_encode(['error' => 'Demasiadas remoções. Aguarda uma hora.']);
+    exit;
+}
+
 $stmt = $conn->prepare("DELETE FROM saves WHERE user_id = ? AND slot = ?");
 $stmt->bind_param("ii", $user_id, $slot);
 $stmt->execute();
 $stmt->close();
 
+recordActionAttempt('save_delete', (string) $user_id, 1);
 echo json_encode(['success' => true]);

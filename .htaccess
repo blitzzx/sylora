@@ -95,11 +95,20 @@ Options -Indexes
 </IfModule>
 
 # =========================================
+# Redirects de URLs renomeados
+# =========================================
+
+<IfModule mod_rewrite.c>
+    RewriteRule ^sobrenos/?$ /sobre [R=301,L]
+    RewriteRule ^sobrenos\.php$ /sobre [R=301,L]
+</IfModule>
+
+# =========================================
 # URLs amigáveis (sem extensão .php)
 # =========================================
 
 <IfModule mod_rewrite.c>
-    # 1. Redirect /page.php → /page (exceto avatar.php)
+    # 1. Redirect /page.php para /page (exceto avatar.php)
     RewriteCond %{THE_REQUEST} \s/([^?\s]+)\.php[\s?]
     RewriteCond %1 !^avatar$
     RewriteRule ^ /%1 [R=301,L,NE]

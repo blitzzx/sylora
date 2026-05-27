@@ -7,7 +7,7 @@ if ($viewUsername === '') {
     redirect('u.php?u=' . urlencode($_SESSION['username']));
 }
 
-// Buscar utilizador alvo
+
 $stmt = $conn->prepare("
     SELECT id, username, email, role, bio, avatar, created_at, last_login_at
     FROM users WHERE username = ? AND is_active = 1 LIMIT 1
@@ -38,7 +38,7 @@ $roleLabel   = $profile['role'] === 'admin' ? 'Admin' : 'Aventureiro';
 $roleColor   = $profile['role'] === 'admin' ? 'role-admin' : 'role-user';
 $hasAvatar   = !empty($profile['avatar']);
 
-// Melhor save
+
 $stmtSave = $conn->prepare("
     SELECT level, hp, hp_total, xp, xp_req, chapter, story_progress, damage, last_saved
     FROM saves WHERE user_id = ? ORDER BY level DESC, last_saved DESC LIMIT 1
@@ -48,14 +48,14 @@ $stmtSave->execute();
 $bestSave = $stmtSave->get_result()->fetch_assoc();
 $stmtSave->close();
 
-// Flash message (só para o próprio)
+
 $flash = null;
 if ($isSelf && isset($_SESSION['flash_message'])) {
     $flash = ['msg' => $_SESSION['flash_message'], 'type' => $_SESSION['flash_type'] ?? 'info'];
     unset($_SESSION['flash_message'], $_SESSION['flash_type']);
 }
 
-// Estado de amizade
+
 $friendStatus = 'none';
 $iRequested   = false;
 if (isLoggedIn() && !$isSelf) {
@@ -75,7 +75,7 @@ if (isLoggedIn() && !$isSelf) {
     }
 }
 
-// Amigos
+
 $friendsList   = [];
 $pendingIn     = [];
 $mutualFriends = [];
@@ -147,7 +147,7 @@ if ($isSelf) {
     $stmtFriends->close();
 }
 
-// Comentários
+
 $stmtComments = $conn->prepare("
     SELECT pc.id, pc.content, pc.created_at,
            u.id AS author_id, u.username AS author_username
@@ -177,7 +177,7 @@ include 'includes/header.php';
       <div class="alert alert-<?php echo e($flash['type']); ?>" style="margin-bottom:16px"><?php echo e($flash['msg']); ?></div>
     <?php endif; ?>
 
-    <!-- ══════════ HERO CARD ══════════ -->
+    
     <div class="up-hero-card">
       <div class="up-hero-bg" aria-hidden="true">
         <span class="ph-orb ph-orb1"></span>
@@ -185,7 +185,7 @@ include 'includes/header.php';
       </div>
 
       <div class="up-hero-inner">
-        <!-- Avatar -->
+        
         <div class="up-avatar-wrap">
           <?php if ($hasAvatar): ?>
             <img
@@ -215,7 +215,7 @@ include 'includes/header.php';
           <?php endif; ?>
         </div>
 
-        <!-- Info -->
+        
         <div class="up-info">
           <div class="up-name-row">
             <h1><?php echo e($profile['username']); ?></h1>
@@ -232,7 +232,7 @@ include 'includes/header.php';
           <?php endif; ?>
         </div>
 
-        <!-- Ações -->
+        
         <div class="up-actions">
           <?php if ($isSelf): ?>
             <button class="btn btn-secondary btn-sm" id="edit-profile-btn" type="button">
@@ -268,7 +268,7 @@ include 'includes/header.php';
       </div>
     </div>
 
-    <!-- ══════════ PAINEL DE EDIÇÃO (só para o próprio) ══════════ -->
+    
     <?php if ($isSelf): ?>
     <div class="up-edit-panel" id="edit-panel">
       <div class="up-edit-panel-inner">
@@ -298,7 +298,7 @@ include 'includes/header.php';
 
           <div class="up-edit-panels">
 
-            <!-- Username -->
+            
             <div class="up-edit-panel-content active" id="ep-username" role="tabpanel">
               <h3>Alterar Username</h3>
               <p>O teu username é público e identificado por outros jogadores.</p>
@@ -314,7 +314,7 @@ include 'includes/header.php';
               </form>
             </div>
 
-            <!-- Email -->
+            
             <div class="up-edit-panel-content" id="ep-email" role="tabpanel">
               <h3>Alterar Email</h3>
               <p>Usa um email válido para recuperação de conta.</p>
@@ -325,11 +325,15 @@ include 'includes/header.php';
                   <label for="ep_new_email">Novo Email</label>
                   <input type="email" id="ep_new_email" name="new_email" value="<?php echo e($profile['email'] ?? ''); ?>" placeholder="novo@email.com" required>
                 </div>
+                <div class="form-group">
+                  <label for="ep_email_current_pw">Password atual</label>
+                  <input type="password" id="ep_email_current_pw" name="current_password" placeholder="••••••••" autocomplete="current-password" required>
+                </div>
                 <button type="submit" class="btn btn-primary btn-sm">Guardar Email</button>
               </form>
             </div>
 
-            <!-- Bio -->
+            
             <div class="up-edit-panel-content" id="ep-bio" role="tabpanel">
               <h3>Bio Pública</h3>
               <p>Apresenta-te à comunidade. Aparece no teu perfil.</p>
@@ -345,10 +349,10 @@ include 'includes/header.php';
               </form>
             </div>
 
-            <!-- Password -->
+            
             <div class="up-edit-panel-content" id="ep-password" role="tabpanel">
               <h3>Alterar Password</h3>
-              <p>Escolhe uma password forte com pelo menos 6 caracteres.</p>
+              <p>Escolhe uma password forte com pelo menos 8 caracteres.</p>
               <form method="POST" action="/profile" class="profile-form">
                 <input type="hidden" name="action" value="change_password">
                 <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
@@ -359,7 +363,7 @@ include 'includes/header.php';
                 <div class="form-row-two">
                   <div class="form-group">
                     <label for="ep_new_pw">Nova Password</label>
-                    <input type="password" id="ep_new_pw" name="new_password" placeholder="••••••••" required minlength="6">
+                    <input type="password" id="ep_new_pw" name="new_password" placeholder="••••••••" required minlength="8">
                   </div>
                   <div class="form-group">
                     <label for="ep_confirm_pw">Confirmar</label>
@@ -370,7 +374,7 @@ include 'includes/header.php';
               </form>
             </div>
 
-            <!-- Danger zone -->
+            
             <div class="up-edit-panel-content" id="ep-danger" role="tabpanel">
               <h3>Zona de Risco</h3>
               <p>Estas ações são irreversíveis. Procede com cuidado.</p>
@@ -389,13 +393,13 @@ include 'includes/header.php';
 
             <button class="up-edit-close" id="edit-panel-close" type="button">↑ Fechar configurações</button>
 
-          </div><!-- /up-edit-panels -->
-        </div><!-- /up-edit-panel-box -->
-      </div><!-- /up-edit-panel-inner -->
-    </div><!-- /up-edit-panel -->
+          </div>
+        </div>
+      </div>
+    </div>
     <?php endif; ?>
 
-    <!-- ══════════ TABS DE CONTEÚDO ══════════ -->
+    
     <div class="up-content-tabs" role="tablist">
       <button class="up-content-tab active" role="tab" data-panel="panel-stats">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
@@ -411,7 +415,7 @@ include 'includes/header.php';
       </button>
     </div>
 
-    <!-- ══ PAINEL: Estatísticas ══ -->
+    
     <div class="up-content-panel active" id="panel-stats">
       <div class="up-card">
         <div class="up-card-title">
@@ -476,12 +480,12 @@ include 'includes/header.php';
       </div>
     </div>
 
-    <!-- ══ PAINEL: Amigos ══ -->
+    
     <div class="up-content-panel" id="panel-friends">
 
       <?php if ($isSelf): ?>
 
-        <!-- Pesquisa de aventureiros -->
+        
         <div class="up-section">
           <div class="up-section-title">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
@@ -496,7 +500,7 @@ include 'includes/header.php';
           </div>
         </div>
 
-        <!-- Pedidos pendentes -->
+        
         <?php if (!empty($pendingIn)): ?>
           <div class="up-section">
             <div class="up-section-title">
@@ -520,7 +524,7 @@ include 'includes/header.php';
           </div>
         <?php endif; ?>
 
-        <!-- Lista de amigos -->
+        
         <div class="up-section">
           <div class="up-section-title">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
@@ -553,7 +557,7 @@ include 'includes/header.php';
 
       <?php else: ?>
 
-        <!-- Amigos em comum -->
+        
         <?php if (!empty($mutualFriends) && isLoggedIn()): ?>
           <div class="up-section">
             <div class="up-section-title">
@@ -571,7 +575,7 @@ include 'includes/header.php';
           </div>
         <?php endif; ?>
 
-        <!-- Amigos do perfil -->
+        
         <div class="up-section">
           <div class="up-section-title">
             <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
@@ -603,7 +607,7 @@ include 'includes/header.php';
       <?php endif; ?>
     </div>
 
-    <!-- ══ PAINEL: Comentários ══ -->
+    
     <div class="up-content-panel" id="panel-comments">
       <div class="up-card">
         <div class="up-card-title">
@@ -671,7 +675,7 @@ include 'includes/header.php';
     return d.innerHTML;
   }
 
-  // ── Edit panel toggle
+
   const editBtn   = document.getElementById('edit-profile-btn');
   const editPanel = document.getElementById('edit-panel');
   const closeBtn  = document.getElementById('edit-panel-close');
@@ -709,13 +713,13 @@ include 'includes/header.php';
     });
   }
 
-  // "Adicionar bio" shortcut
+
   const addBioBtn = document.querySelector('.up-add-bio-btn');
   if (addBioBtn) {
     addBioBtn.addEventListener('click', () => openEditPanel('ep-bio'));
   }
 
-  // ── Edit panel tabs
+
   document.querySelectorAll('.up-edit-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       document.querySelectorAll('.up-edit-tab').forEach(t => t.classList.remove('active'));
@@ -726,7 +730,7 @@ include 'includes/header.php';
     });
   });
 
-  // ── Merge comments into stats panel
+
   (function () {
     const statsPanel    = document.getElementById('panel-stats');
     const commentsPanel = document.getElementById('panel-comments');
@@ -737,18 +741,24 @@ include 'includes/header.php';
     }
   })();
 
-  // ── Content tabs
-  document.querySelectorAll('.up-content-tab').forEach(tab => {
-    tab.addEventListener('click', () => {
-      document.querySelectorAll('.up-content-tab').forEach(t => t.classList.remove('active'));
-      document.querySelectorAll('.up-content-panel').forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      const target = document.getElementById(tab.dataset.panel);
-      if (target) target.classList.add('active');
-    });
-  });
 
-  // ── Avatar upload → abre o modal de crop global (header.php)
+  function activateTab(panelId) {
+    const tab = document.querySelector('.up-content-tab[data-panel="' + panelId + '"]');
+    const panel = document.getElementById(panelId);
+    if (!tab || !panel) return;
+    document.querySelectorAll('.up-content-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.up-content-panel').forEach(p => p.classList.remove('active'));
+    tab.classList.add('active');
+    panel.classList.add('active');
+  }
+  document.querySelectorAll('.up-content-tab').forEach(tab => {
+    tab.addEventListener('click', () => activateTab(tab.dataset.panel));
+  });
+  const initialTab = new URLSearchParams(window.location.search).get('tab');
+  if (initialTab === 'friends') activateTab('panel-friends');
+  else if (initialTab === 'comments') activateTab('panel-comments');
+
+
   const avatarInput = document.getElementById('avatar-upload-input');
   if (avatarInput) {
     avatarInput.addEventListener('change', function () {
@@ -771,7 +781,7 @@ include 'includes/header.php';
     });
   }
 
-  // ── Friend actions
+
   function friendAction(action, userId) {
     const methods = { add: 'POST', cancel: 'DELETE', remove: 'DELETE', accept: 'PUT', decline: 'PUT' };
     const body    = JSON.stringify({ user_id: userId, _csrf: CSRF_TOKEN, action: (action === 'accept' || action === 'decline') ? action : undefined });
@@ -798,7 +808,7 @@ include 'includes/header.php';
     });
   });
 
-  // ── Friend search (own profile only)
+
   if (IS_SELF) {
     const searchInput   = document.getElementById('friend-search-input');
     const searchResults = document.getElementById('friend-search-results');

@@ -16,30 +16,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!verifyCSRFToken($csrf)) {
         $codeError = 'Pedido inválido. Tenta novamente.';
     } elseif (array_key_exists('code', $_POST)) {
-        // ── Verificação do código ──────────────────────────
+        
         $code  = preg_replace('/\D/', '', $_POST['code'] ?? '');
         $email = sanitize($_POST['email'] ?? '');
         $pendingEmail = $email;
 
         if (strlen($code) !== 6) {
             $codeError = 'Introduz os 6 dígitos do código.';
+        } elseif (!checkActionRateLimit('verify_code', strtolower($email), 5, 15)) {
+            
+            
+            
+            $codeError = 'Demasiadas tentativas. Aguarda 15 minutos.';
         } else {
             $userId = verifyPendingCode($email, $code);
             if ($userId) {
+                recordActionAttempt('verify_code', strtolower($email), 1);
                 $stmt = $conn->prepare('SELECT username, email, role FROM users WHERE id = ? LIMIT 1');
                 $stmt->bind_param('i', $userId);
                 $stmt->execute();
                 $user = $stmt->get_result()->fetch_assoc();
                 $stmt->close();
                 loginUser($userId, $user['username'], $user['email'], $user['role']);
-                $_SESSION['avatar'] = false;
                 unset($_SESSION['verify_for']);
                 redirect('/', 'Conta criada! Bem-vindo ao Sylora, ' . e($user['username']) . '!', 'success');
             }
+            recordActionAttempt('verify_code', strtolower($email), 0);
             $codeError = 'Código incorreto ou expirado. Tenta novamente.';
         }
     } else {
-        // ── Reenvio de código ──────────────────────────────
+        
         $email = sanitize($_POST['email'] ?? '');
         $ip    = $_SERVER['REMOTE_ADDR'];
         if (!isValidEmail($email)) {
@@ -49,9 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $resent = true;
         } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'resend')) {
             $resendErrors[] = 'Verificação de segurança falhou. Tenta novamente.';
-        } elseif (!checkEmailRateLimit($ip, 'verify-resend', 5)) {
+        } elseif (!checkEmailRateLimit($ip, 'verify-resend', 5) || !checkActionRateLimit('verify_resend', strtolower($email), 3, 60)) {
             $resendErrors[] = 'Demasiadas tentativas. Aguarda uns minutos.';
         } else {
+            recordActionAttempt('verify_resend', strtolower($email), 1);
             $stmt = $conn->prepare('SELECT username, password_hash FROM pending_registrations WHERE email = ?');
             $stmt->bind_param('s', $email);
             $stmt->execute();
@@ -98,7 +105,7 @@ $csrfToken = generateCSRFToken();
       .auth-form-inner { padding: 20px 16px 36px; }
       .auth-form-top   { padding: 14px 16px; }
     }
-    /* ── OTP boxes ── */
+    
     .otp-wrap {
       display: flex;
       gap: 10px;
@@ -191,7 +198,7 @@ $csrfToken = generateCSRFToken();
 
       <?php if ($showCodeForm): ?>
 
-        <!-- ── Estado: mostrar form de código OTP ── -->
+        
         <div class="auth-form-header">
           <h1>Introduz o código</h1>
           <p>Enviámos um código de 6 dígitos para<br><strong><?php echo e($pendingEmail); ?></strong></p>
@@ -243,7 +250,7 @@ $csrfToken = generateCSRFToken();
 
       <?php else: ?>
 
-        <!-- ── Estado: sem email pendente: pedir email para reenvio ── -->
+        
         <div class="auth-form-header">
           <h1>Verificar E-mail</h1>
           <p>Insere o teu e-mail para receber um novo código de verificação.</p>
@@ -283,7 +290,7 @@ $csrfToken = generateCSRFToken();
 </div>
 
 <script>
-  /* ── OTP widget ── */
+  
   (function() {
     var inputs  = document.querySelectorAll('.otp-input');
     var hidden  = document.getElementById('code-hidden');
@@ -330,10 +337,10 @@ $csrfToken = generateCSRFToken();
       });
     });
 
-    // Auto-focus first box on load
+
     if (inputs[0]) inputs[0].focus();
 
-    // Auto-submit when all 6 filled
+
     var otpForm = document.getElementById('otp-form');
     if (otpForm) {
       otpForm.addEventListener('submit', function() {
@@ -342,7 +349,7 @@ $csrfToken = generateCSRFToken();
     }
   })();
 
-  /* ── Custom cursor ── */
+  
   (function(){
     if (window.matchMedia('(hover: none)').matches) return;
     var el = document.createElement('div');

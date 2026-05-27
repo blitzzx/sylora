@@ -1,4 +1,4 @@
-</div><!-- /#pjax-root -->
+</div>
 <?php if (empty($_SERVER['HTTP_X_PJAX'])): ?>
 <?php if (empty($noFooter)): ?>
 <footer class="site-footer">
@@ -6,10 +6,11 @@
     <div class="footer-brand">
       <img src="assets/img/Logo-Sylora.png" alt="Sylora" height="32" loading="lazy">
     </div>
-    <p class="footer-copy">© <?php echo date('Y'); ?> Sylora. Developed by <a href="sobrenos.php">Márcio Sousa e Samuel Meixieira</a>.</p>
+    <p class="footer-copy">© <?php echo date('Y'); ?> Sylora. Developed by <a href="sobre.php">Márcio Sousa e Samuel Meixieira</a>.</p>
     <div class="footer-links">
       <a href="historia.php">História</a>
       <a href="jogar.php">Jogar</a>
+      <a href="sobre.php#contacto">Contacto</a>
     </div>
   </div>
 </footer>

@@ -45,7 +45,7 @@ function redirect($url, $message = '', $type = 'info') {
         $_SESSION['flash_message'] = $message;
         $_SESSION['flash_type']    = $type;
     }
-    // Strip .php extension for clean URLs (skip external URLs and api/)
+    
     if (!preg_match('#^https?://#', $url) && !str_starts_with($url, 'api/')) {
         $url = preg_replace('#\.php(\?|$)#', '$1', $url);
         if ($url === '' || $url === 'index') {

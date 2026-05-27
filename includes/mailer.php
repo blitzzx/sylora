@@ -1,37 +1,41 @@
 <?php
-// Envia email via Resend HTTP API (porta 443, nunca bloqueada por firewalls).
-// Fallback para SMTP genérico se RESEND_API_KEY não estiver definido.
+
+
 
 require_once __DIR__ . '/../vendor/autoload.php';
 
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\Exception as MailerException;
 
-function sendMail(string $to, string $toName, string $subject, string $htmlBody): bool {
+function sendMail(string $to, string $toName, string $subject, string $htmlBody, ?string $replyTo = null, ?string $replyToName = null): bool {
     $resendKey = getenv('RESEND_API_KEY') ?: '';
     $smtpHost  = getenv('SMTP_HOST') ?: '';
 
     if ($resendKey) {
-        return _sendMailResend($to, $toName, $subject, $htmlBody, $resendKey);
+        return _sendMailResend($to, $toName, $subject, $htmlBody, $resendKey, $replyTo, $replyToName);
     }
     if ($smtpHost) {
-        return _sendMailSmtp($to, $toName, $subject, $htmlBody);
+        return _sendMailSmtp($to, $toName, $subject, $htmlBody, $replyTo, $replyToName);
     }
     return false;
 }
 
-function _sendMailResend(string $to, string $toName, string $subject, string $htmlBody, string $apiKey): bool {
+function _sendMailResend(string $to, string $toName, string $subject, string $htmlBody, string $apiKey, ?string $replyTo = null, ?string $replyToName = null): bool {
     $fromName  = getenv('SMTP_FROM_NAME') ?: 'Sylora';
     $fromEmail = getenv('SMTP_FROM')      ?: 'noreply@sylora.lol';
     $altBody   = strip_tags(str_replace(['<br>', '<br/>', '<br />'], "\n", $htmlBody));
 
-    $payload = json_encode([
+    $payloadArr = [
         'from'    => $fromName . ' <' . $fromEmail . '>',
-        'to'      => [$to],
+        'to'      => [$toName !== '' ? $toName . ' <' . $to . '>' : $to],
         'subject' => $subject,
         'html'    => $htmlBody,
         'text'    => $altBody,
-    ]);
+    ];
+    if ($replyTo) {
+        $payloadArr['reply_to'] = $replyToName ? $replyToName . ' <' . $replyTo . '>' : $replyTo;
+    }
+    $payload = json_encode($payloadArr);
 
     $ctx = stream_context_create([
         'http' => [
@@ -65,7 +69,7 @@ function _sendMailResend(string $to, string $toName, string $subject, string $ht
     return false;
 }
 
-function _sendMailSmtp(string $to, string $toName, string $subject, string $htmlBody): bool {
+function _sendMailSmtp(string $to, string $toName, string $subject, string $htmlBody, ?string $replyTo = null, ?string $replyToName = null): bool {
     $mail = new PHPMailer(true);
     try {
         $mail->isSMTP();
@@ -80,6 +84,9 @@ function _sendMailSmtp(string $to, string $toName, string $subject, string $html
         $mail->CharSet    = 'UTF-8';
         $mail->setFrom(getenv('SMTP_FROM') ?: 'noreply@sylora.lol', getenv('SMTP_FROM_NAME') ?: 'Sylora');
         $mail->addAddress($to, $toName);
+        if ($replyTo) {
+            $mail->addReplyTo($replyTo, $replyToName ?: '');
+        }
         $mail->isHTML(true);
         $mail->Subject = $subject;
         $mail->Body    = $htmlBody;
@@ -132,4 +139,35 @@ function mailPasswordReset(string $email, string $username, string $token): bool
 </div>
 HTML;
     return sendMail($email, $username, 'Repor password: Sylora', $html);
+}
+
+function mailContactForm(string $toEmail, string $fromName, string $fromEmail, string $subject, string $message, string $ip = ''): bool {
+    $name    = htmlspecialchars($fromName, ENT_QUOTES, 'UTF-8');
+    $email   = htmlspecialchars($fromEmail, ENT_QUOTES, 'UTF-8');
+    $subj    = htmlspecialchars($subject, ENT_QUOTES, 'UTF-8');
+    $msg     = nl2br(htmlspecialchars($message, ENT_QUOTES, 'UTF-8'));
+    $ipSafe  = htmlspecialchars($ip, ENT_QUOTES, 'UTF-8');
+    $sentAt  = date('Y-m-d H:i:s');
+
+    $html = <<<HTML
+<div style="font-family:Georgia,serif;max-width:600px;margin:0 auto;padding:32px 28px;background:#0d0d14;color:#e8c46a;border:1px solid rgba(201,153,58,0.35);border-radius:10px;">
+  <h1 style="margin:0 0 4px;font-size:22px;letter-spacing:2px;">SYLORA</h1>
+  <p style="color:#7a6a4a;margin:0 0 24px;font-size:13px;letter-spacing:1px;">NOVA MENSAGEM DE CONTACTO</p>
+
+  <div style="background:#111118;border:1px solid rgba(201,153,58,0.25);border-radius:10px;padding:18px 20px;margin:0 0 18px;">
+    <p style="margin:0 0 10px;color:#c8b890;line-height:1.7;"><strong style="color:#f0d9a0;">De:</strong> {$name} &lt;{$email}&gt;</p>
+    <p style="margin:0 0 10px;color:#c8b890;line-height:1.7;"><strong style="color:#f0d9a0;">Assunto:</strong> {$subj}</p>
+    <p style="margin:0;color:#7a6a4a;font-size:12px;">{$sentAt} · IP: {$ipSafe}</p>
+  </div>
+
+  <div style="background:#111118;border:1px solid rgba(201,153,58,0.25);border-radius:10px;padding:18px 20px;color:#e8d9b0;line-height:1.7;">
+    {$msg}
+  </div>
+
+  <p style="color:#4a3a2a;font-size:12px;margin:24px 0 0;">Podes responder diretamente a esta mensagem; o Reply-To está configurado para {$email}.</p>
+</div>
+HTML;
+
+    $finalSubject = '[Sylora Contacto] ' . $subject;
+    return sendMail($toEmail, 'Sylora', $finalSubject, $html, $fromEmail, $fromName);
 }
