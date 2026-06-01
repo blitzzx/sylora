@@ -50,7 +50,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         createRememberMeToken($user['id']);
                     }
 
-                    redirect('/', t('flash.welcome_back', ['name' => e($user['username'])]), 'success');
+                    $_SESSION['flash_key']  = 'flash.welcome_back';
+                    $_SESSION['flash_vars'] = ['name' => e($user['username'])];
+                    $_SESSION['flash_type'] = 'success';
+                    redirect('/');
                 }
             } else {
                 recordLoginAttempt($ip, $email, 0);

@@ -773,7 +773,7 @@ document.addEventListener("DOMContentLoaded", () => {
       try {
         displaySaveData(JSON.parse(text));
       } catch (err) {
-        if (typeof showToast === "function") showToast("Ficheiro de save inválido ou corrompido.", "error");
+        if (typeof showToast === "function") showToast(window.SYLORA_T ? window.SYLORA_T("toast.save_corrupt") : "Invalid save file.", "error");
         console.error(err);
       }
     };

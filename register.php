@@ -141,7 +141,7 @@ $csrfToken = generateCSRFToken();
       display: none;
       color: #c96b5a;
       font-size: 12px;
-      margin-top: 6px;
+      width: 100%;
     }
     
     .terms-overlay {

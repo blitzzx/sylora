@@ -36,7 +36,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $stmt->close();
                 loginUser($userId, $user['username'], $user['email']);
                 unset($_SESSION['verify_for']);
-                redirect('/', t('flash.account_created', ['name' => e($user['username'])]), 'success');
+                $_SESSION['flash_key']  = 'flash.account_created';
+                $_SESSION['flash_vars'] = ['name' => e($user['username'])];
+                $_SESSION['flash_type'] = 'success';
+                redirect('/');
             }
             recordActionAttempt('verify_code', strtolower($email), 0);
             $codeError = t('err.code_invalid');

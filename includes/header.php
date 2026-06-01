@@ -4,6 +4,13 @@ require_once __DIR__ . '/config.php';
 
 $isPjax = !empty($_SERVER['HTTP_X_PJAX']);
 
+$_flashMsg = null; $_flashType = 'success';
+if (isset($_SESSION['flash_key'])) {
+    $_flashMsg  = t($_SESSION['flash_key'], $_SESSION['flash_vars'] ?? []);
+    $_flashType = $_SESSION['flash_type'] ?? 'success';
+    unset($_SESSION['flash_key'], $_SESSION['flash_vars'], $_SESSION['flash_type']);
+}
+
 $isLoggedIn  = isset($_SESSION['user_id']);
 $username    = $isLoggedIn ? e($_SESSION['username'] ?? t('profile.role_user')) : null;
 $userInitial = $isLoggedIn ? strtoupper(mb_substr($_SESSION['username'] ?? 'A', 0, 1)) : null;
@@ -337,7 +344,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <?php endif; ?>
 
 
-<div id="sylora-toast" aria-live="polite" aria-atomic="true"></div>
+<div id="sylora-toast" aria-live="polite" aria-atomic="true"<?php if ($_flashMsg): ?> data-flash-msg="<?= e($_flashMsg) ?>" data-flash-type="<?= e($_flashType) ?>"<?php endif; ?>></div>
 
 
 <div class="sylora-confirm-overlay" id="sylora-confirm" role="dialog" aria-modal="true" aria-labelledby="sylora-confirm-msg">
@@ -370,7 +377,12 @@ function setLang(lang) {
   });
   document.querySelectorAll('[data-i18n-html]').forEach(function(el) {
     var k = el.getAttribute('data-i18n-html');
-    if (dict[k] !== undefined) el.innerHTML = dict[k];
+    if (dict[k] !== undefined) {
+      var val = dict[k];
+      var n = el.getAttribute('data-i18n-n');
+      if (n !== null) val = val.split('{n}').join(n);
+      el.innerHTML = val;
+    }
   });
   document.querySelectorAll('[data-i18n-placeholder]').forEach(function(el) {
     var k = el.getAttribute('data-i18n-placeholder');
@@ -438,6 +450,13 @@ function setLang(lang) {
       setLang(btn.getAttribute('data-lang'));
     });
   });
+})();
+
+(function(){
+  var t = document.getElementById('sylora-toast');
+  if (t && t.dataset.flashMsg) {
+    setTimeout(function(){ showToast(t.dataset.flashMsg, t.dataset.flashType || 'success'); }, 120);
+  }
 })();
 
 function showToast(msg, type) {

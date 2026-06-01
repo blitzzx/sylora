@@ -21,7 +21,7 @@ include 'includes/header.php';
     <p class="about-lead" data-i18n="sobre.lead"><?= t('sobre.lead') ?></p>
 
     <div class="about-hero-tags">
-      <span class="about-hero-tag" data-i18n-html="sobre.tag_months"><?= t('sobre.tag_months', ['n' => $monthsActive]) ?></span>
+      <span class="about-hero-tag" data-i18n-html="sobre.tag_months" data-i18n-n="<?= $monthsActive ?>"><?= t('sobre.tag_months', ['n' => $monthsActive]) ?></span>
       <span class="about-hero-tag" data-i18n-html="sobre.tag_devs"><?= t('sobre.tag_devs') ?></span>
       <span class="about-hero-tag" data-i18n-html="sobre.tag_world"><?= t('sobre.tag_world') ?></span>
       <span class="about-hero-tag" data-i18n-html="sobre.tag_pap"><?= t('sobre.tag_pap') ?></span>
