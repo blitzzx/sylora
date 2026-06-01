@@ -18,7 +18,7 @@ if ($q !== '' && mb_strlen($q) >= 2) {
 
     
     $stmt = $conn->prepare("
-        SELECT u.id, u.username, u.role, u.created_at,
+        SELECT u.id, u.username, u.created_at,
                (SELECT level FROM saves WHERE user_id = u.id ORDER BY level DESC LIMIT 1) AS best_level,
                (SELECT chapter FROM saves WHERE user_id = u.id ORDER BY level DESC LIMIT 1) AS best_chapter
         FROM users u
@@ -105,7 +105,6 @@ include 'includes/header.php';
             <?php
               $level   = $r['best_level'] ? (int) $r['best_level'] : null;
               $chapter = $r['best_chapter'] ?? null;
-              $roleLabel = $r['role'] === 'admin' ? t('profile.role_admin') : t('profile.role_user');
             ?>
             <a href="u.php?u=<?php echo urlencode($r['username']); ?>" class="search-card">
               <div class="search-avatar">
@@ -118,7 +117,7 @@ include 'includes/header.php';
               </div>
               <div class="search-info">
                 <strong class="search-username"><?php echo e($r['username']); ?></strong>
-                <span class="search-role"><?php echo e($roleLabel); ?></span>
+                <span class="search-role" data-i18n="drawer.role"><?= t('drawer.role') ?></span>
                 <?php if ($level): ?>
                   <span class="search-stats">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>

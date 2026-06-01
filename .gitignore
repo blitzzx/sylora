@@ -1,6 +1,9 @@
 # Secrets — nunca commitar
 .env
 
+# Dependências PHP
+vendor/
+
 # Docker local (apenas para desenvolvimento)
 compose.yml
 
@@ -20,5 +23,3 @@ compose.yml
 # OS
 .DS_Store
 Thumbs.db
-
-.claude

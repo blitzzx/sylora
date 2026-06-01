@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         } elseif (!checkLoginRateLimit($ip)) {
             $errors[] = t('err.too_many');
         } else {
-            $stmt = $conn->prepare('SELECT id, username, email, password, role, is_active, email_verified_at FROM users WHERE email = ? LIMIT 1');
+            $stmt = $conn->prepare('SELECT id, username, email, password, is_active, email_verified_at FROM users WHERE email = ? LIMIT 1');
             $stmt->bind_param('s', $email);
             $stmt->execute();
             $user = $stmt->get_result()->fetch_assoc();
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     }
                 } else {
                     recordLoginAttempt($ip, $email, 1);
-                    loginUser($user['id'], $user['username'], $user['email'], $user['role']);
+                    loginUser($user['id'], $user['username'], $user['email']);
 
                     if ($remember) {
                         createRememberMeToken($user['id']);

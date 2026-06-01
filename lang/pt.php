@@ -360,8 +360,6 @@
   'profile.revoke_h'         => 'Terminar todas as sessões',
   'profile.revoke_sub'       => 'Faz logout em todos os dispositivos onde tens sessão iniciada.',
   'profile.revoke_btn'       => 'Terminar sessões',
-  'profile.role_user'        => 'Aventureiro',
-  'profile.role_admin'       => 'Admin',
   'profile.since'            => 'Aventureiro desde {date}',
   'profile.last_login'       => 'Último login: {date}',
   'profile.bio_empty'        => 'Sem bio ainda.',

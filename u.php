@@ -9,7 +9,7 @@ if ($viewUsername === '') {
 
 
 $stmt = $conn->prepare("
-    SELECT id, username, email, role, bio, avatar, created_at, last_login_at
+    SELECT id, username, email, bio, avatar, created_at, last_login_at
     FROM users WHERE username = ? AND is_active = 1 LIMIT 1
 ");
 $stmt->bind_param('s', $viewUsername);
@@ -34,8 +34,6 @@ $isGuest     = !isLoggedIn();
 $csrfToken   = isLoggedIn() ? generateCSRFToken() : '';
 $memberSince = $profile['created_at'] ? date('d/m/Y', strtotime($profile['created_at'])) : '-';
 $lastLogin   = $profile['last_login_at'] ? date('d/m/Y \à\s H:i', strtotime($profile['last_login_at'])) : '-';
-$roleLabel   = $profile['role'] === 'admin' ? t('profile.role_admin') : t('profile.role_user');
-$roleColor   = $profile['role'] === 'admin' ? 'role-admin' : 'role-user';
 $hasAvatar   = !empty($profile['avatar']);
 
 
@@ -219,7 +217,7 @@ include 'includes/header.php';
         <div class="up-info">
           <div class="up-name-row">
             <h1><?php echo e($profile['username']); ?></h1>
-            <span class="profile-role-badge <?php echo $roleColor; ?>"><?php echo e($roleLabel); ?></span>
+            <span class="profile-role-badge role-user" data-i18n="drawer.role"><?= t('drawer.role') ?></span>
           </div>
           <p class="up-since">
             <?php echo e(t('profile.since', ['date' => $memberSince])); ?>

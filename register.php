@@ -83,7 +83,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
                     $emailConfigured = !empty(getenv('RESEND_API_KEY')) || !empty(getenv('SMTP_HOST'));
                     if (!$emailConfigured) {
-                        $stmt = $conn->prepare('INSERT INTO users (username, email, password, role, is_active, email_verified_at, created_at) VALUES (?, ?, ?, "user", 1, NOW(), NOW())');
+                        $stmt = $conn->prepare('INSERT INTO users (username, email, password, is_active, email_verified_at, created_at) VALUES (?, ?, ?, 1, NOW(), NOW())');
                         $stmt->bind_param('sss', $username, $email, $hash);
                         $stmt->execute();
                         $newId = $conn->insert_id;

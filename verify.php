@@ -29,12 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $userId = verifyPendingCode($email, $code);
             if ($userId) {
                 recordActionAttempt('verify_code', strtolower($email), 1);
-                $stmt = $conn->prepare('SELECT username, email, role FROM users WHERE id = ? LIMIT 1');
+                $stmt = $conn->prepare('SELECT username, email FROM users WHERE id = ? LIMIT 1');
                 $stmt->bind_param('i', $userId);
                 $stmt->execute();
                 $user = $stmt->get_result()->fetch_assoc();
                 $stmt->close();
-                loginUser($userId, $user['username'], $user['email'], $user['role']);
+                loginUser($userId, $user['username'], $user['email']);
                 unset($_SESSION['verify_for']);
                 redirect('/', t('flash.account_created', ['name' => e($user['username'])]), 'success');
             }

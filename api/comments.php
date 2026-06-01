@@ -151,8 +151,7 @@ if ($method === 'DELETE') {
 
     
     $canDelete = $row['author_id'] === $userId
-              || $row['profile_user_id'] === $userId
-              || isAdmin();
+              || $row['profile_user_id'] === $userId;
     if (!$canDelete) jsonErr(403, 'Sem permissão para apagar este comentário.');
 
     $stmtDel = $conn->prepare("UPDATE profile_comments SET is_hidden = 1 WHERE id = ?");

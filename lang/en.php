@@ -360,8 +360,6 @@
   'profile.revoke_h'         => 'End all sessions',
   'profile.revoke_sub'       => 'Log out from all devices where you have a session.',
   'profile.revoke_btn'       => 'End sessions',
-  'profile.role_user'        => 'Adventurer',
-  'profile.role_admin'       => 'Admin',
   'profile.since'            => 'Adventurer since {date}',
   'profile.last_login'       => 'Last login: {date}',
   'profile.bio_empty'        => 'No bio yet.',

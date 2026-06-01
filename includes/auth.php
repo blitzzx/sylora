@@ -13,14 +13,13 @@ function requireLogin() {
     }
 }
 
-function loginUser($userId, $username, $email, $role) {
+function loginUser($userId, $username, $email) {
     global $conn;
 
     $csrfToken = $_SESSION['csrf_token'] ?? null;
 
-    session_regenerate_id(true); 
+    session_regenerate_id(true);
 
-    
     if ($csrfToken) {
         $_SESSION['csrf_token'] = $csrfToken;
     }
@@ -28,7 +27,6 @@ function loginUser($userId, $username, $email, $role) {
     $_SESSION['user_id']  = $userId;
     $_SESSION['username'] = $username;
     $_SESSION['email']    = $email;
-    $_SESSION['role']     = $role;
 
     
     
@@ -89,7 +87,7 @@ function tryRememberMeLogin() {
     
     $stmt = $conn->prepare("
         SELECT us.id, us.user_id, us.token_hash,
-               u.username, u.email, u.role, u.is_active
+               u.username, u.email, u.is_active
         FROM user_sessions us
         INNER JOIN users u ON u.id = us.user_id
         WHERE us.selector = ?
@@ -126,7 +124,7 @@ function tryRememberMeLogin() {
     }
 
     
-    loginUser($session['user_id'], $session['username'], $session['email'], $session['role']);
+    loginUser($session['user_id'], $session['username'], $session['email']);
 
     
     createRememberMeToken($session['user_id']);
@@ -167,12 +165,7 @@ function getCurrentUser() {
         'id'       => $_SESSION['user_id'],
         'username' => $_SESSION['username'],
         'email'    => $_SESSION['email'],
-        'role'     => $_SESSION['role'] ?? 'user',
     ];
-}
-
-function isAdmin() {
-    return isLoggedIn() && $_SESSION['role'] === 'admin';
 }
 
 function revokeAllUserSessions($userId) {
@@ -370,7 +363,7 @@ function verifyPendingCode(string $email, string $code) {
         return false;
     }
 
-    $stmt = $conn->prepare("INSERT INTO users (username, email, password, role, is_active, email_verified_at, created_at) VALUES (?, ?, ?, 'user', 1, NOW(), NOW())");
+    $stmt = $conn->prepare("INSERT INTO users (username, email, password, is_active, email_verified_at, created_at) VALUES (?, ?, ?, 1, NOW(), NOW())");
     $stmt->bind_param("sss", $row['username'], $email, $row['password_hash']);
     $stmt->execute();
     $newId = (int)$conn->insert_id;

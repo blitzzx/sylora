@@ -33,17 +33,30 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 # Diretório de trabalho
 WORKDIR /var/www/html
 
-# Instalar dependências PHP (camada separada para cache)
-COPY composer.json .
-RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader
+# Instalar dependências PHP e guardar cópia em /opt/vendor
+# (fora do bind mount) para o entrypoint restaurar localmente
+COPY composer.json composer.lock* ./
+RUN composer install --no-dev --no-interaction --prefer-dist --optimize-autoloader \
+    && cp -r vendor /opt/vendor
 
 # Copiar ficheiros da aplicação para a imagem
 COPY . .
 
+# Entrypoint: restaura vendor/ se estiver em falta (bind mount sem composer)
+# e ajusta o porto do Apache conforme PORT do Railway.
+# Criado aqui (não copiado do host) para evitar problemas de CRLF no Windows.
+RUN printf '#!/bin/sh\nset -e\n\
+if [ ! -f /var/www/html/vendor/autoload.php ]; then\n\
+  echo "[entrypoint] vendor/ nao encontrado, a restaurar de /opt/vendor..."\n\
+  cp -r /opt/vendor /var/www/html/vendor\n\
+fi\n\
+find /etc/apache2/mods-enabled -name '"'"'mpm_event*'"'"'  -delete 2>/dev/null || true\n\
+find /etc/apache2/mods-enabled -name '"'"'mpm_worker*'"'"' -delete 2>/dev/null || true\n\
+sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf\n\
+exec "$@"\n' > /docker-entrypoint-sylora.sh \
+    && chmod +x /docker-entrypoint-sylora.sh
+
 EXPOSE 80
 
-# Ajustar porto do Apache ao valor de PORT definido pelo Railway em runtime
-CMD find /etc/apache2/mods-enabled -name 'mpm_event*' -delete 2>/dev/null; \
-    find /etc/apache2/mods-enabled -name 'mpm_worker*' -delete 2>/dev/null; \
-    sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf && \
-    apache2-foreground
+ENTRYPOINT ["/docker-entrypoint-sylora.sh"]
+CMD ["apache2-foreground"]
