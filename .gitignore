@@ -4,6 +4,9 @@
 # Dependências PHP
 vendor/
 
+# Vídeo do trailer (não commitar até ter o trailer oficial)
+assets/video/trailer.mp4
+
 # Docker local (apenas para desenvolvimento)
 compose.yml
 

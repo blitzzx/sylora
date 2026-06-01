@@ -44,9 +44,11 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
 
   
   <section class="site-hero-full" id="hero-full">
+    <?php if (file_exists(__DIR__ . '/assets/video/trailer.mp4')): ?>
     <video class="hero-video" id="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true">
       <source src="assets/video/trailer.mp4" type="video/mp4">
     </video>
+    <?php endif; ?>
     <div class="hero-overlay" aria-hidden="true"></div>
     <canvas class="hero-canvas" id="hero-canvas" aria-hidden="true"></canvas>
 

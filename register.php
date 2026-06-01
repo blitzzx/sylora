@@ -325,7 +325,7 @@ $csrfToken = generateCSRFToken();
               name="username"
               placeholder="<?= t('register.username_ph') ?>"
               value="<?php echo e($formData['username']); ?>"
-              autocomplete="username"
+              autocomplete="off"
               required
               minlength="3"
               maxlength="20"
@@ -410,54 +410,41 @@ $csrfToken = generateCSRFToken();
   <div class="terms-sheet">
     <div class="terms-sheet-handle"></div>
     <div class="terms-sheet-header">
-      <h2 class="terms-sheet-title" id="terms-title"><?= t('terms.title') ?></h2>
+      <h2 class="terms-sheet-title" id="terms-title" data-i18n="terms.title"><?= t('terms.title') ?></h2>
       <button class="terms-sheet-close" id="terms-close-btn" aria-label="Fechar">
         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
       </button>
     </div>
     <div class="terms-sheet-body">
-      <h3>1. Aceitação dos Termos</h3>
-      <p>Ao criar uma conta e utilizar a plataforma Sylora, aceitas cumprir estes Termos de Utilização. Se não concordares com algum ponto, não deves criar uma conta nem utilizar os serviços.</p>
+      <h3 data-i18n="terms.s1_title"><?= t('terms.s1_title') ?></h3>
+      <p data-i18n="terms.s1_body"><?= t('terms.s1_body') ?></p>
 
-      <h3>2. Elegibilidade</h3>
-      <p>A plataforma Sylora destina-se a utilizadores com 13 anos ou mais. Ao registares-te, confirmas que tens idade suficiente para aceitar estes termos ou que tens autorização de um responsável legal.</p>
+      <h3 data-i18n="terms.s2_title"><?= t('terms.s2_title') ?></h3>
+      <p data-i18n="terms.s2_body"><?= t('terms.s2_body') ?></p>
 
-      <h3>3. A Tua Conta</h3>
-      <p>És responsável por:</p>
-      <ul>
-        <li>Manter a confidencialidade da tua password</li>
-        <li>Toda a atividade que ocorra na tua conta</li>
-        <li>Notificar-nos imediatamente de qualquer uso não autorizado</li>
-      </ul>
-      <p>É proibido partilhar, vender ou transferir o acesso à tua conta.</p>
+      <h3 data-i18n="terms.s3_title"><?= t('terms.s3_title') ?></h3>
+      <div data-i18n-html="terms.s3_body"><?= t('terms.s3_body') ?></div>
 
-      <h3>4. Conduta do Utilizador</h3>
-      <p>Ao utilizar o Sylora comprometes-te a não:</p>
-      <ul>
-        <li>Publicar conteúdo ofensivo, discriminatório ou abusivo</li>
-        <li>Fazer spam ou assediar outros utilizadores</li>
-        <li>Tentar aceder a sistemas ou contas que não são tuas</li>
-        <li>Usar scripts, bots ou automação não autorizada</li>
-        <li>Criar múltiplas contas para contornar banimentos</li>
-      </ul>
+      <h3 data-i18n="terms.s4_title"><?= t('terms.s4_title') ?></h3>
+      <div data-i18n-html="terms.s4_body"><?= t('terms.s4_body') ?></div>
 
-      <h3>5. Propriedade Intelectual</h3>
-      <p>Todo o conteúdo do Sylora (arte, música, texto, código e marca) é propriedade exclusiva da equipa Sylora e está protegido por direitos de autor. Não podes reproduzir, distribuir ou criar trabalhos derivados sem autorização escrita prévia.</p>
+      <h3 data-i18n="terms.s5_title"><?= t('terms.s5_title') ?></h3>
+      <p data-i18n="terms.s5_body"><?= t('terms.s5_body') ?></p>
 
-      <h3>6. Privacidade</h3>
-      <p>O teu endereço de email é utilizado apenas para autenticação e comunicações essenciais relacionadas com a tua conta. Não vendemos nem partilhamos os teus dados com terceiros para fins comerciais.</p>
+      <h3 data-i18n="terms.s6_title"><?= t('terms.s6_title') ?></h3>
+      <p data-i18n="terms.s6_body"><?= t('terms.s6_body') ?></p>
 
-      <h3>7. Suspensão e Encerramento</h3>
-      <p>Reservamo-nos o direito de suspender ou encerrar contas que violem estes termos, sem aviso prévio. Em caso de encerramento, perdes o acesso a todos os dados e progresso associados à conta.</p>
+      <h3 data-i18n="terms.s7_title"><?= t('terms.s7_title') ?></h3>
+      <p data-i18n="terms.s7_body"><?= t('terms.s7_body') ?></p>
 
-      <h3>8. Limitação de Responsabilidade</h3>
-      <p>O Sylora é fornecido "tal como está". Não garantimos disponibilidade ininterrupta nem a ausência de erros. Não somos responsáveis por perda de dados de jogo resultante de problemas técnicos.</p>
+      <h3 data-i18n="terms.s8_title"><?= t('terms.s8_title') ?></h3>
+      <p data-i18n="terms.s8_body"><?= t('terms.s8_body') ?></p>
 
-      <h3>9. Alterações aos Termos</h3>
-      <p>Podemos atualizar estes termos. Quando o fizermos, notificaremos os utilizadores por email. A utilização continuada após as alterações constitui aceitação dos novos termos.</p>
+      <h3 data-i18n="terms.s9_title"><?= t('terms.s9_title') ?></h3>
+      <p data-i18n="terms.s9_body"><?= t('terms.s9_body') ?></p>
 
-      <h3>10. Contacto</h3>
-      <p>Para questões sobre estes termos, contacta-nos através do email de suporte disponível no site.</p>
+      <h3 data-i18n="terms.s10_title"><?= t('terms.s10_title') ?></h3>
+      <p data-i18n="terms.s10_body"><?= t('terms.s10_body') ?></p>
     </div>
     <div class="terms-sheet-footer">
       <button type="button" id="terms-accept-btn" class="btn btn-primary" style="flex:1;">
