@@ -1,5 +1,12 @@
 ﻿@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap');
 
+html {
+  scroll-behavior: smooth;
+  scroll-snap-type: y proximity;
+  scroll-padding-top: 80px;
+  scroll-padding-bottom: 80px;
+}
+
 :root {
   --bg:             #0d0b08;
   --surface:        #141109;
@@ -33,6 +40,11 @@
   --font-body:         'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --t:              180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+section, main {
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
 }
 
 *, *::before, *::after {
@@ -6808,23 +6820,32 @@ footer {
   left: 0 !important;
   right: 0 !important;
   opacity: 0 !important;
+  transform: translateY(-10px);
   visibility: hidden !important;
   pointer-events: none !important;
   box-shadow: none !important;
-  transition: opacity 400ms ease, background 400ms ease, box-shadow 400ms ease;
+  /* sem transition — evita flash ao carregar a página */
+}
+.navbar.navbar-hero.navbar-transitions-ready {
+  /* transitions só ativam após o JS confirmar que o load terminou */
+  transition: opacity 320ms ease, transform 320ms ease,
+              background 320ms ease, box-shadow 320ms ease,
+              visibility 0s 320ms linear;
 }
 .navbar.navbar-hero.navbar-scrolled {
   opacity: 1 !important;
+  transform: translateY(0) !important;
   visibility: visible !important;
   pointer-events: all !important;
   background: var(--surface) !important;
   box-shadow: var(--shadow-soft) !important;
   border-bottom-color: var(--gold-border) !important;
-  animation: navSlideDown 650ms cubic-bezier(0.16,1,0.3,1) both;
 }
-@keyframes navSlideDown {
-  from { opacity: 0; transform: translateY(-20px); }
-  to   { opacity: 1; transform: translateY(0); }
+.navbar.navbar-hero.navbar-transitions-ready.navbar-scrolled {
+  transition: opacity 420ms cubic-bezier(0.16, 1, 0.3, 1),
+              transform 420ms cubic-bezier(0.16, 1, 0.3, 1),
+              background 420ms ease, box-shadow 420ms ease,
+              visibility 0s linear;
 }
 .save-drag-hint { font-size: 12px; color: var(--muted); margin-top: 6px; display: flex; align-items: center; gap: 5px; }
 

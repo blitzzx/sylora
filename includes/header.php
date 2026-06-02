@@ -197,7 +197,7 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <?php endif; ?>
 
 
-<nav class="navbar" role="navigation" aria-label="Navegação principal">
+<nav class="navbar<?= !empty($navbarHero) ? ' navbar-hero' : '' ?>" role="navigation" aria-label="Navegação principal">
   <div class="container">
 
     <a href="/" class="logo" aria-label="Sylora: Início">

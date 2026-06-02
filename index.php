@@ -1,5 +1,7 @@
 ﻿<?php
 require_once __DIR__ . '/includes/config.php';
+// Pré-aplica navbar-hero via PHP para guests — evita flash de navbar ao carregar
+$navbarHero = !isset($_SESSION['user_id']);
 require_once 'includes/header.php';
 
 $isLoggedIn = isset($_SESSION['user_id']);
@@ -13,12 +15,12 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     <div class="hero-logged-bg"></div>
     <div class="hero-logged-content container">
       <div class="hero-logged-text">
-        <span class="overline-badge"><?= t('home.welcome_back') ?></span>
+        <span class="overline-badge" data-i18n="home.welcome_back"><?= t('home.welcome_back') ?></span>
         <h1><?php echo $username; ?></h1>
-        <p><?= t('home.adventure_sub') ?></p>
+        <p data-i18n="home.adventure_sub"><?= t('home.adventure_sub') ?></p>
         <div class="hero-actions">
-          <a href="jogar.php"    class="btn btn-primary btn-lg"><?= t('home.continue') ?></a>
-          <a href="historia.php" class="btn btn-secondary btn-lg"><?= t('home.view_story') ?></a>
+          <a href="jogar.php"    class="btn btn-primary btn-lg"  data-i18n="home.continue"><?= t('home.continue') ?></a>
+          <a href="historia.php" class="btn btn-secondary btn-lg" data-i18n="home.view_story"><?= t('home.view_story') ?></a>
         </div>
       </div>
       <div class="hero-logged-clio">
@@ -35,7 +37,7 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
             </svg>
           </div>
         </div>
-        <p class="clio-label"><?= t('home.clio_waiting') ?></p>
+        <p class="clio-label" data-i18n="home.clio_waiting"><?= t('home.clio_waiting') ?></p>
       </div>
     </div>
   </section>
@@ -61,11 +63,11 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
     <div class="hero-actions-row">
       <button class="hero-explore-btn" id="hero-explore" aria-label="Explorar mais">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
-        <span><?= t('home.explore') ?></span>
+        <span data-i18n="home.explore"><?= t('home.explore') ?></span>
       </button>
       <button class="hero-download-btn" id="hero-download" aria-label="Download do jogo">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
-        <span><?= t('home.download') ?></span>
+        <span data-i18n="home.download"><?= t('home.download') ?></span>
       </button>
     </div>
 

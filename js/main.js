@@ -820,10 +820,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function syncNavHero() {
       if (document.getElementById("hero-full")) {
+        // Classe já pode vir do PHP — apenas garante o estado correto
         nav.classList.add("navbar-hero");
+        // Ativa transições só após o primeiro frame para não animar no load inicial
+        requestAnimationFrame(() => nav.classList.add("navbar-transitions-ready"));
         onScroll();
       } else {
-        nav.classList.remove("navbar-hero", "navbar-scrolled");
+        nav.classList.remove("navbar-hero", "navbar-scrolled", "navbar-transitions-ready");
       }
     }
 
