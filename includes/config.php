@@ -39,6 +39,18 @@ require_once __DIR__ . '/functions.php';
 require_once __DIR__ . '/auth.php';
 require_once __DIR__ . '/lang.php';
 
+// Forçar idioma por URL (?lang=xx) — entrada server-side para hreflang/crawlers e landing multilíngue.
+// O switcher normal continua a ser 100% client-side; isto só atua quando o param existe.
+if (isset($_GET['lang']) && in_array($_GET['lang'], ['en', 'pt', 'es'], true)) {
+    setcookie('sylora_lang', $_GET['lang'], [
+        'expires'  => time() + 31536000,
+        'path'     => '/',
+        'samesite' => 'Lax',
+        'secure'   => $_is_https,
+    ]);
+    $_COOKIE['sylora_lang'] = $_GET['lang']; // reflete no render atual
+}
+
 
 
 if (!isLoggedIn() && isset($_COOKIE['remember_selector'], $_COOKIE['remember_token'])) {

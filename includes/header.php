@@ -22,10 +22,15 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 $_seoTitle  = isset($pageTitle)       ? $pageTitle       : t('site.title');
 $_seoDesc   = isset($pageDescription) ? $pageDescription : t('site.description');
 $_seoPath   = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
-$_seoCanon  = isset($pageCanonical)   ? $pageCanonical   : SITE_URL . $_seoPath;
+$_seoBase   = SITE_URL . $_seoPath;
+$_seoLang   = getLang();
+$_seoAlts   = ['en' => $_seoBase, 'pt' => $_seoBase . '?lang=pt', 'es' => $_seoBase . '?lang=es'];
+// Emite hreflang só em páginas públicas sem canonical próprio (home, historia, sobre)
+$_seoHasAlts = empty($pageNoindex) && !isset($pageCanonical);
+$_seoCanon  = isset($pageCanonical) ? $pageCanonical : ($_seoAlts[$_seoLang] ?? $_seoBase);
 $_seoImage  = SITE_URL . '/assets/img/Logo-Sylora.png';
 $_seoRobots = !empty($pageNoindex) ? 'noindex, follow' : 'index, follow';
-$_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][getLang()] ?? 'pt_PT';
+$_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][$_seoLang] ?? 'en_US';
 ?>
 <?php if (!$isPjax): ?>
 <!DOCTYPE html>
@@ -39,6 +44,12 @@ $_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][getLang()] ?? 
   <meta name="author" content="Sylora">
   <meta name="keywords" content="Sylora, Sylora jogo, Sylora RPG, Sylora Ecos dos Deuses, jogo de mitologia grega, RPG português, aventura narrativa, jogo indie português, Sylora game">
   <link rel="canonical" href="<?= e($_seoCanon) ?>">
+<?php if ($_seoHasAlts): ?>
+  <link rel="alternate" hreflang="en" href="<?= e($_seoAlts['en']) ?>">
+  <link rel="alternate" hreflang="pt" href="<?= e($_seoAlts['pt']) ?>">
+  <link rel="alternate" hreflang="es" href="<?= e($_seoAlts['es']) ?>">
+  <link rel="alternate" hreflang="x-default" href="<?= e($_seoBase) ?>">
+<?php endif; ?>
 
 
   <meta property="og:type" content="website">
