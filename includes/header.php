@@ -17,6 +17,15 @@ $userInitial = $isLoggedIn ? strtoupper(mb_substr($_SESSION['username'] ?? 'A', 
 
 
 $currentPage = basename($_SERVER['PHP_SELF']);
+
+// ─── SEO: cada página pode sobrepor com $pageTitle / $pageDescription / $pageCanonical / $pageNoindex antes do include ───
+$_seoTitle  = isset($pageTitle)       ? $pageTitle       : t('site.title');
+$_seoDesc   = isset($pageDescription) ? $pageDescription : t('site.description');
+$_seoPath   = strtok($_SERVER['REQUEST_URI'] ?? '/', '?');
+$_seoCanon  = isset($pageCanonical)   ? $pageCanonical   : SITE_URL . $_seoPath;
+$_seoImage  = SITE_URL . '/assets/img/Logo-Sylora.png';
+$_seoRobots = !empty($pageNoindex) ? 'noindex, follow' : 'index, follow';
+$_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][getLang()] ?? 'pt_PT';
 ?>
 <?php if (!$isPjax): ?>
 <!DOCTYPE html>
@@ -24,8 +33,77 @@ $currentPage = basename($_SERVER['PHP_SELF']);
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title><?= t('site.title') ?></title>
-  <meta name="description" content="<?= t('site.description') ?>">
+  <title><?= e($_seoTitle) ?></title>
+  <meta name="description" content="<?= e($_seoDesc) ?>">
+  <meta name="robots" content="<?= $_seoRobots ?>">
+  <meta name="author" content="Sylora">
+  <meta name="keywords" content="Sylora, Sylora jogo, Sylora RPG, Sylora Ecos dos Deuses, jogo de mitologia grega, RPG português, aventura narrativa, jogo indie português, Sylora game">
+  <link rel="canonical" href="<?= e($_seoCanon) ?>">
+
+
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Sylora">
+  <meta property="og:title" content="<?= e($_seoTitle) ?>">
+  <meta property="og:description" content="<?= e($_seoDesc) ?>">
+  <meta property="og:url" content="<?= e($_seoCanon) ?>">
+  <meta property="og:image" content="<?= e($_seoImage) ?>">
+  <meta property="og:image:width" content="512">
+  <meta property="og:image:height" content="512">
+  <meta property="og:image:alt" content="Sylora — Ecos dos Deuses">
+  <meta property="og:locale" content="<?= $_seoLocale ?>">
+  <meta property="og:locale:alternate" content="pt_PT">
+  <meta property="og:locale:alternate" content="en_US">
+  <meta property="og:locale:alternate" content="es_ES">
+
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="<?= e($_seoTitle) ?>">
+  <meta name="twitter:description" content="<?= e($_seoDesc) ?>">
+  <meta name="twitter:image" content="<?= e($_seoImage) ?>">
+
+
+  <script type="application/ld+json"><?= json_encode([
+    '@context' => 'https://schema.org',
+    '@graph' => [
+      [
+        '@type' => 'WebSite',
+        '@id' => SITE_URL . '/#website',
+        'name' => 'Sylora',
+        'alternateName' => 'Sylora: Ecos dos Deuses',
+        'url' => SITE_URL . '/',
+        'inLanguage' => ['pt-PT', 'en', 'es'],
+        'publisher' => ['@id' => SITE_URL . '/#organization'],
+        'potentialAction' => [
+          '@type' => 'SearchAction',
+          'target' => ['@type' => 'EntryPoint', 'urlTemplate' => SITE_URL . '/search?q={search_term_string}'],
+          'query-input' => 'required name=search_term_string',
+        ],
+      ],
+      [
+        '@type' => 'Organization',
+        '@id' => SITE_URL . '/#organization',
+        'name' => 'Sylora',
+        'url' => SITE_URL . '/',
+        'logo' => SITE_URL . '/assets/img/Logo-Sylora.png',
+      ],
+      [
+        '@type' => 'VideoGame',
+        '@id' => SITE_URL . '/#game',
+        'name' => 'Sylora',
+        'alternateName' => 'Sylora: Ecos dos Deuses',
+        'url' => SITE_URL . '/',
+        'description' => t('site.description'),
+        'image' => SITE_URL . '/assets/img/Logo-Sylora.png',
+        'inLanguage' => ['pt-PT', 'en', 'es'],
+        'genre' => ['RPG', 'Adventure', 'Action'],
+        'gamePlatform' => ['PC', 'Windows'],
+        'operatingSystem' => 'Windows',
+        'applicationCategory' => 'Game',
+        'author' => ['@id' => SITE_URL . '/#organization'],
+        'publisher' => ['@id' => SITE_URL . '/#organization'],
+      ],
+    ],
+  ], JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE) ?></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">

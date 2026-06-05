@@ -9,6 +9,7 @@ $diff         = $startDate->diff($today);
 $monthsActive = ($diff->y * 12) + $diff->m + ($diff->d >= 15 ? 1 : 0);
 if ($monthsActive < 1) $monthsActive = 1;
 
+$pageTitle = t('nav.about') . ' — Sylora: Ecos dos Deuses';
 include 'includes/header.php';
 ?>
 

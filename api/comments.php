@@ -150,8 +150,8 @@ if ($method === 'DELETE') {
     if (!$row) jsonErr(404, 'Comentário não encontrado.');
 
     
-    $canDelete = $row['author_id'] === $userId
-              || $row['profile_user_id'] === $userId;
+    $canDelete = (int) $row['author_id'] === $userId
+              || (int) $row['profile_user_id'] === $userId;
     if (!$canDelete) jsonErr(403, 'Sem permissão para apagar este comentário.');
 
     $stmtDel = $conn->prepare("UPDATE profile_comments SET is_hidden = 1 WHERE id = ?");

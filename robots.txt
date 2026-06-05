@@ -1,0 +1,19 @@
+User-agent: *
+Allow: /
+
+# Áreas privadas / sem valor de indexação
+Disallow: /api/
+Disallow: /includes/
+Disallow: /login
+Disallow: /register
+Disallow: /verify
+Disallow: /forgot
+Disallow: /reset
+Disallow: /logout
+Disallow: /profile
+Disallow: /jogar
+Disallow: /search
+Disallow: /avatar.php
+Disallow: /*?*json=
+
+Sitemap: https://www.sylora.lol/sitemap.xml

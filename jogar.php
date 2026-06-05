@@ -32,6 +32,7 @@ function actIcon(string $chapter): string {
     return '📜';
 }
 
+$pageTitle = t('nav.play') . ' — Sylora: Ecos dos Deuses';
 include 'includes/header.php';
 ?>
 

@@ -1,0 +1,51 @@
+services:
+  web:
+    build: .
+    container_name: sylora-web
+    ports:
+      - "8080:80"
+    volumes:
+      - .:/var/www/html
+    environment:
+      APP_ENV: development
+      SITE_URL: http://localhost:8080
+      DB_HOST: sylora-db
+      DB_USER: sylora_user
+      DB_PASS: sylora_pass
+      DB_NAME: sylora
+    depends_on:
+      db:
+        condition: service_healthy
+
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: sylora-pma
+    ports:
+      - "8081:80"
+    environment:
+      PMA_HOST: sylora-db
+      PMA_USER: sylora_user
+      PMA_PASSWORD: sylora_pass
+    depends_on:
+      db:
+        condition: service_healthy
+
+  db:
+    image: mysql:8.0
+    container_name: sylora-db
+    environment:
+      MYSQL_ROOT_PASSWORD: root_pass
+      MYSQL_DATABASE: sylora
+      MYSQL_USER: sylora_user
+      MYSQL_PASSWORD: sylora_pass
+    volumes:
+      - sylora_db_data:/var/lib/mysql
+      - ./sylora.sql:/docker-entrypoint-initdb.d/sylora.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "sylora_user", "-psylora_pass"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  sylora_db_data:

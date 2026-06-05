@@ -165,6 +165,11 @@ $stmtComCount->execute();
 $totalComments = (int) $stmtComCount->get_result()->fetch_row()[0];
 $stmtComCount->close();
 
+$pageTitle = $profile['username'] . ' — Sylora';
+$pageDescription = !empty($profile['bio'])
+    ? mb_substr(trim(preg_replace('/\s+/', ' ', $profile['bio'])), 0, 160)
+    : t('profile.role_user') . ' ' . $profile['username'] . ' — Sylora: Ecos dos Deuses.';
+$pageCanonical = SITE_URL . '/u?u=' . urlencode($profile['username']);
 include 'includes/header.php';
 ?>
 
@@ -634,7 +639,7 @@ include 'includes/header.php';
               <div class="up-comment-header">
                 <a href="u.php?u=<?php echo urlencode($c['author_username']); ?>" class="up-comment-author"><?php echo e($c['author_username']); ?></a>
                 <span class="up-comment-date"><?php echo date('d/m/Y H:i', strtotime($c['created_at'])); ?></span>
-                <?php if (isLoggedIn() && ((int)$_SESSION['user_id'] === (int)$c['author_id'] || $isSelf || isAdmin())): ?>
+                <?php if (isLoggedIn() && ((int)$_SESSION['user_id'] === (int)$c['author_id'] || $isSelf)): ?>
                   <button class="up-comment-delete" data-comment-id="<?php echo (int)$c['id']; ?>" data-csrf="<?php echo e($csrfToken); ?>" title="Apagar" aria-label="Apagar">
                     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"/><path d="M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a1 1 0 011-1h4a1 1 0 011 1v2"/></svg>
                   </button>

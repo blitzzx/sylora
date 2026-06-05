@@ -47,6 +47,9 @@ if ($isJson) {
     exit;
 }
 
+// Páginas de resultados de pesquisa não devem ser indexadas (conteúdo fino/duplicado)
+$pageNoindex = true;
+$pageTitle   = t('search.title') . ' — Sylora';
 include 'includes/header.php';
 ?>
 

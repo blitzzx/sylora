@@ -1,5 +1,6 @@
 <?php
 require_once 'includes/config.php';
+$pageTitle = t('nav.historia') . ' — Sylora: Ecos dos Deuses';
 include 'includes/header.php';
 $isLoggedIn = isset($_SESSION['user_id']);
 ?>
