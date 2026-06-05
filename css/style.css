@@ -2,7 +2,6 @@
 
 html {
   scroll-behavior: smooth;
-  scroll-snap-type: y proximity;
   scroll-padding-top: 80px;
   scroll-padding-bottom: 80px;
 }
@@ -40,11 +39,6 @@ html {
   --font-body:         'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 
   --t:              180ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-section, main {
-  scroll-snap-align: start;
-  scroll-snap-stop: always;
 }
 
 *, *::before, *::after {

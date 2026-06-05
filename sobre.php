@@ -93,7 +93,7 @@ include 'includes/header.php';
             <strong class="about-member-name">Márcio Sousa</strong>
             <span class="about-member-role">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
-              <span data-i18n="sobre.role_gd"><?= t('sobre.role_gd') ?></span>
+              <span data-i18n-html="sobre.role_gd"><?= t('sobre.role_gd') ?></span>
             </span>
           </div>
         </header>
@@ -108,8 +108,8 @@ include 'includes/header.php';
         <div class="about-member-stack">
           <span class="about-stack-pill">GameMaker</span>
           <span class="about-stack-pill">GML</span>
-          <span class="about-stack-pill">Aseprite</span>
-          <span class="about-stack-pill">Game Design</span>
+          <span class="about-stack-pill">PHP</span>
+          <span class="about-stack-pill">MySQL</span>
         </div>
       </article>
 
@@ -137,11 +137,10 @@ include 'includes/header.php';
         </ul>
 
         <div class="about-member-stack">
-          <span class="about-stack-pill">PHP</span>
-          <span class="about-stack-pill">MySQL</span>
           <span class="about-stack-pill">JavaScript</span>
           <span class="about-stack-pill">CSS</span>
-          <span class="about-stack-pill">UX</span>
+          <span class="about-stack-pill">Aseprite</span>
+          <span class="about-stack-pill">Game Design</span>
         </div>
       </article>
 
