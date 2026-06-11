@@ -54,7 +54,8 @@ if [ ! -f /var/www/html/vendor/autoload.php ]; then\n\
 fi\n\
 find /etc/apache2/mods-enabled -name '"'"'mpm_event*'"'"'  -delete 2>/dev/null || true\n\
 find /etc/apache2/mods-enabled -name '"'"'mpm_worker*'"'"' -delete 2>/dev/null || true\n\
-sed -i "s/Listen 80/Listen ${PORT:-80}/" /etc/apache2/ports.conf\n\
+sed -i "s/^Listen .*/Listen ${PORT:-80}/" /etc/apache2/ports.conf\n\
+sed -i "s/<VirtualHost \\*:[0-9][0-9]*/<VirtualHost *:${PORT:-80}/" /etc/apache2/sites-available/000-default.conf\n\
 exec "$@"\n' > /docker-entrypoint-sylora.sh \
     && chmod +x /docker-entrypoint-sylora.sh
 
