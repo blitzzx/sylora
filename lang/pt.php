@@ -105,10 +105,25 @@
   'forgot.deco_sub'  => 'Insere o teu e-mail e enviamos um link para repores a tua password.',
   'forgot.back_login' => 'Login',
   'forgot.sent_explicit' => 'Enviámos um link de recuperação para {email}. Verifica também a pasta de spam.',
-  'forgot.not_verified'  => 'Esta conta existe mas ainda não foi ativada. Vai ao teu email (e à pasta de spam) para a ativares.',
-  'forgot.resend_btn'    => 'Reenviar email de verificação',
-  'forgot.resent'        => 'Email de verificação reenviado! Verifica a tua caixa de entrada e o spam.',
   'forgot.not_found'     => 'Não existe nenhuma conta com este email. <a href="/register">Cria uma conta</a>.',
+
+  // auth — partilhado entre login/forgot
+  'auth.verify_redirect' => 'A tua conta ainda não foi verificada. A reencaminhar-te para a verificação…',
+
+  // emails (enviados no idioma do site)
+  'email.tagline'        => 'ECOS DOS DEUSES',
+  'email.greeting'       => 'Olá {name},',
+  'email.verify_subject' => 'O teu código de verificação: Sylora',
+  'email.verify_heading' => 'O teu código de verificação',
+  'email.verify_intro'   => 'Usa o código abaixo para confirmar o teu e-mail e ativar a conta Sylora.',
+  'email.verify_validity'=> 'O código é válido durante 1 hora.',
+  'email.verify_ignore'  => 'Se não criaste esta conta, podes ignorar este e-mail. Nenhuma conta será criada sem o código.',
+  'email.reset_subject'  => 'Repor password: Sylora',
+  'email.reset_heading'  => 'Repor password',
+  'email.reset_intro'    => 'Recebemos um pedido para repor a password da tua conta.',
+  'email.reset_validity' => 'O link é válido durante 1 hora.',
+  'email.reset_btn'      => 'Repor Password',
+  'email.reset_ignore'   => 'Se não pediste a reposição da password, ignora este e-mail. A tua password não será alterada.',
 
   // verify
   'verify.title_code'   => 'Introduz o código',

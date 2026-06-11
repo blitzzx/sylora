@@ -5,8 +5,9 @@ if (isLoggedIn()) {
     redirect('/');
 }
 
-$errors     = [];
-$emailValue = '';
+$errors           = [];
+$emailValue       = '';
+$redirectToVerify = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf = $_POST['_csrf'] ?? '';
@@ -33,15 +34,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $user = $stmt->get_result()->fetch_assoc();
             $stmt->close();
 
-            if ($user && password_verify($password, $user['password'])) {
+            if ($user && empty($user['is_active']) && empty($user['email_verified_at'])) {
+                // Conta em users mas por verificar (caso legado) → encaminhar para /verify
+                recordLoginAttempt($ip, $email, 0);
+                $_SESSION['verify_for'] = $email;
+                $redirectToVerify = true;
+            } elseif ($user && password_verify($password, $user['password'])) {
                 if (empty($user['is_active'])) {
+                    // Verificada mas desativada
                     recordLoginAttempt($ip, $email, 0);
-                    if (empty($user['email_verified_at'])) {
-                        $errors[]      = t('err.verify_required');
-                        $showVerifyLink = true;
-                    } else {
-                        $errors[] = t('err.account_disabled');
-                    }
+                    $errors[] = t('err.account_disabled');
                 } else {
                     recordLoginAttempt($ip, $email, 1);
                     loginUser($user['id'], $user['username'], $user['email']);
@@ -55,13 +57,35 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     $_SESSION['flash_type'] = 'success';
                     redirect('/');
                 }
+            } elseif (!$user) {
+                // Sem conta em users: pode ser um registo pendente por confirmar
+                $stmt = $conn->prepare('SELECT 1 FROM pending_registrations WHERE email = ? AND expires_at > NOW() LIMIT 1');
+                $stmt->bind_param('s', $email);
+                $stmt->execute();
+                $stmt->store_result();
+                $isPending = $stmt->num_rows > 0;
+                $stmt->close();
+
+                recordLoginAttempt($ip, $email, 0);
+                if ($isPending) {
+                    $_SESSION['verify_for'] = $email;
+                    $redirectToVerify = true;
+                } else {
+                    $errors[] = t('err.bad_credentials');
+                }
             } else {
+                // Conta existe e verificada, mas password errada
                 recordLoginAttempt($ip, $email, 0);
                 $errors[] = t('err.bad_credentials');
             }
         }
     }
 }
+
+// Popup + reencaminhamento para /verify quando a conta ainda não foi verificada.
+$authToastMsg      = $redirectToVerify ? t('auth.verify_redirect') : '';
+$authToastType     = 'info';
+$authToastRedirect = $redirectToVerify ? '/verify' : '';
 
 $csrfToken = generateCSRFToken();
 ?>
@@ -148,9 +172,6 @@ $csrfToken = generateCSRFToken();
           <?php foreach ($errors as $err): ?>
             <p><?php echo e($err); ?></p>
           <?php endforeach; ?>
-          <?php if (!empty($showVerifyLink)): ?>
-            <p><a href="/verify"><?= t('login.resend_verify') ?></a></p>
-          <?php endif; ?>
         </div>
       <?php endif; ?>
 
@@ -268,6 +289,8 @@ $csrfToken = generateCSRFToken();
     });
   })();
 </script>
+
+<?php require __DIR__ . '/includes/auth_toast.php'; ?>
 
 </body>
 </html>

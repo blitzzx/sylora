@@ -6,7 +6,7 @@ if (isLoggedIn()) {
     redirect('/');
 }
 
-$state            = '';   // '', 'sent', 'unverified', 'disabled', 'not_found', 'resent'
+$state            = '';   // '', 'sent', 'unverified', 'disabled', 'not_found'
 $errors           = [];
 $emailValue       = '';
 $recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
@@ -15,7 +15,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf   = $_POST['_csrf'] ?? '';
     $email  = sanitize($_POST['email'] ?? '');
     $ip     = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
-    $action = $_POST['action'] ?? 'forgot';
 
     $emailValue = $email;
 
@@ -23,34 +22,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $errors[] = t('err.invalid_request');
     } elseif (!empty($_POST['hp_website'])) {
         // Honeypot preenchido: bot detetado — fingir sucesso
-        $state = ($action === 'resend_verify') ? 'resent' : 'sent';
-    } elseif ($action === 'resend_verify') {
-        // ── Reenvio do email de verificação (conta por ativar) ──
-        // Espelha a lógica de verify.php; mantém a mensagem 'unverified' em caso de erro.
-        $state = 'unverified';
-        if (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'resend')) {
-            $errors[] = t('err.security_failed');
-        } elseif (!isValidEmail($email)) {
-            $errors[] = t('err.invalid_email');
-        } elseif (!checkEmailRateLimit($ip, 'verify-resend', 5)
-               || !checkActionRateLimit('verify_resend', strtolower($email), 3, 60)) {
-            $errors[] = t('err.too_many_min');
-        } else {
-            recordActionAttempt('verify_resend', strtolower($email), 1);
-            $stmt = $conn->prepare('SELECT username, password_hash FROM pending_registrations WHERE email = ?');
-            $stmt->bind_param('s', $email);
-            $stmt->execute();
-            $pending = $stmt->get_result()->fetch_assoc();
-            $stmt->close();
-
-            if ($pending) {
-                $code = createPendingRegistration($email, $pending['username'], $pending['password_hash']);
-                mailVerification($email, $pending['username'], $code);
-                recordEmailAttempt($ip, 'verify-resend');
-                $_SESSION['verify_for'] = $email;
-            }
-            $state = 'resent';
-        }
+        $state = 'sent';
     } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'forgot')) {
         $errors[] = t('err.security_failed');
     } elseif (!checkEmailRateLimit($ip, 'forgot', 3)) {
@@ -96,7 +68,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             }
         }
     }
+
+    // Conta por verificar → popup + reencaminhamento para /verify (mete lá o código).
+    if ($state === 'unverified') {
+        $_SESSION['verify_for'] = $email;
+    }
 }
+
+// Popup + redirect para /verify quando a conta ainda não foi verificada.
+$redirectToVerify  = ($state === 'unverified');
+$authToastMsg      = $redirectToVerify ? t('auth.verify_redirect') : '';
+$authToastType     = 'info';
+$authToastRedirect = $redirectToVerify ? '/verify' : '';
 
 $csrfToken = generateCSRFToken();
 ?>
@@ -188,15 +171,6 @@ $csrfToken = generateCSRFToken();
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
         </a>
 
-      <?php elseif ($state === 'resent'): ?>
-        <div class="alert alert-success">
-          <p><?= t('forgot.resent') ?></p>
-        </div>
-        <a href="/login" class="btn btn-primary btn-block auth-submit-btn" style="text-align:center;">
-          <?= t('forgot.go_login') ?>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
-
       <?php elseif ($state === 'disabled'): ?>
         <div class="alert alert-error">
           <p><?= t('err.account_disabled') ?></p>
@@ -208,19 +182,12 @@ $csrfToken = generateCSRFToken();
 
       <?php elseif ($state === 'unverified'): ?>
         <div class="alert alert-info">
-          <p><?= t('forgot.not_verified') ?></p>
+          <p><?= t('auth.verify_redirect') ?></p>
         </div>
-        <form method="POST" action="/forgot" class="auth-form" data-rc-action="resend" novalidate>
-          <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
-          <input type="hidden" name="action" value="resend_verify">
-          <input type="hidden" name="email" value="<?php echo e($emailValue); ?>">
-          <input type="hidden" id="g-recaptcha-token-resend" name="g_recaptcha_token">
-
-          <button type="submit" class="btn btn-primary btn-block auth-submit-btn">
-            <?= t('forgot.resend_btn') ?>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-          </button>
-        </form>
+        <a href="/verify" class="btn btn-primary btn-block auth-submit-btn" style="text-align:center;">
+          <?= t('verify.title_form') ?>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
 
       <?php else: ?>
         <?php if ($state === 'not_found'): ?>
@@ -309,6 +276,8 @@ $csrfToken = generateCSRFToken();
     });
   })();
 </script>
+
+<?php require __DIR__ . '/includes/auth_toast.php'; ?>
 
 </body>
 </html>

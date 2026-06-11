@@ -105,10 +105,25 @@
   'forgot.deco_sub'  => 'Enter your email and we\'ll send a link to reset your password.',
   'forgot.back_login' => 'Login',
   'forgot.sent_explicit' => 'We\'ve sent a recovery link to {email}. Check your spam folder too.',
-  'forgot.not_verified'  => 'This account exists but hasn\'t been activated yet. Go to your email (and check spam) to activate it.',
-  'forgot.resend_btn'    => 'Resend verification email',
-  'forgot.resent'        => 'Verification email resent! Check your inbox and spam folder.',
   'forgot.not_found'     => 'There\'s no account with this email. <a href="/register">Create an account</a>.',
+
+  // auth — shared between login/forgot
+  'auth.verify_redirect' => 'Your account hasn\'t been verified yet. Redirecting you to verification…',
+
+  // emails (sent in the site language)
+  'email.tagline'        => 'ECHOES OF THE GODS',
+  'email.greeting'       => 'Hi {name},',
+  'email.verify_subject' => 'Your verification code: Sylora',
+  'email.verify_heading' => 'Your verification code',
+  'email.verify_intro'   => 'Use the code below to confirm your email and activate your Sylora account.',
+  'email.verify_validity'=> 'The code is valid for 1 hour.',
+  'email.verify_ignore'  => 'If you didn\'t create this account, you can ignore this email. No account will be created without the code.',
+  'email.reset_subject'  => 'Reset password: Sylora',
+  'email.reset_heading'  => 'Reset password',
+  'email.reset_intro'    => 'We received a request to reset your account password.',
+  'email.reset_validity' => 'The link is valid for 1 hour.',
+  'email.reset_btn'      => 'Reset Password',
+  'email.reset_ignore'   => 'If you didn\'t request a password reset, ignore this email. Your password won\'t be changed.',
 
   // verify
   'verify.title_code'   => 'Enter the code',

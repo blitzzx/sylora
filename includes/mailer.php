@@ -100,45 +100,58 @@ function _sendMailSmtp(string $to, string $toName, string $subject, string $html
 }
 
 function mailVerification(string $email, string $username, string $code): bool {
-    $u    = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
-    $c    = htmlspecialchars($code, ENT_QUOTES, 'UTF-8');
+    $u        = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
+    $c        = htmlspecialchars($code, ENT_QUOTES, 'UTF-8');
+    $tagline  = t('email.tagline');
+    $heading  = t('email.verify_heading');
+    $greeting = t('email.greeting', ['name' => '<strong>' . $u . '</strong>']);
+    $intro    = t('email.verify_intro');
+    $validity = t('email.verify_validity');
+    $ignore   = t('email.verify_ignore');
     $html = <<<HTML
 <div style="font-family:Georgia,serif;max-width:540px;margin:0 auto;padding:32px 28px;background:#0d0d14;color:#e8c46a;border:1px solid rgba(201,153,58,0.35);border-radius:10px;">
   <h1 style="margin:0 0 4px;font-size:22px;letter-spacing:2px;">SYLORA</h1>
-  <p style="color:#7a6a4a;margin:0 0 28px;font-size:13px;letter-spacing:1px;">ECOS DOS DEUSES</p>
-  <h2 style="font-size:17px;color:#f0d9a0;margin:0 0 14px;">O teu código de verificação</h2>
-  <p style="color:#c8b890;line-height:1.7;margin:0 0 24px;">Olá <strong>{$u}</strong>,<br>
-  Usa o código abaixo para confirmar o teu e-mail e ativar a conta Sylora.<br>
-  <span style="color:#7a6a4a;font-size:13px;">O código é válido durante 1 hora.</span></p>
+  <p style="color:#7a6a4a;margin:0 0 28px;font-size:13px;letter-spacing:1px;">{$tagline}</p>
+  <h2 style="font-size:17px;color:#f0d9a0;margin:0 0 14px;">{$heading}</h2>
+  <p style="color:#c8b890;line-height:1.7;margin:0 0 24px;">{$greeting}<br>
+  {$intro}<br>
+  <span style="color:#7a6a4a;font-size:13px;">{$validity}</span></p>
   <div style="text-align:center;margin:0 0 28px;">
     <div style="display:inline-block;background:#111118;border:1px solid rgba(201,153,58,0.45);border-radius:12px;padding:24px 40px;">
       <span style="font-family:Georgia,monospace;font-size:42px;letter-spacing:16px;color:#e8c46a;font-weight:bold;">{$c}</span>
     </div>
   </div>
-  <p style="color:#4a3a2a;font-size:12px;margin:0;">Se não criaste esta conta, podes ignorar este e-mail. Nenhuma conta será criada sem o código.</p>
+  <p style="color:#4a3a2a;font-size:12px;margin:0;">{$ignore}</p>
 </div>
 HTML;
-    return sendMail($email, $username, 'O teu código de verificação: Sylora', $html);
+    return sendMail($email, $username, t('email.verify_subject'), $html);
 }
 
 function mailPasswordReset(string $email, string $username, string $token): bool {
-    $link = rtrim(SITE_URL, '/') . '/reset?t=' . urlencode($token);
-    $u    = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
+    $link     = rtrim(SITE_URL, '/') . '/reset?t=' . urlencode($token);
+    $u        = htmlspecialchars($username, ENT_QUOTES, 'UTF-8');
+    $tagline  = t('email.tagline');
+    $heading  = t('email.reset_heading');
+    $greeting = t('email.greeting', ['name' => '<strong>' . $u . '</strong>']);
+    $intro    = t('email.reset_intro');
+    $validity = t('email.reset_validity');
+    $btn      = t('email.reset_btn');
+    $ignore   = t('email.reset_ignore');
     $html = <<<HTML
 <div style="font-family:Georgia,serif;max-width:540px;margin:0 auto;padding:32px 28px;background:#0d0d14;color:#e8c46a;border:1px solid rgba(201,153,58,0.35);border-radius:10px;">
   <h1 style="margin:0 0 4px;font-size:22px;letter-spacing:2px;">SYLORA</h1>
-  <p style="color:#7a6a4a;margin:0 0 28px;font-size:13px;letter-spacing:1px;">ECOS DOS DEUSES</p>
-  <h2 style="font-size:17px;color:#f0d9a0;margin:0 0 14px;">Repor password</h2>
-  <p style="color:#c8b890;line-height:1.7;margin:0 0 24px;">Olá <strong>{$u}</strong>,<br>
-  Recebemos um pedido para repor a password da tua conta.<br>
-  <span style="color:#7a6a4a;font-size:13px;">O link é válido durante 1 hora.</span></p>
+  <p style="color:#7a6a4a;margin:0 0 28px;font-size:13px;letter-spacing:1px;">{$tagline}</p>
+  <h2 style="font-size:17px;color:#f0d9a0;margin:0 0 14px;">{$heading}</h2>
+  <p style="color:#c8b890;line-height:1.7;margin:0 0 24px;">{$greeting}<br>
+  {$intro}<br>
+  <span style="color:#7a6a4a;font-size:13px;">{$validity}</span></p>
   <div style="text-align:center;margin:0 0 28px;">
-    <a href="{$link}" style="display:inline-block;background:#c9993a;color:#0d0d14;padding:13px 32px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:15px;letter-spacing:0.5px;">Repor Password</a>
+    <a href="{$link}" style="display:inline-block;background:#c9993a;color:#0d0d14;padding:13px 32px;border-radius:6px;text-decoration:none;font-weight:bold;font-size:15px;letter-spacing:0.5px;">{$btn}</a>
   </div>
-  <p style="color:#4a3a2a;font-size:12px;margin:0;">Se não pediste a reposição da password, ignora este e-mail. A tua password não será alterada.</p>
+  <p style="color:#4a3a2a;font-size:12px;margin:0;">{$ignore}</p>
 </div>
 HTML;
-    return sendMail($email, $username, 'Repor password: Sylora', $html);
+    return sendMail($email, $username, t('email.reset_subject'), $html);
 }
 
 function mailContactForm(string $toEmail, string $fromName, string $fromEmail, string $subject, string $message, string $ip = ''): bool {

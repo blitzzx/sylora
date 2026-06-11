@@ -105,10 +105,25 @@
   'forgot.deco_sub'  => 'Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.',
   'forgot.back_login' => 'Login',
   'forgot.sent_explicit' => 'Hemos enviado un enlace de recuperación a {email}. Revisa también tu carpeta de spam.',
-  'forgot.not_verified'  => 'Esta cuenta existe pero aún no ha sido activada. Ve a tu correo (y revisa el spam) para activarla.',
-  'forgot.resend_btn'    => 'Reenviar correo de verificación',
-  'forgot.resent'        => '¡Correo de verificación reenviado! Revisa tu bandeja de entrada y el spam.',
   'forgot.not_found'     => 'No existe ninguna cuenta con este correo. <a href="/register">Crea una cuenta</a>.',
+
+  // auth — compartido entre login/forgot
+  'auth.verify_redirect' => 'Tu cuenta aún no ha sido verificada. Redirigiéndote a la verificación…',
+
+  // emails (enviados en el idioma del sitio)
+  'email.tagline'        => 'ECOS DE LOS DIOSES',
+  'email.greeting'       => 'Hola {name},',
+  'email.verify_subject' => 'Tu código de verificación: Sylora',
+  'email.verify_heading' => 'Tu código de verificación',
+  'email.verify_intro'   => 'Usa el código de abajo para confirmar tu correo y activar tu cuenta Sylora.',
+  'email.verify_validity'=> 'El código es válido durante 1 hora.',
+  'email.verify_ignore'  => 'Si no creaste esta cuenta, puedes ignorar este correo. No se creará ninguna cuenta sin el código.',
+  'email.reset_subject'  => 'Restablecer contraseña: Sylora',
+  'email.reset_heading'  => 'Restablecer contraseña',
+  'email.reset_intro'    => 'Recibimos una solicitud para restablecer la contraseña de tu cuenta.',
+  'email.reset_validity' => 'El enlace es válido durante 1 hora.',
+  'email.reset_btn'      => 'Restablecer Contraseña',
+  'email.reset_ignore'   => 'Si no solicitaste el restablecimiento, ignora este correo. Tu contraseña no será cambiada.',
 
   // verify
   'verify.title_code'   => 'Ingresa el código',
