@@ -362,6 +362,14 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         <p data-i18n="home.feat_friends_desc"><?= t('home.feat_friends_desc') ?></p>
         <span class="feature-card-arrow">→</span>
       </a>
+      <a href="comunidade.php" class="feature-card">
+        <div class="feature-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="9" r="3"/><path d="M1 21v-2a4 4 0 014-4h2"/><circle cx="18" cy="9" r="3"/><path d="M23 21v-2a4 4 0 00-4-4h-2"/><circle cx="12" cy="7" r="4"/><path d="M7 21a5 5 0 0110 0"/></svg>
+        </div>
+        <h3 data-i18n="home.feat_community_title"><?= t('home.feat_community_title') ?></h3>
+        <p data-i18n="home.feat_community_desc"><?= t('home.feat_community_desc') ?></p>
+        <span class="feature-card-arrow">→</span>
+      </a>
       <?php else: ?>
       <div class="feature-card feature-card-locked">
         <div class="lock-badge">
@@ -373,6 +381,17 @@ $username   = $isLoggedIn ? e($_SESSION['username'] ?? 'Aventureiro') : null;
         </div>
         <h3 data-i18n="home.feat_friends_title"><?= t('home.feat_friends_title') ?></h3>
         <p data-i18n="home.feat_friends_desc"><?= t('home.feat_friends_desc') ?></p>
+      </div>
+      <div class="feature-card feature-card-locked">
+        <div class="lock-badge">
+          <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+          <span data-i18n="home.feat_locked"><?= t('home.feat_locked') ?></span>
+        </div>
+        <div class="feature-card-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="6" cy="9" r="3"/><path d="M1 21v-2a4 4 0 014-4h2"/><circle cx="18" cy="9" r="3"/><path d="M23 21v-2a4 4 0 00-4-4h-2"/><circle cx="12" cy="7" r="4"/><path d="M7 21a5 5 0 0110 0"/></svg>
+        </div>
+        <h3 data-i18n="home.feat_community_title"><?= t('home.feat_community_title') ?></h3>
+        <p data-i18n="home.feat_community_desc"><?= t('home.feat_community_desc') ?></p>
       </div>
       <?php endif; ?>
 

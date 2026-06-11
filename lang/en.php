@@ -11,7 +11,9 @@
   'nav.login'    => 'Log in',
   'nav.register' => 'Sign up',
   'nav.logout'   => 'Log out',
-  'nav.home'     => 'Home',
+  'nav.home'      => 'Home',
+  'nav.friends'   => 'Friends',
+  'nav.community' => 'Community',
 
   // drawer
   'drawer.role'       => 'Adventurer',
@@ -227,9 +229,11 @@
   'home.feat_profile_title' => 'Public Profile',
   'home.feat_profile_desc'  => 'Customize your profile with an avatar and show it to the community.',
   'home.feat_about_title'   => 'About Us',
-  'home.feat_friends_title' => 'Friends',
-  'home.feat_friends_desc'  => 'Find other adventurers, add friends and share your journey.',
-  'home.feat_locked'        => 'Requires account',
+  'home.feat_friends_title'    => 'Friends',
+  'home.feat_friends_desc'     => 'Find other adventurers, add friends and share your journey.',
+  'home.feat_community_title'  => 'Community',
+  'home.feat_community_desc'   => 'See the global leaderboard of adventurers ranked by their highest level reached.',
+  'home.feat_locked'           => 'Requires account',
 
   // index - chars
   'home.chars_title' => 'Figures of Legend',
@@ -432,7 +436,8 @@
   'profile.comment_ph'       => 'Leave a respectful comment…',
   'profile.comment_hint'     => 'Max 500 characters · Respect the community',
   'profile.comment_submit'   => 'Comment',
-  'profile.comment_login'    => '<a href="/login">Log in</a> to leave a comment.',
+  'profile.comment_login'        => '<a href="/login">Log in</a> to leave a comment.',
+  'profile.comment_friends_only' => 'Only friends can comment on this profile.',
   'profile.no_comments'      => 'No comments yet. Be the first!',
   'profile.see_more'         => 'See more comments ({n} left)',
   'profile.view_profile'     => 'View Profile',
@@ -616,10 +621,27 @@
   'sobre.ct_subject_ph' => 'What do you want to talk about?',
   'sobre.ct_message'    => 'Message',
   'sobre.ct_message_ph' => 'Tell us.',
-  'sobre.ct_submit'     => 'Send message',
+  'sobre.ct_submit'       => 'Send message',
+  'sobre.ct_login_gate'   => 'You need to be logged in to contact us.',
   'sobre.credential_label' => 'Escola Secundária de Mem Martins · PAP 2025/2026',
   'sobre.credential_p'  => 'Sylora: Echoes of the Gods was developed as a Professional Aptitude Test in the Professional Course of Management and Programming of Computer Systems. The game, website and narrative were developed by the team members throughout the school year.',
 
   // u.php specifics not covered above
   'u.preview_slot_warn_extra' => 'This slot already has a save (Level {level} · {chapter}). It will be replaced.',
+
+  // community page
+  'community.title'          => 'Community',
+  'community.description'    => 'See the best Sylora players ranked by level.',
+  'community.story_progress'     => 'story progress',
+  'community.empty'              => 'No adventurers registered yet.',
+  'community.page_of'            => 'Page {cur} of {total}',
+  'community.stat_adventurers'   => 'Adventurers',
+  'community.stat_with_saves'    => 'With saves',
+  'community.search_placeholder' => 'Search adventurer...',
+  'community.no_save'            => 'No saves',
+  'community.search_empty'       => 'No adventurer found.',
+
+  // common pagination
+  'common.prev' => 'Previous',
+  'common.next' => 'Next',
 ];

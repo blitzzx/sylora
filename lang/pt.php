@@ -11,7 +11,9 @@
   'nav.login'    => 'Entrar',
   'nav.register' => 'Registar',
   'nav.logout'   => 'Sair',
-  'nav.home'     => 'Início',
+  'nav.home'      => 'Início',
+  'nav.friends'   => 'Amigos',
+  'nav.community' => 'Comunidade',
 
   // drawer
   'drawer.role'       => 'Aventureiro',
@@ -227,9 +229,11 @@
   'home.feat_profile_title' => 'Perfil Público',
   'home.feat_profile_desc'  => 'Personaliza o teu perfil com avatar e mostra-o à comunidade.',
   'home.feat_about_title'   => 'Sobre Nós',
-  'home.feat_friends_title' => 'Amigos',
-  'home.feat_friends_desc'  => 'Encontra outros aventureiros, adiciona amigos e partilha a tua jornada.',
-  'home.feat_locked'        => 'Requer conta',
+  'home.feat_friends_title'    => 'Amigos',
+  'home.feat_friends_desc'     => 'Encontra outros aventureiros, adiciona amigos e partilha a tua jornada.',
+  'home.feat_community_title'  => 'Comunidade',
+  'home.feat_community_desc'   => 'Vê o leaderboard global de aventureiros ordenados pelo nível mais alto alcançado.',
+  'home.feat_locked'           => 'Requer conta',
 
   // index - chars
   'home.chars_title' => 'Figuras da Lenda',
@@ -432,7 +436,8 @@
   'profile.comment_ph'       => 'Deixa um comentário respeitoso…',
   'profile.comment_hint'     => 'Máx. 500 caracteres · Respeita a comunidade',
   'profile.comment_submit'   => 'Comentar',
-  'profile.comment_login'    => '<a href="/login">Entra</a> para deixar um comentário.',
+  'profile.comment_login'        => '<a href="/login">Entra</a> para deixar um comentário.',
+  'profile.comment_friends_only' => 'Só amigos podem comentar neste perfil.',
   'profile.no_comments'      => 'Ainda sem comentários. Sê o primeiro!',
   'profile.see_more'         => 'Ver mais comentários ({n} restantes)',
   'profile.view_profile'     => 'Ver Perfil',
@@ -616,9 +621,26 @@
   'sobre.ct_subject_ph' => 'Sobre o que queres falar?',
   'sobre.ct_message'    => 'Mensagem',
   'sobre.ct_message_ph' => 'Conta-nos.',
-  'sobre.ct_submit'     => 'Enviar mensagem',
+  'sobre.ct_submit'       => 'Enviar mensagem',
+  'sobre.ct_login_gate'   => 'Tens de fazer login para entrar em contacto connosco.',
   'sobre.credential_label' => 'Escola Secundária de Mem Martins · PAP 2025/2026',
   'sobre.credential_p'  => 'Sylora: Ecos dos Deuses foi desenvolvido como Prova de Aptidão Profissional no Curso Profissional de Gestão e Programação de Sistemas Informáticos. O jogo, o site e a narrativa foram trabalhados pelos elementos da equipa ao longo do ano letivo.',
 
   'u.preview_slot_warn_extra' => 'Este slot já tem uma save (Nível {level} · {chapter}). Será substituída.',
+
+  // community page
+  'community.title'          => 'Comunidade',
+  'community.description'    => 'Vê os melhores jogadores de Sylora ordenados por nível.',
+  'community.story_progress'     => 'progresso na história',
+  'community.empty'              => 'Ainda não há aventureiros registados.',
+  'community.page_of'            => 'Página {cur} de {total}',
+  'community.stat_adventurers'   => 'Aventureiros',
+  'community.stat_with_saves'    => 'Com saves',
+  'community.search_placeholder' => 'Pesquisar aventureiro...',
+  'community.no_save'            => 'Sem saves',
+  'community.search_empty'       => 'Nenhum aventureiro encontrado.',
+
+  // common pagination
+  'common.prev' => 'Anterior',
+  'common.next' => 'Seguinte',
 ];

@@ -180,9 +180,6 @@ $_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][$_seoLang] ?? 
     <svg class="drawer-header-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18l6-6-6-6"/></svg>
   </a>
 
-  <button class="drawer-close" id="drawer-close" aria-label="Fechar menu">
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
-  </button>
 
   <div class="drawer-body">
 
@@ -212,6 +209,12 @@ $_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][$_seoLang] ?? 
             </a>
             <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" class="drawer-nav-link <?php echo $currentPage==='u.php'?'active':''; ?>">
               <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> <span data-i18n="nav.profile"><?= t('nav.profile') ?></span>
+            </a>
+            <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>&tab=friends" class="drawer-nav-link">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg> <span data-i18n="nav.friends"><?= t('nav.friends') ?></span>
+            </a>
+            <a href="/comunidade" class="drawer-nav-link <?php echo $currentPage==='comunidade.php'?'active':''; ?>">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="9" r="3"/><path d="M1 21v-2a4 4 0 014-4h2"/><circle cx="18" cy="9" r="3"/><path d="M23 21v-2a4 4 0 00-4-4h-2"/><circle cx="12" cy="7" r="4"/><path d="M7 21a5 5 0 0110 0"/></svg> <span data-i18n="nav.community"><?= t('nav.community') ?></span>
             </a>
           </nav>
         </div>
@@ -304,6 +307,10 @@ $_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][$_seoLang] ?? 
         <span data-i18n="nav.play"><?= t('nav.play') ?></span>
       </a></li>
       <?php if ($isLoggedIn): ?>
+      <li><a href="/comunidade" class="<?php echo $currentPage==='comunidade.php'?'active':''; ?>">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="6" cy="9" r="3"/><path d="M1 21v-2a4 4 0 014-4h2"/><circle cx="18" cy="9" r="3"/><path d="M23 21v-2a4 4 0 00-4-4h-2"/><circle cx="12" cy="7" r="4"/><path d="M7 21a5 5 0 0110 0"/></svg>
+        <span data-i18n="nav.community"><?= t('nav.community') ?></span>
+      </a></li>
       <li><a href="/sobre" class="<?php echo $currentPage==='sobre.php'?'active':''; ?>">
         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
         <span data-i18n="nav.about"><?= t('nav.about') ?></span>
@@ -364,7 +371,7 @@ $_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][$_seoLang] ?? 
 
       <?php if ($isLoggedIn): ?>
 
-        <button class="user-pill" id="drawer-trigger" aria-label="Abrir menu">
+        <button class="user-pill" id="drawer-trigger" aria-label="Abrir menu" data-profile-url="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>">
           <div class="user-avatar">
             <?php if (!empty($_SESSION['avatar'])): ?>
               <img
@@ -401,8 +408,9 @@ $_seoLocale = ['pt' => 'pt_PT', 'en' => 'en_US', 'es' => 'es_ES'][$_seoLang] ?? 
     <a href="/historia" data-i18n="nav.historia"><?= t('nav.historia') ?></a>
     <a href="/jogar" data-i18n="nav.play"><?= t('nav.play') ?></a>
     <?php if ($isLoggedIn): ?>
+      <a href="/comunidade" data-i18n="nav.community"><?= t('nav.community') ?></a>
       <a href="/sobre" data-i18n="nav.about"><?= t('nav.about') ?></a>
-      <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>" data-i18n="nav.profile"><?= t('nav.profile') ?></a>
+      <a href="/u?u=<?php echo urlencode($_SESSION['username'] ?? ''); ?>&tab=friends" data-i18n="nav.friends"><?= t('nav.friends') ?></a>
       <a href="/logout" style="color:rgba(201,107,90,0.85);" data-i18n="nav.logout"><?= t('nav.logout') ?></a>
     <?php else: ?>
       <a href="/login" data-i18n="nav.login"><?= t('nav.login') ?></a>
