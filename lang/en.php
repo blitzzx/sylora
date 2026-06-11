@@ -104,6 +104,11 @@
   'forgot.deco_h2'   => 'Memory can be recovered.',
   'forgot.deco_sub'  => 'Enter your email and we\'ll send a link to reset your password.',
   'forgot.back_login' => 'Login',
+  'forgot.sent_explicit' => 'We\'ve sent a recovery link to {email}. Check your spam folder too.',
+  'forgot.not_verified'  => 'This account exists but hasn\'t been activated yet. Go to your email (and check spam) to activate it.',
+  'forgot.resend_btn'    => 'Resend verification email',
+  'forgot.resent'        => 'Verification email resent! Check your inbox and spam folder.',
+  'forgot.not_found'     => 'There\'s no account with this email. <a href="/register">Create an account</a>.',
 
   // verify
   'verify.title_code'   => 'Enter the code',

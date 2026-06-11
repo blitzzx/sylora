@@ -104,6 +104,11 @@
   'forgot.deco_h2'   => 'La memoria puede recuperarse.',
   'forgot.deco_sub'  => 'Ingresa tu correo y te enviaremos un enlace para restablecer tu contraseña.',
   'forgot.back_login' => 'Login',
+  'forgot.sent_explicit' => 'Hemos enviado un enlace de recuperación a {email}. Revisa también tu carpeta de spam.',
+  'forgot.not_verified'  => 'Esta cuenta existe pero aún no ha sido activada. Ve a tu correo (y revisa el spam) para activarla.',
+  'forgot.resend_btn'    => 'Reenviar correo de verificación',
+  'forgot.resent'        => '¡Correo de verificación reenviado! Revisa tu bandeja de entrada y el spam.',
+  'forgot.not_found'     => 'No existe ninguna cuenta con este correo. <a href="/register">Crea una cuenta</a>.',
 
   // verify
   'verify.title_code'   => 'Ingresa el código',

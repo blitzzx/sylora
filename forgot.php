@@ -6,20 +6,51 @@ if (isLoggedIn()) {
     redirect('/');
 }
 
-$sent            = false;
-$errors          = [];
+$state            = '';   // '', 'sent', 'unverified', 'disabled', 'not_found', 'resent'
+$errors           = [];
+$emailValue       = '';
 $recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $csrf  = $_POST['_csrf'] ?? '';
-    $email = sanitize($_POST['email'] ?? '');
-    $ip    = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $csrf   = $_POST['_csrf'] ?? '';
+    $email  = sanitize($_POST['email'] ?? '');
+    $ip     = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $action = $_POST['action'] ?? 'forgot';
+
+    $emailValue = $email;
 
     if (!verifyCSRFToken($csrf)) {
         $errors[] = t('err.invalid_request');
     } elseif (!empty($_POST['hp_website'])) {
         // Honeypot preenchido: bot detetado — fingir sucesso
-        $sent = true;
+        $state = ($action === 'resend_verify') ? 'resent' : 'sent';
+    } elseif ($action === 'resend_verify') {
+        // ── Reenvio do email de verificação (conta por ativar) ──
+        // Espelha a lógica de verify.php; mantém a mensagem 'unverified' em caso de erro.
+        $state = 'unverified';
+        if (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'resend')) {
+            $errors[] = t('err.security_failed');
+        } elseif (!isValidEmail($email)) {
+            $errors[] = t('err.invalid_email');
+        } elseif (!checkEmailRateLimit($ip, 'verify-resend', 5)
+               || !checkActionRateLimit('verify_resend', strtolower($email), 3, 60)) {
+            $errors[] = t('err.too_many_min');
+        } else {
+            recordActionAttempt('verify_resend', strtolower($email), 1);
+            $stmt = $conn->prepare('SELECT username, password_hash FROM pending_registrations WHERE email = ?');
+            $stmt->bind_param('s', $email);
+            $stmt->execute();
+            $pending = $stmt->get_result()->fetch_assoc();
+            $stmt->close();
+
+            if ($pending) {
+                $code = createPendingRegistration($email, $pending['username'], $pending['password_hash']);
+                mailVerification($email, $pending['username'], $code);
+                recordEmailAttempt($ip, 'verify-resend');
+                $_SESSION['verify_for'] = $email;
+            }
+            $state = 'resent';
+        }
     } elseif (!verifyRecaptchaV3($_POST['g_recaptcha_token'] ?? '', 'forgot')) {
         $errors[] = t('err.security_failed');
     } elseif (!checkEmailRateLimit($ip, 'forgot', 3)) {
@@ -27,26 +58,43 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!isValidEmail($email)) {
         $errors[] = t('err.invalid_email');
     } else {
-        
-        
-        
+        // ── Recuperação de password com feedback explícito ──
         $allowed = checkActionRateLimit('forgot_ip', $ip, 5, 60)
                 && checkActionRateLimit('forgot_email', strtolower($email), 3, 60);
-        if ($allowed) {
+        if (!$allowed) {
+            $errors[] = t('err.too_many_min');
+        } else {
             recordActionAttempt('forgot_ip', $ip, 1);
             recordActionAttempt('forgot_email', strtolower($email), 1);
-            $stmt = $conn->prepare('SELECT id, username FROM users WHERE email = ? AND is_active = 1 LIMIT 1');
+
+            $stmt = $conn->prepare('SELECT id, username, is_active, email_verified_at FROM users WHERE email = ? LIMIT 1');
             $stmt->bind_param('s', $email);
             $stmt->execute();
             $user = $stmt->get_result()->fetch_assoc();
             $stmt->close();
 
-            if ($user) {
+            if ($user && (int)$user['is_active'] === 1) {
+                // Conta ativa: envia o link de recuperação.
                 $token = createPasswordResetToken((int)$user['id']);
                 mailPasswordReset($email, $user['username'], $token);
+                $state = 'sent';
+            } elseif ($user && empty($user['email_verified_at'])) {
+                // Conta na tabela users mas por verificar (caso legado).
+                $state = 'unverified';
+            } elseif ($user) {
+                // Conta existe e foi verificada, mas está desativada.
+                $state = 'disabled';
+            } else {
+                // Sem row em users: pode ser um registo pendente por confirmar.
+                $stmt = $conn->prepare('SELECT 1 FROM pending_registrations WHERE email = ? AND expires_at > NOW() LIMIT 1');
+                $stmt->bind_param('s', $email);
+                $stmt->execute();
+                $stmt->store_result();
+                $isPending = $stmt->num_rows > 0;
+                $stmt->close();
+                $state = $isPending ? 'unverified' : 'not_found';
             }
         }
-        $sent = true;
     }
 }
 
@@ -120,11 +168,7 @@ $csrfToken = generateCSRFToken();
 
       <div class="auth-form-header">
         <h1><?= t('forgot.title') ?></h1>
-        <?php if ($sent): ?>
-          <p><?= t('forgot.sent') ?></p>
-        <?php else: ?>
-          <p><?= t('forgot.subtitle') ?></p>
-        <?php endif; ?>
+        <p><?= t('forgot.subtitle') ?></p>
       </div>
 
       <?php if (!empty($errors)): ?>
@@ -135,8 +179,56 @@ $csrfToken = generateCSRFToken();
         </div>
       <?php endif; ?>
 
-      <?php if (!$sent): ?>
-        <form method="POST" action="/forgot" class="auth-form" novalidate>
+      <?php if ($state === 'sent'): ?>
+        <div class="alert alert-success">
+          <p><?= t('forgot.sent_explicit', ['email' => e($emailValue)]) ?></p>
+        </div>
+        <a href="/login" class="btn btn-primary btn-block auth-submit-btn" style="text-align:center;">
+          <?= t('forgot.go_login') ?>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+      <?php elseif ($state === 'resent'): ?>
+        <div class="alert alert-success">
+          <p><?= t('forgot.resent') ?></p>
+        </div>
+        <a href="/login" class="btn btn-primary btn-block auth-submit-btn" style="text-align:center;">
+          <?= t('forgot.go_login') ?>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+      <?php elseif ($state === 'disabled'): ?>
+        <div class="alert alert-error">
+          <p><?= t('err.account_disabled') ?></p>
+        </div>
+        <a href="/login" class="btn btn-primary btn-block auth-submit-btn" style="text-align:center;">
+          <?= t('forgot.go_login') ?>
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+
+      <?php elseif ($state === 'unverified'): ?>
+        <div class="alert alert-info">
+          <p><?= t('forgot.not_verified') ?></p>
+        </div>
+        <form method="POST" action="/forgot" class="auth-form" data-rc-action="resend" novalidate>
+          <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
+          <input type="hidden" name="action" value="resend_verify">
+          <input type="hidden" name="email" value="<?php echo e($emailValue); ?>">
+          <input type="hidden" id="g-recaptcha-token-resend" name="g_recaptcha_token">
+
+          <button type="submit" class="btn btn-primary btn-block auth-submit-btn">
+            <?= t('forgot.resend_btn') ?>
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+          </button>
+        </form>
+
+      <?php else: ?>
+        <?php if ($state === 'not_found'): ?>
+          <div class="alert alert-error">
+            <p><?= t('forgot.not_found') ?></p>
+          </div>
+        <?php endif; ?>
+        <form method="POST" action="/forgot" class="auth-form" data-rc-action="forgot" novalidate>
           <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
           <input type="hidden" id="g-recaptcha-token" name="g_recaptcha_token">
 
@@ -147,6 +239,7 @@ $csrfToken = generateCSRFToken();
               id="email"
               name="email"
               placeholder="<?= t('forgot.email_ph') ?>"
+              value="<?php echo e($emailValue); ?>"
               autocomplete="email"
               required
             >
@@ -159,11 +252,6 @@ $csrfToken = generateCSRFToken();
             <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
           </button>
         </form>
-      <?php else: ?>
-        <a href="/login" class="btn btn-primary btn-block auth-submit-btn" style="text-align:center;">
-          <?= t('forgot.go_login') ?>
-          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
-        </a>
       <?php endif; ?>
 
     </div>
@@ -194,28 +282,30 @@ $csrfToken = generateCSRFToken();
     var siteKey = <?= json_encode($recaptchaSiteKey) ?>;
     <?php unset($_SESSION['_rc_debug']); ?>
     if (!siteKey) return;
-    var form       = document.querySelector('form.auth-form');
-    var tokenInput = document.getElementById('g-recaptcha-token');
-    var submitBtn  = form ? form.querySelector('[type=submit]') : null;
-    if (!form || !tokenInput) return;
-    form.addEventListener('submit', function(e) {
-      if (tokenInput.value) return;
-      e.preventDefault();
-      if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = (window.SYLORA_T ? window.SYLORA_T('common.verifying') : 'A verificar…'); }
-      var done = false;
-      function proceed(token) {
-        if (done) return; done = true;
-        if (token) tokenInput.value = token;
-        form.submit();
-      }
-      var timer = setTimeout(function() { proceed(''); }, 4000);
-      try {
-        grecaptcha.ready(function() {
-          grecaptcha.execute(siteKey, {action: 'forgot'})
-            .then(function(t) { clearTimeout(timer); proceed(t); })
-            .catch(function() { clearTimeout(timer); proceed(''); });
-        });
-      } catch(err) { clearTimeout(timer); proceed(''); }
+    document.querySelectorAll('form.auth-form').forEach(function(form) {
+      var tokenInput = form.querySelector('input[name=g_recaptcha_token]');
+      var submitBtn  = form.querySelector('[type=submit]');
+      var action     = form.getAttribute('data-rc-action') || 'forgot';
+      if (!tokenInput) return;
+      form.addEventListener('submit', function(e) {
+        if (tokenInput.value) return;
+        e.preventDefault();
+        if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = (window.SYLORA_T ? window.SYLORA_T('common.verifying') : 'A verificar…'); }
+        var done = false;
+        function proceed(token) {
+          if (done) return; done = true;
+          if (token) tokenInput.value = token;
+          form.submit();
+        }
+        var timer = setTimeout(function() { proceed(''); }, 4000);
+        try {
+          grecaptcha.ready(function() {
+            grecaptcha.execute(siteKey, {action: action})
+              .then(function(t) { clearTimeout(timer); proceed(t); })
+              .catch(function() { clearTimeout(timer); proceed(''); });
+          });
+        } catch(err) { clearTimeout(timer); proceed(''); }
+      });
     });
   })();
 </script>
