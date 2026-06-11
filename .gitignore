@@ -1,18 +1,37 @@
 # Secrets — nunca commitar
 .env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+*.cer
 
 # Dependências PHP
 vendor/
 
 # Vídeo do trailer (não commitar até ter o trailer oficial)
 assets/video/trailer.mp4
+public/assets/video/trailer.mp4
 
 # Docker local (apenas para desenvolvimento)
 compose.yml
+docker-compose.override.yml
+
+# Uploads de utilizadores (dados pessoais)
+assets/avatars/
+public/assets/avatars/
 
 # Logs e caches
 *.log
 *.cache
+/logs/
+/storage/
+
+# Sessões PHP
+/sessions/
 
 # Claude Code
 .claude/
@@ -26,3 +45,8 @@ compose.yml
 # OS
 .DS_Store
 Thumbs.db
+desktop.ini
+
+# Backups e dumps de dados (apenas schema é seguro para commitar)
+*_data_dump.sql
+*_backup.sql

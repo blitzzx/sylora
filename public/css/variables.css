@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Cinzel:wght@400;600;700;900&family=Inter:wght@300;400;500;600&display=swap');
+
+:root {
+  --bg:             #0d0b08;
+  --surface:        #141109;
+  --surface-2:      #1c1710;
+  --surface-3:      #231e15;
+  --surface-offset: #2a2318;
+  --text:           #e8dfc8;
+  --muted:          rgba(232, 223, 200, 0.60);
+  --faint:          rgba(232, 223, 200, 0.30);
+
+  --gold:           #c9993a;
+  --gold-light:     #e8c46a;
+  --gold-dark:      #8a6420;
+  --gold-border:    rgba(201, 153, 58, 0.30);
+  --gold-border-hi: rgba(232, 196, 106, 0.55);
+
+  --success:        #7aad6e;
+  --error:          #c96b5a;
+  --info:           #7a9ec9;
+
+  --radius:         12px;
+  --radius-lg:      18px;
+  --max:            1100px;
+
+  --shadow:         0 20px 60px rgba(0, 0, 0, 0.70);
+  --shadow-soft:    0 8px 28px rgba(0, 0, 0, 0.45);
+  --focus:          0 0 0 3px rgba(201, 153, 58, 0.40);
+
+  --font-display:      'Cinzel', serif;
+  --font-display-hero: 'Cinzel Decorative', serif;
+  --font-body:         'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  --t:              180ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+[data-theme="light"] {
+  --bg:             #f8f5ef;
+  --surface:        #f2ede4;
+  --surface-2:      #ece6da;
+  --surface-3:      #e5dece;
+  --surface-offset: #ddd5c0;
+  --text:           #18160f;
+  --muted:          rgba(24, 22, 15, 0.58);
+  --faint:          rgba(24, 22, 15, 0.28);
+  --gold:           #8a5f10;
+  --gold-light:     #7a520d;
+  --gold-dark:      #b8881e;
+  --gold-border:    rgba(138, 95, 16, 0.22);
+  --gold-border-hi: rgba(138, 95, 16, 0.45);
+
+  --shadow:         0 20px 60px rgba(0, 0, 0, 0.12);
+  --shadow-soft:    0 6px 20px rgba(0, 0, 0, 0.08);
+  --focus:          0 0 0 3px rgba(138, 95, 16, 0.28);
+}
+
+:root {
+  --gold:        #c9953a;
+  --gold-dim:    rgba(201,149,58,0.22);
+  --gold-border: rgba(201,149,58,0.35);
+  --gold-glow:   rgba(201,149,58,0.15);
+  --gold-text:   #e8b86d;
+}
+
+[data-theme="light"] {
+  --bg:     #f5f0e8;
+  --text:   #1c1410;
+  --muted:  rgba(28,20,16,0.62);
+  --border: rgba(139,100,50,0.28);
+  --panel:  rgba(139,100,50,0.06);
+  --panel-2: rgba(139,100,50,0.1);
+  --shadow: 0 8px 28px rgba(100,70,20,0.18);
+  --shadow-soft: 0 4px 16px rgba(100,70,20,0.12);
+}

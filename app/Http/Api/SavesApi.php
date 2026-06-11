@@ -1,0 +1,101 @@
+<?php
+/**
+ * Endpoint: GET | POST /api/saves
+ * Purpose:  Upload, download, and delete game save slots.
+ * Auth:     Requires session
+ * Input:    GET action=download, slot | POST action=upload (multipart) | POST action=delete, slot, _csrf
+ * Output:   Binary .sav file (download) | JSON { success, message } | { error: string }
+ */
+
+require_once ROOT . '/app/Core/config.php';
+require_once ROOT . '/app/Services/SaveService.php';
+
+requireLogin();
+
+$method = $_SERVER['REQUEST_METHOD'];
+$userId = (int) getCurrentUser()['id'];
+
+function jsonErr(int $code, string $msg): never
+{
+    http_response_code($code);
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(['error' => $msg]);
+    exit;
+}
+
+if ($method === 'GET') {
+    $action = $_GET['action'] ?? 'download';
+    if ($action !== 'download') jsonErr(400, 'Ação inválida.');
+
+    $slot = (int) ($_GET['slot'] ?? 0);
+    if ($slot < 1 || $slot > 3) jsonErr(400, 'Slot inválido.');
+
+    $saveData = SaveService::download($conn, $userId, $slot);
+    if ($saveData === null) {
+        http_response_code(404);
+        echo 'Save não encontrado.';
+        exit;
+    }
+
+    $output = $saveData . "\x00";
+    while (ob_get_level() > 0) ob_end_clean();
+    header('Content-Type: application/octet-stream');
+    header('Content-Disposition: attachment; filename="syloradata.sav"');
+    header('Content-Length: ' . strlen($output));
+    header('Cache-Control: no-store');
+    echo $output;
+    exit;
+}
+
+if ($method === 'POST') {
+    header('Content-Type: application/json; charset=utf-8');
+    $action = $_POST['action'] ?? 'upload';
+
+    if ($action === 'upload') {
+        $csrf = $_POST['_csrf'] ?? '';
+        if (!verifyCSRFToken($csrf)) jsonErr(403, 'Token inválido.');
+
+        if (!checkActionRateLimit('save_upload', (string) $userId, 30, 60)) {
+            jsonErr(429, 'Demasiados uploads. Aguarda uma hora.');
+        }
+
+        $slot = (int) ($_POST['slot'] ?? 0);
+
+        $maxSize = 2 * 1024 * 1024;
+        if (isset($_FILES['savefile']) && $_FILES['savefile']['size'] > $maxSize) {
+            jsonErr(400, 'Ficheiro demasiado grande (máx. 2 MB).');
+        }
+        if (!isset($_FILES['savefile']) || $_FILES['savefile']['error'] !== UPLOAD_ERR_OK) {
+            jsonErr(400, 'Nenhum ficheiro recebido.');
+        }
+
+        $raw    = file_get_contents($_FILES['savefile']['tmp_name']);
+        $result = SaveService::validateAndUpload($conn, $userId, $slot, $raw);
+        if (isset($result['error'])) jsonErr($result['code'], $result['error']);
+
+        recordActionAttempt('save_upload', (string) $userId, 1);
+        echo json_encode($result);
+        exit;
+    }
+
+    if ($action === 'delete') {
+        $csrf = $_POST['_csrf'] ?? '';
+        if (!verifyCSRFToken($csrf)) jsonErr(403, 'Token inválido.');
+
+        if (!checkActionRateLimit('save_delete', (string) $userId, 30, 60)) {
+            jsonErr(429, 'Demasiadas remoções. Aguarda uma hora.');
+        }
+
+        $slot   = (int) ($_POST['slot'] ?? 0);
+        $result = SaveService::delete($conn, $userId, $slot);
+        if (isset($result['error'])) jsonErr($result['code'], $result['error']);
+
+        recordActionAttempt('save_delete', (string) $userId, 1);
+        echo json_encode($result);
+        exit;
+    }
+
+    jsonErr(400, 'Ação inválida.');
+}
+
+jsonErr(405, 'Método não suportado.');

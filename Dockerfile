@@ -17,8 +17,10 @@ RUN echo "=== MPMs antes ===" && find /etc/apache2/mods-enabled -name 'mpm_*' | 
 # Ativar módulos Apache necessários
 RUN a2enmod rewrite headers expires deflate
 
-# Permitir que o .htaccess funcione (AllowOverride All)
-RUN printf '<Directory /var/www/html>\n\tAllowOverride All\n\tRequire all granted\n</Directory>\n' \
+# Definir DocumentRoot para public/ e habilitar AllowOverride
+RUN sed -i 's|DocumentRoot /var/www/html|DocumentRoot /var/www/html/public|g' /etc/apache2/sites-available/000-default.conf \
+    && sed -i 's|<Directory /var/www/html>|<Directory /var/www/html/public>|g' /etc/apache2/apache2.conf \
+    && printf '<Directory /var/www/html>\n\tOptions FollowSymLinks\n\tAllowOverride None\n\tRequire all granted\n</Directory>\n<Directory /var/www/html/public>\n\tAllowOverride All\n\tRequire all granted\n</Directory>\n' \
     > /etc/apache2/conf-available/docker-override.conf \
     && a2enconf docker-override
 

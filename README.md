@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/img/Logo-Sylora.png" alt="Sylora" width="180"/>
+<img src="public/assets/img/Logo-Sylora.png" alt="Sylora" width="180"/>
 
 <br/>
 
