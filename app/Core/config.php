@@ -38,6 +38,7 @@ require_once __DIR__ . '/Database.php';
 require_once __DIR__ . '/Functions.php';
 require_once __DIR__ . '/Auth.php';
 require_once __DIR__ . '/Lang.php';
+require_once __DIR__ . '/Mailer.php';
 
 $conn = Database::conn();
 
