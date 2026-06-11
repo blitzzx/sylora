@@ -250,6 +250,8 @@ include 'includes/header.php';
       <h2 data-i18n="sobre.ct_title"><?= t('sobre.ct_title') ?></h2>
     </div>
 
+    <?php if ($isLoggedIn): ?>
+
     <p class="about-contact-intro" data-i18n="sobre.ct_intro"><?= t('sobre.ct_intro') ?></p>
 
     <form class="about-contact-form" id="contact-form" novalidate>
@@ -283,6 +285,15 @@ include 'includes/header.php';
         <span data-i18n="sobre.ct_submit"><?= t('sobre.ct_submit') ?></span>
       </button>
     </form>
+
+    <?php else: ?>
+    <div class="about-contact-login-gate">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      <p data-i18n="sobre.ct_login_gate"><?= t('sobre.ct_login_gate') ?></p>
+      <a href="/login" class="btn btn-primary btn-sm"><?= t('nav.login') ?></a>
+    </div>
+    <?php endif; ?>
+
   </section>
 
   <div class="about-credential">

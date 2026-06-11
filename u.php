@@ -619,7 +619,7 @@ include 'includes/header.php';
           <span class="up-comment-count"><?php echo $totalComments; ?></span>
         </div>
 
-        <?php if (isLoggedIn() && !$isSelf): ?>
+        <?php if (isLoggedIn() && !$isSelf && $friendStatus === 'accepted'): ?>
           <form class="up-comment-form" id="comment-form" data-user-id="<?php echo $profileId; ?>">
             <input type="hidden" name="_csrf" value="<?php echo e($csrfToken); ?>">
             <textarea name="content" class="up-comment-textarea" data-i18n-placeholder="profile.comment_ph" placeholder="<?= e(t('profile.comment_ph')) ?>" maxlength="500" rows="3" required></textarea>
@@ -629,6 +629,8 @@ include 'includes/header.php';
             </div>
             <div class="up-comment-error" id="comment-error" style="display:none"></div>
           </form>
+        <?php elseif (isLoggedIn() && !$isSelf && $friendStatus !== 'accepted'): ?>
+          <p class="up-comment-login-hint" data-i18n="profile.comment_friends_only"><?= t('profile.comment_friends_only') ?></p>
         <?php elseif ($isGuest): ?>
           <p class="up-comment-login-hint" data-i18n-html="profile.comment_login"><?= t('profile.comment_login') ?></p>
         <?php endif; ?>

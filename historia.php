@@ -10,6 +10,9 @@ $isLoggedIn = isset($_SESSION['user_id']);
 
 <div class="sx-outer">
 <div data-no-footer aria-hidden="true" style="display:none"></div>
+<a href="/" class="sx-back-btn" aria-label="<?= e(t('nav.home')) ?>">
+  <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+</a>
 <div class="sx-wrap" id="sxWrap">
 
   <div class="sx-bg" aria-hidden="true">

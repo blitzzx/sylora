@@ -10,7 +10,9 @@
     <div class="footer-links">
       <a href="historia.php" data-i18n="nav.historia"><?= t('nav.historia') ?></a>
       <a href="jogar.php" data-i18n="nav.play"><?= t('nav.play') ?></a>
+      <?php if (!empty($isLoggedIn)): ?>
       <a href="sobre.php#contacto" data-i18n="footer.contact"><?= t('footer.contact') ?></a>
+      <?php endif; ?>
     </div>
   </div>
 </footer>

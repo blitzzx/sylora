@@ -114,7 +114,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const pillBtn     = document.getElementById("drawer-trigger");
   const drawer      = document.getElementById("user-drawer");
   const overlay     = document.getElementById("drawer-overlay");
-  const closeBtn    = document.getElementById("drawer-close");
   const pillChevron = pillBtn ? pillBtn.querySelector("svg:last-child") : null;
 
   function openDrawer() {
@@ -125,7 +124,6 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.style.overflow = "hidden";
     if (pillBtn) pillBtn.setAttribute("aria-expanded", "true");
     if (pillChevron) pillChevron.style.transform = "rotate(90deg)";
-    if (closeBtn) closeBtn.focus();
   }
 
   function closeDrawer() {
@@ -141,11 +139,15 @@ document.addEventListener("DOMContentLoaded", () => {
     if (pillChevron) pillChevron.style.transform = "";
   }
 
-  if (pillBtn && drawer && overlay && closeBtn) {
+  if (pillBtn && drawer && overlay) {
     pillBtn.addEventListener("click", () => {
+      if (window.innerWidth <= 768) {
+        const profileUrl = pillBtn.dataset.profileUrl;
+        if (profileUrl) window.location.href = profileUrl;
+        return;
+      }
       drawer.classList.contains("open") ? closeDrawer() : openDrawer();
     });
-    closeBtn.addEventListener("click", closeDrawer);
     overlay.addEventListener("click", closeDrawer);
     document.addEventListener("keydown", (e) => {
       if (e.key === "Escape" && drawer && drawer.classList.contains("open")) closeDrawer();
@@ -155,10 +157,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   $$(".drawer-section-title").forEach((title) => {
     title.addEventListener("click", () => {
-      const section    = title.closest(".drawer-section");
-      const isExpanded = section.classList.contains("expanded");
-      $$(".drawer-section").forEach((s) => s.classList.remove("expanded"));
-      if (!isExpanded) section.classList.add("expanded");
+      title.closest(".drawer-section").classList.toggle("expanded");
     });
   });
 
