@@ -4,8 +4,6 @@ services:
     container_name: sylora-web
     ports:
       - "8080:80"
-    volumes:
-      - .:/var/www/html
     environment:
       APP_ENV: development
       SITE_URL: http://localhost:8080
@@ -40,7 +38,6 @@ services:
       MYSQL_PASSWORD: sylora_pass
     volumes:
       - sylora_db_data:/var/lib/mysql
-      - ./sylora.sql:/docker-entrypoint-initdb.d/sylora.sql
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "sylora_user", "-psylora_pass"]
       interval: 5s
