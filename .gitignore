@@ -33,8 +33,10 @@ public/assets/avatars/
 # Sessões PHP
 /sessions/
 
-# Claude Code
+# Claude Code / tooling de agentes (local, não pertence ao projeto)
 .claude/
+.agents/
+skills-lock.json
 
 # IDEs
 .vscode/
@@ -50,3 +52,17 @@ desktop.ini
 # Backups e dumps de dados (apenas schema é seguro para commitar)
 *_data_dump.sql
 *_backup.sql
+*_dump.sql
+
+# Dump local da BD — pode vir a conter dados de utilizadores;
+# o schema versionado vive em database/schema.sql
+/sylora.sql
+
+# Node e ferramentas de teste/browser
+node_modules/
+.playwright/
+playwright-report/
+test-results/
+
+# Composer
+composer.phar
