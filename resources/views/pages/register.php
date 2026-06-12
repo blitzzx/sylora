@@ -9,7 +9,7 @@ $recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf = $_POST['_csrf'] ?? '';
-    $ip   = $_SERVER['REMOTE_ADDR'];
+    $ip   = getClientIp();
 
     if (!verifyCSRFToken($csrf)) {
         $errors[] = t('err.invalid_request');
@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $email           = sanitize($_POST['email'] ?? '');
         $password        = $_POST['password'] ?? '';
         $confirmPassword = $_POST['confirm_password'] ?? '';
-        $ip              = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+        $ip              = getClientIp();
 
         $formData = ['username' => $username, 'email' => $email];
 

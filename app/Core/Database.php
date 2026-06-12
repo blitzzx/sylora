@@ -10,10 +10,22 @@ class Database
             return self::$conn;
         }
 
-        define('DB_HOST', getenv('DB_HOST') ?: 'sylora-db');
-        define('DB_USER', getenv('DB_USER') ?: 'sylora_user');
-        define('DB_PASS', getenv('DB_PASS') ?: 'sylora_pass');
-        define('DB_NAME', getenv('DB_NAME') ?: 'sylora');
+        $host = getenv('DB_HOST');
+        $user = getenv('DB_USER');
+        $pass = getenv('DB_PASS');
+        $name = getenv('DB_NAME');
+
+        // Em produção as credenciais TÊM de vir do ambiente — sem
+        // fallback para valores previsíveis de desenvolvimento.
+        if (getenv('APP_ENV') === 'production' && (!$host || !$user || !$pass || !$name)) {
+            http_response_code(503);
+            die('Serviço temporariamente indisponível.');
+        }
+
+        define('DB_HOST', $host ?: 'sylora-db');
+        define('DB_USER', $user ?: 'sylora_user');
+        define('DB_PASS', $pass ?: 'sylora_pass');
+        define('DB_NAME', $name ?: 'sylora');
 
         $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
 

@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
 
         $email = sanitize($_POST['email'] ?? '');
-        $ip    = $_SERVER['REMOTE_ADDR'];
+        $ip    = getClientIp();
         if (!isValidEmail($email)) {
             $resendErrors[] = t('err.invalid_email');
         } elseif (!empty($_POST['hp_website'])) {

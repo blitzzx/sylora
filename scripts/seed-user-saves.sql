@@ -1,3 +1,9 @@
+-- ============================================================
+-- ATENÇÃO: APENAS PARA TESTES LOCAIS / LOAD TESTING.
+-- Cria contas ativas com a password conhecida "password"
+-- (hash bcrypt público). NUNCA executar em PRODUÇÃO.
+-- ============================================================
+
 /* Get-Content .\scripts\seed-user-saves.sql -Raw | docker exec -i sylora-db mysql -uroot -proot sylora */
 
 INSERT INTO saves (

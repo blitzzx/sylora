@@ -10,6 +10,26 @@ function sanitize(string $input): string
     return trim(strip_tags($input));
 }
 
+/**
+ * IP real do cliente. Atrás do proxy do Railway, REMOTE_ADDR é o IP do
+ * proxy — o que tornaria o rate limiting global (5 falhas de qualquer
+ * pessoa bloqueariam toda a gente). O proxy confiável acrescenta o IP
+ * real no FIM do X-Forwarded-For, por isso usamos o último elemento
+ * válido; valores anteriores podem ser forjados pelo cliente.
+ */
+function getClientIp(): string
+{
+    $xff = $_SERVER['HTTP_X_FORWARDED_FOR'] ?? '';
+    if ($xff !== '') {
+        $parts     = array_map('trim', explode(',', $xff));
+        $candidate = end($parts);
+        if (filter_var($candidate, FILTER_VALIDATE_IP)) {
+            return $candidate;
+        }
+    }
+    return $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+}
+
 function isValidEmail(string $email): bool
 {
     return filter_var($email, FILTER_VALIDATE_EMAIL) !== false;
@@ -28,7 +48,8 @@ function isValidPassword(string $password): bool
 function verifyRecaptchaV3(string $token, string $action = ''): bool
 {
     $secret = getenv('RECAPTCHA_SECRET_KEY') ?: '';
-    if (!$secret || !$token) return true;
+    if (!$secret) return true;   // verificação desligada (sem chave configurada)
+    if (!$token)  return false;  // chave configurada mas pedido sem token => bloquear
 
     $ctx = stream_context_create(['http' => [
         'method'        => 'POST',

@@ -1,3 +1,9 @@
+-- ============================================================
+-- ATENÇÃO: APENAS PARA TESTES LOCAIS / LOAD TESTING.
+-- Cria contas ativas com a password conhecida "password"
+-- (hash bcrypt público). NUNCA executar em PRODUÇÃO.
+-- ============================================================
+
 SET @start := COALESCE((
   SELECT MAX(CAST(SUBSTRING(username, 10) AS UNSIGNED))
   FROM users

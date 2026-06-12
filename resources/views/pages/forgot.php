@@ -11,7 +11,7 @@ $recaptchaSiteKey = getenv('RECAPTCHA_SITE_KEY') ?: '';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $csrf   = $_POST['_csrf'] ?? '';
     $email  = sanitize($_POST['email'] ?? '');
-    $ip     = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $ip     = getClientIp();
 
     $emailValue = $email;
 

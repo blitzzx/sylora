@@ -49,7 +49,7 @@ function createRememberMeToken(int $userId): void
     $tokenHash = hash('sha256', $token);
     $expiresAt = date('Y-m-d H:i:s', time() + (30 * 24 * 60 * 60));
     $userAgent = $_SERVER['HTTP_USER_AGENT'] ?? '';
-    $ip        = $_SERVER['REMOTE_ADDR'];
+    $ip        = getClientIp();
     $secure    = (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] === 'https')
               || (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off');
 
@@ -142,12 +142,19 @@ function logoutUser(): void
 {
     global $conn;
 
+    // A revogação na BD é "best effort": se a ligação falhar momentaneamente,
+    // o logout local (cookies + sessão) tem de acontecer na mesma — caso
+    // contrário uma exceção mysqli rebenta o pedido e o utilizador fica preso.
     if (isset($_COOKIE['remember_selector'])) {
-        $selector = $_COOKIE['remember_selector'];
-        $stmt = $conn->prepare("UPDATE user_sessions SET revoked_at = NOW() WHERE selector = ? AND revoked_at IS NULL");
-        $stmt->bind_param("s", $selector);
-        $stmt->execute();
-        $stmt->close();
+        try {
+            $selector = $_COOKIE['remember_selector'];
+            $stmt = $conn->prepare("UPDATE user_sessions SET revoked_at = NOW() WHERE selector = ? AND revoked_at IS NULL");
+            $stmt->bind_param("s", $selector);
+            $stmt->execute();
+            $stmt->close();
+        } catch (Throwable $e) {
+            error_log('logout: falha a revogar sessão remember-me: ' . $e->getMessage());
+        }
     }
 
     clearRememberMeCookies();
@@ -246,7 +253,7 @@ function recordActionAttempt(string $action, string $key, int $success = 0): voi
 {
     global $conn;
     $username = $action . ':' . $key;
-    $ip = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    $ip = getClientIp();
     $stmt = $conn->prepare("INSERT INTO login_attempts (ip, username, success) VALUES (?, ?, ?)");
     $stmt->bind_param('ssi', $ip, $username, $success);
     $stmt->execute();

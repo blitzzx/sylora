@@ -46,7 +46,7 @@ $name    = trim($_POST['name']    ?? '');
 $email   = trim($_POST['email']   ?? '');
 $subject = trim($_POST['subject'] ?? '');
 $message = trim($_POST['message'] ?? '');
-$ip      = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+$ip      = getClientIp();
 
 if ($name === '' || $email === '' || $subject === '' || $message === '') {
     jsonResponse(400, ['error' => 'Preenche todos os campos.']);

@@ -12,6 +12,20 @@ class SaveService
         'Zephyria'       => 'Ato III: O Véu dos Ventos',
     ];
 
+    /**
+     * Normaliza um valor numérico vindo de um save: rejeita não-numéricos
+     * e NaN/INF (ex.: "hp": 1e500 num save editado à mão) e limita ao
+     * intervalo das colunas MySQL — caso contrário o INSERT lança
+     * mysqli_sql_exception (Out of range) e o upload rebenta com 500.
+     */
+    private static function num(mixed $v, float $min, float $max, float $default): float
+    {
+        if (!is_numeric($v)) return $default;
+        $f = (float) $v;
+        if (!is_finite($f)) return $default;
+        return max($min, min($max, $f));
+    }
+
     public static function validateAndUpload(mysqli $conn, int $userId, int $slot, string $rawData): array
     {
         if ($slot < 1 || $slot > 3) {
@@ -21,19 +35,19 @@ class SaveService
         $content = trim(str_replace("\x00", '', $rawData));
         $data    = json_decode($content, true);
 
-        if (!$data || !isset($data['stats'])) {
+        if (!$data || !isset($data['stats']) || !is_array($data['stats'])) {
             return ['error' => 'Ficheiro corrompido ou não é um save da Sylora.', 'code' => 400];
         }
 
         $s = $data['stats'];
-        $level          = (int)   ($s['lvl']            ?? 1);
-        $hp             = (float) ($s['hp']             ?? 100);
-        $hpTotal        = (float) ($s['hp_total']       ?? 100);
-        $xp             = (float) ($s['xp']             ?? 0);
-        $xpReq          = (float) ($s['xp_req']         ?? 100);
-        $damage         = (float) ($s['damage']         ?? 3);
-        $storyProgress  = (int)   ($s['story_progress'] ?? 0);
-        $room           = preg_replace('/[^a-zA-Z0-9_]/', '', $s['save_rm'] ?? 'Thalassos');
+        $level          = (int) self::num($s['lvl']            ?? 1,   1, 9999,        1);
+        $hp             =       self::num($s['hp']             ?? 100, 0, 999999999, 100);
+        $hpTotal        =       self::num($s['hp_total']       ?? 100, 1, 999999999, 100);
+        $xp             =       self::num($s['xp']             ?? 0,   0, 999999999,   0);
+        $xpReq          =       self::num($s['xp_req']         ?? 100, 1, 999999999, 100);
+        $damage         =       self::num($s['damage']         ?? 3,   0, 999999999,   3);
+        $storyProgress  = (int) self::num($s['story_progress'] ?? 0,   0, 1000000,     0);
+        $room           = preg_replace('/[^a-zA-Z0-9_]/', '', is_string($s['save_rm'] ?? null) ? $s['save_rm'] : 'Thalassos');
         $playerName     = trim((string) ($data['player_name'] ?? ''));
 
         if (mb_strlen($playerName) > 32) {
@@ -42,11 +56,16 @@ class SaveService
 
         $chapter = self::$chapterMap[$room] ?? 'Ato I: Ilha de Thalassos';
 
-        SaveRepository::upsert(
-            $conn, $userId, $slot, $playerName, $content,
-            $level, $hp, $hpTotal, $xp, $xpReq, $damage,
-            $chapter, $storyProgress
-        );
+        try {
+            SaveRepository::upsert(
+                $conn, $userId, $slot, $playerName, $content,
+                $level, $hp, $hpTotal, $xp, $xpReq, $damage,
+                $chapter, $storyProgress
+            );
+        } catch (Throwable $e) {
+            error_log('save upload: falha no upsert (user ' . $userId . '): ' . $e->getMessage());
+            return ['error' => 'Não foi possível guardar o save. Verifica se o ficheiro é válido.', 'code' => 422];
+        }
 
         return ['success' => true, 'message' => 'Save guardado na cloud!'];
     }

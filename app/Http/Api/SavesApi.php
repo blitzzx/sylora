@@ -23,6 +23,10 @@ function jsonErr(int $code, string $msg): never
     exit;
 }
 
+// Qualquer exceção não prevista (ex.: mysqli) responde JSON em vez de
+// 500 sem corpo — senão o frontend mostra "Erro de ligação" genérico.
+try {
+
 if ($method === 'GET') {
     $action = $_GET['action'] ?? 'download';
     if ($action !== 'download') jsonErr(400, 'Ação inválida.');
@@ -99,3 +103,8 @@ if ($method === 'POST') {
 }
 
 jsonErr(405, 'Método não suportado.');
+
+} catch (Throwable $e) {
+    error_log('saves api: erro inesperado: ' . $e->getMessage());
+    jsonErr(500, 'Erro no servidor. Tenta novamente dentro de momentos.');
+}

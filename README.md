@@ -1,32 +1,25 @@
 <div align="center">
 
-<img src="public/assets/img/Logo-Sylora.png" alt="Sylora" width="180"/>
+<img src="public/assets/img/Logo-Sylora.png" alt="Sylora" width="200"/>
 
-<br/>
-
-```
-  █████  ██    ██ ██       ██████  ██████   █████
- ██       ██    ██ ██      ██    ██ ██   ██ ██   ██
-  █████    ██████  ██      ██    ██ ██████  ███████
-      ██     ██    ██      ██    ██ ██   ██ ██   ██
- ██████      ██    ███████  ██████  ██   ██ ██   ██
-```
-
-### ✦ *Ecos dos Deuses* ✦
+# ✦ SYLORA ✦
+### *Ecos dos Deuses*
 
 *Num arquipélago esquecido pelos deuses, a tua saga começa.*
 
 <br/>
 
-[![PHP](https://img.shields.io/badge/PHP-8.3-7C3AED?style=for-the-badge&logo=php&logoColor=white)](https://php.net)
-[![MySQL](https://img.shields.io/badge/MySQL-8.0-4F46E5?style=for-the-badge&logo=mysql&logoColor=white)](https://mysql.com)
-[![Apache](https://img.shields.io/badge/Apache-2.4-6D28D9?style=for-the-badge&logo=apache&logoColor=white)](https://httpd.apache.org)
-[![Railway](https://img.shields.io/badge/Deploy-Railway-4F46E5?style=for-the-badge&logo=railway&logoColor=white)](https://railway.app)
-[![Status](https://img.shields.io/badge/Estado-Alpha%20Aberto-e8c46a?style=for-the-badge)](https://www.sylora.lol)
+[![PHP](https://img.shields.io/badge/PHP-8.3-c9993a?style=for-the-badge&logo=php&logoColor=white&labelColor=1c1710)](https://php.net)
+[![MySQL](https://img.shields.io/badge/MySQL-8.0-c9993a?style=for-the-badge&logo=mysql&logoColor=white&labelColor=1c1710)](https://mysql.com)
+[![Apache](https://img.shields.io/badge/Apache-2.4-c9993a?style=for-the-badge&logo=apache&logoColor=white&labelColor=1c1710)](https://httpd.apache.org)
+[![Railway](https://img.shields.io/badge/Deploy-Railway-c9993a?style=for-the-badge&logo=railway&logoColor=white&labelColor=1c1710)](https://railway.app)
+
+[![Estado](https://img.shields.io/badge/Estado-Alpha%20Aberto-e8c46a?style=for-the-badge&labelColor=1c1710)](https://www.sylora.lol)
+[![Idiomas](https://img.shields.io/badge/Idiomas-PT%20·%20EN%20·%20ES-e8c46a?style=for-the-badge&labelColor=1c1710)](https://www.sylora.lol)
 
 <br/>
 
-**[🌊 Jogar Agora](https://www.sylora.lol)**
+### 🌊 **[JOGAR AGORA → sylora.lol](https://www.sylora.lol)** 🌊
 
 <br/>
 
@@ -40,11 +33,21 @@
 
 </div>
 
-**Sylora** é um RPG de aventura narrativa baseado na web, ambientado numa Grécia Antiga sombria e corrompida. Exploras um arquipélago de ilhas perdidas, cada uma guardando segredos, monstros e memórias esquecidas. Avanças por capítulos, ganhas poder, forjas amizades e descobres o que os deuses esconderam.
+**Sylora** é um RPG de aventura narrativa, ambientado numa Grécia Antiga sombria e corrompida. Exploras um arquipélago de ilhas perdidas, cada uma guardando segredos, monstros e memórias esquecidas. Avanças por capítulos, ganhas poder, forjas amizades e descobres o que os deuses esconderam.
 
 > *"Os mapas mostram terras. Sylora mostra destinos."*
 
 Cada herói parte da mesma costa. Nenhum chega ao fim igual ao que partiu.
+
+**A jornada atravessa cinco ilhas:**
+
+| Ato | Ilha | |
+|:---:|---|---|
+| **I** | Ilha de Thalassos | *O Despertar* |
+| **II** | Ilha de Helion | *As Cinzas de Hyperion* |
+| **III** | Zephyria | *O Véu dos Ventos* |
+| **IV** | Tártaro Profundo | *O Submundo pela Memória* |
+| **V** | Templo Celestial de Themis | *O Julgamento dos Deuses* |
 
 ---
 
@@ -56,14 +59,16 @@ Cada herói parte da mesma costa. Nenhum chega ao fim igual ao que partiu.
 
 | &nbsp; | Módulo | Descrição |
 |:---:|---|---|
-| ⚔️ | **Sistema de Jogo** | Progressão por capítulos com HP, XP, dano e saves persistentes |
+| ⚔️ | **Sistema de Jogo** | Progressão por capítulos com HP, XP, dano e saves persistentes na cloud |
 | 📖 | **Narrativa** | História ramificada com progresso individual por jogador |
 | 🗺️ | **Mundo** | Arquipélago navegável com áreas e ilhas desbloqueáveis |
-| 👤 | **Perfil de Herói** | Avatar personalizado, bio pública e página de perfil |
+| 🏆 | **Comunidade** | Leaderboard global com pódio animado, tiers e pesquisa de jogadores |
+| 👤 | **Perfil de Herói** | Avatar personalizado com crop, bio pública e página de perfil |
 | 🤝 | **Amizades** | Pedidos, aceitação e gestão de aliados |
-| 💬 | **Muralha** | Comentários nos perfis de outros aventureiros |
-| 🔐 | **Autenticação** | Login seguro com "lembrar-me", OTP de verificação e reset de password |
-| 🔍 | **Pesquisa** | Encontra outros aventureiros pelo nome |
+| 💬 | **Muralha** | Comentários nos perfis, com moderação automática em dois níveis |
+| 🔐 | **Autenticação** | Login com "lembrar-me", verificação OTP por email e reset de password |
+| 🌗 | **Temas** | Dark mode "templo" e light mode "pergaminho" |
+| 🌍 | **i18n** | Interface completa em Português, English e Español, sem reload |
 
 ---
 
@@ -79,10 +84,10 @@ O jogo está vivo em **[sylora.lol](https://www.sylora.lol)**. Cria uma conta, e
 
 **Como podes ajudar:**
 
-- 🎮 **Joga**: explora tudo o que está disponível
-- 🐛 **Reporta bugs**: abre uma [Issue](../../issues) com o que encontraste
-- 💡 **Sugere**: tens uma ideia para o mundo ou para o jogo? Partilha nas Issues
-- ⭐ **Dá uma estrela**: ajuda outros aventureiros a encontrar Sylora
+- 🎮 **Joga** — explora tudo o que está disponível e [transfere a demo](https://www.sylora.lol)
+- 🐛 **Reporta bugs** — abre uma [Issue](../../issues) com o que encontraste
+- 💡 **Sugere** — tens uma ideia para o mundo ou para o jogo? Partilha nas Issues
+- ⭐ **Dá uma estrela** — ajuda outros aventureiros a encontrar Sylora
 
 > *Este é o início. O que construímos a seguir depende de quem aparece.*
 
@@ -96,13 +101,15 @@ O jogo está vivo em **[sylora.lol](https://www.sylora.lol)**. Cria uma conta, e
 
 A fortaleza que protege o reino:
 
-- **SQL Injection**: prepared statements em todas as queries
-- **Passwords**: bcrypt com `PASSWORD_DEFAULT`
-- **Sessões**: tokens com rotação, revogação e cookies `HttpOnly + SameSite`
-- **CSRF**: tokens validados em todos os formulários POST
-- **Rate Limiting**: máx. 5 tentativas de login por 15 minutos
-- **Headers**: CSP, X-Frame-Options, HSTS via `.htaccess`
-- **Credenciais**: exclusivamente via variáveis de ambiente, nenhum segredo no código
+- **SQL Injection** — prepared statements em todas as queries, sem exceção
+- **Passwords** — bcrypt com `PASSWORD_DEFAULT`
+- **Sessões** — tokens selector/validator com rotação, deteção de roubo e revogação global
+- **Cookies** — `HttpOnly` + `SameSite` + `Secure` em HTTPS
+- **CSRF** — tokens validados com `hash_equals` em todos os formulários POST
+- **Uploads** — validação MIME real (finfo), `getimagesize` e re-encoding GD dos avatares
+- **Rate Limiting** — em logins, emails e ações sensíveis
+- **Headers** — CSP, HSTS, X-Frame-Options, nosniff via `.htaccess`
+- **Credenciais** — exclusivamente via variáveis de ambiente; zero segredos no código
 
 ---
 
@@ -116,9 +123,27 @@ A fortaleza que protege o reino:
 Backend        →  PHP 8.3 + MySQLi (prepared statements)
 Base de Dados  →  MySQL 8.0
 Servidor       →  Apache 2.4 (mod_rewrite, .htaccess)
-Contentor      →  Docker  (php:8.3-apache)
+Contentor      →  Docker (php:8.3-apache)
 Deploy         →  Railway
 Email          →  Resend API / SMTP (PHPMailer)
+Frontend       →  PHP templates + CSS/JS vanilla (sem frameworks)
+```
+
+**Arquitetura:**
+
+```
+sylora/
+├── app/
+│   ├── Core/          # Auth, Database, Mailer, i18n, helpers
+│   ├── Http/Api/      # Endpoints JSON (saves, amigos, comentários…)
+│   ├── Repositories/  # Acesso a dados
+│   └── Services/      # Lógica de negócio + moderação
+├── public/            # Docroot (páginas, CSS, JS, assets, APIs)
+├── resources/
+│   ├── lang/          # Traduções PT · EN · ES
+│   └── views/         # Templates de páginas e partials
+├── database/          # Schema da base de dados
+└── scripts/           # Seeds de teste (NUNCA correr em produção)
 ```
 
 ---
@@ -143,14 +168,21 @@ cp .env.example .env
 docker compose up -d
 
 # 4. Importa o schema da base de dados
-# Acede a http://localhost:8081 (phpMyAdmin) e importa sylora.sql
+# Acede a http://localhost:8081 (phpMyAdmin) e importa database/schema.sql
 ```
 
 Aventura disponível em **http://localhost:8080** ✦
 
+> ⚠️ Os scripts em `scripts/` criam contas de teste com password conhecida.
+> São apenas para load testing local — **nunca** os executes em produção.
+
 ---
 
 <div align="center">
+
+## 🏛 &nbsp; Os Artífices &nbsp; 🏛
+
+Forjado por **[Márcio Sousa](https://github.com/Blitzzx)** e **Samuel Meixieira**
 
 <br/>
 
