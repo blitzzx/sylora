@@ -10,11 +10,6 @@
 require_once ROOT . '/app/Core/config.php';
 require_once ROOT . '/app/Services/SaveService.php';
 
-requireLogin();
-
-$method = $_SERVER['REQUEST_METHOD'];
-$userId = (int) getCurrentUser()['id'];
-
 function jsonErr(int $code, string $msg): never
 {
     http_response_code($code);
@@ -22,6 +17,16 @@ function jsonErr(int $code, string $msg): never
     echo json_encode(['error' => $msg]);
     exit;
 }
+
+// Não usar requireLogin() aqui: ele faz redirect 302 para /login, e o
+// download (via <a download>) gravaria o HTML do login dentro do .sav.
+// Em vez disso devolvemos 401 limpo para o frontend tratar.
+if (!isLoggedIn() && !tryRememberMeLogin()) {
+    jsonErr(401, 'Sessão expirada. Faz login novamente.');
+}
+
+$method = $_SERVER['REQUEST_METHOD'];
+$userId = (int) getCurrentUser()['id'];
 
 // Qualquer exceção não prevista (ex.: mysqli) responde JSON em vez de
 // 500 sem corpo — senão o frontend mostra "Erro de ligação" genérico.

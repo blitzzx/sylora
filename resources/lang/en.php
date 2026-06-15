@@ -646,4 +646,15 @@
   // common pagination
   'common.prev' => 'Previous',
   'common.next' => 'Next',
+
+  // error pages
+  'error.404_title'  => 'Lost in the mists',
+  'error.404_msg'    => 'This path leads nowhere. The page you seek does not exist or has been moved.',
+  'error.403_title'  => 'Forbidden ground',
+  'error.403_msg'    => 'You do not have permission to access this place.',
+  'error.500_title'  => 'The gods are silent',
+  'error.500_msg'    => 'Something went wrong on our end. Try again in a few moments.',
+  'error.code_label' => 'Error',
+  'error.home_btn'   => 'Back to home',
+  'error.back_btn'   => 'Go back',
 ];

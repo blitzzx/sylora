@@ -645,4 +645,15 @@
   // common pagination
   'common.prev' => 'Anterior',
   'common.next' => 'Seguinte',
+
+  // error pages
+  'error.404_title'  => 'Perdido na névoa',
+  'error.404_msg'    => 'Este caminho não leva a lado nenhum. A página que procuras não existe ou foi movida.',
+  'error.403_title'  => 'Terreno proibido',
+  'error.403_msg'    => 'Não tens permissão para aceder a este lugar.',
+  'error.500_title'  => 'Os deuses estão em silêncio',
+  'error.500_msg'    => 'Algo correu mal do nosso lado. Tenta novamente dentro de momentos.',
+  'error.code_label' => 'Erro',
+  'error.home_btn'   => 'Voltar ao início',
+  'error.back_btn'   => 'Voltar atrás',
 ];

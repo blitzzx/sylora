@@ -540,15 +540,35 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         if (input && 'value' in input) input.value = '';
     };
 
-    window.downloadSave = function (slot, btn) {
+    window.downloadSave = async function (slot, btn) {
         btn.classList.add('btn-loading');
-        setTimeout(() => btn.classList.remove('btn-loading'), 1200);
-        const a = document.createElement('a');
-        a.href = '/api/save_download?slot=' + encodeURIComponent(slot);
-        a.download = 'syloradata.sav';
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
+        try {
+            const res = await fetch('/api/save_download?slot=' + encodeURIComponent(slot), {
+                credentials: 'same-origin'
+            });
+            if (!res.ok) {
+                // Nunca gravar a resposta como .sav: pode ser o HTML do login
+                // (sessão expirada) ou um JSON de erro. Mostra toast.
+                let msg = window.SYLORA_T('toast.connection_error');
+                try { const j = await res.json(); if (j && j.error) msg = j.error; } catch (e) {}
+                showToast(msg, 'error');
+                if (res.status === 401) setTimeout(() => { window.location.href = '/login'; }, 1500);
+                return;
+            }
+            const blob = await res.blob();
+            const url  = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'syloradata.sav';
+            document.body.appendChild(a);
+            a.click();
+            a.remove();
+            URL.revokeObjectURL(url);
+        } catch (e) {
+            showToast(window.SYLORA_T('toast.connection_error'), 'error');
+        } finally {
+            btn.classList.remove('btn-loading');
+        }
     };
 
     window.deleteSave = function (slot, btn) {

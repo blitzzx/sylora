@@ -11,6 +11,14 @@ RewriteBase /
 
 Options -Indexes
 
+# =========================================
+# Páginas de erro personalizadas
+# =========================================
+
+ErrorDocument 403 /403.php
+ErrorDocument 404 /404.php
+ErrorDocument 500 /500.php
+
 <IfModule mod_headers.c>
     Header always set X-Frame-Options "SAMEORIGIN"
     Header always set X-Content-Type-Options "nosniff"
