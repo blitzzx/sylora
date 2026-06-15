@@ -253,6 +253,7 @@
 
   // footer
   'footer.contact' => 'Contacto',
+  'footer.credit'  => 'Desenvolvido por <a href="/sobre">Márcio Sousa e Samuel Meixieira</a>.',
 
   // avatar crop
   'avatar.crop_hint' => 'Arrasta para mover · Belisca ou roda para fazer zoom',

@@ -61,6 +61,7 @@ desktop.ini
 # Node e ferramentas de teste/browser
 node_modules/
 .playwright/
+.playwright-cli/
 playwright-report/
 test-results/
 
