@@ -53,13 +53,15 @@ class SaveService
 
         $s = $data['stats'];
         $level          = (int) self::num($s['lvl']            ?? 1,   1, 9999,        1);
-        // Teto a 1e15: dentro da gama de inteiros exatos do double (2^53 ~ 9e15)
-        // e das colunas DOUBLE da BD. Evita perda de precisao em saves end-game.
-        $hp             =       self::num($s['hp']             ?? 100, 0, 1e15, 100);
-        $hpTotal        =       self::num($s['hp_total']       ?? 100, 1, 1e15, 100);
-        $xp             =       self::num($s['xp']             ?? 0,   0, 1e15,   0);
-        $xpReq          =       self::num($s['xp_req']         ?? 100, 1, 1e15, 100);
-        $damage         =       self::num($s['damage']         ?? 3,   0, 1e15,   3);
+        // Teto apenas como guarda de sanidade (NaN/INF ja sao filtrados em num()).
+        // Colunas DOUBLE aguentam ate ~1.8e308; o ranking usa o nivel, nao o XP,
+        // e o display e notacao cientifica — por isso um teto alto nao tem custo
+        // e evita cortar XP end-game (que ja chega a ~5.7e16).
+        $hp             =       self::num($s['hp']             ?? 100, 0, 1e30, 100);
+        $hpTotal        =       self::num($s['hp_total']       ?? 100, 1, 1e30, 100);
+        $xp             =       self::num($s['xp']             ?? 0,   0, 1e30,   0);
+        $xpReq          =       self::num($s['xp_req']         ?? 100, 1, 1e30, 100);
+        $damage         =       self::num($s['damage']         ?? 3,   0, 1e30,   3);
         $storyProgress  = (int) self::num($s['story_progress'] ?? 0,   0, 1000000,     0);
         $room           = preg_replace('/[^a-zA-Z0-9_]/', '', is_string($s['save_rm'] ?? null) ? $s['save_rm'] : 'Thalassos');
         $playerName     = trim((string) ($data['player_name'] ?? ''));
