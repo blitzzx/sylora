@@ -317,12 +317,12 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         };
     }
 
-    // Espelho de fmtStat() em PHP (Functions.php): acima de 1.000.000 usa
-    // notação científica (ex.: 1.5×10⁹), senão número normal a `dec` casas.
+    // Espelho de fmtStat() em PHP (Functions.php): acima de 9.999.999.999 usa
+    // notação científica (ex.: 1.5×10¹⁰), senão número normal a `dec` casas.
     function fmtStat(n, dec) {
         n = Number(n) || 0;
         dec = dec || 0;
-        if (Math.abs(n) > 1000000) {
+        if (Math.abs(n) > 9999999999) {
             let exp  = Math.floor(Math.log10(Math.abs(n)));
             let mant = Math.round(n / Math.pow(10, exp) * 100) / 100;
             if (Math.abs(mant) >= 10) { mant /= 10; exp++; }

@@ -11,15 +11,15 @@ function sanitize(string $input): string
 }
 
 /**
- * Formata um valor numérico de stat para display. Acima de 1.000.000
- * usa notação científica (ex.: 1.5×10⁹) para não estourar a UI; abaixo
+ * Formata um valor numérico de stat para display. Acima de 9.999.999.999
+ * usa notação científica (ex.: 1.5×10¹⁰) para não estourar a UI; abaixo
  * disso mostra o número normal arredondado a $dec casas.
  * Espelhado em JS (fmtStat) em jogar.php.
  */
 function fmtStat(float|int|null $n, int $dec = 0): string
 {
     $n = (float) ($n ?? 0);
-    if (abs($n) > 1000000) {
+    if (abs($n) > 9999999999) {
         $exp  = (int) floor(log10(abs($n)));
         $mant = round($n / (10 ** $exp), 2);
         if (abs($mant) >= 10) { $mant /= 10; $exp++; }   // corrige bordas do log10
