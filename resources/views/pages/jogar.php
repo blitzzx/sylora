@@ -413,12 +413,33 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         try { raw = await file.text(); }
         catch (e) { showToast(window.SYLORA_T('toast.save_unreadable'), 'error'); return; }
 
-        const clean = raw.replace(/\x00/g, '').trim();
         let data;
-        try { data = JSON.parse(clean); }
-        catch (e) {
-            showToast(window.SYLORA_T('toast.save_corrupt'), 'error');
-            return;
+        if (raw.startsWith('SYL2')) {
+            // Save encriptado — o browser não tem a chave. O servidor decifra
+            // e devolve o JSON (a chave nunca sai do servidor).
+            try {
+                const form = new FormData();
+                form.append('savefile', file);
+                form.append('_csrf', window.SAVE_CSRF);
+                const res = await fetch('/api/save_preview', { method: 'POST', body: form, credentials: 'same-origin' });
+                const out = await res.json();
+                if (!out || !out.success) {
+                    showToast((out && out.error) || window.SYLORA_T('toast.save_corrupt'), 'error');
+                    return;
+                }
+                data = out.save;
+            } catch (e) {
+                showToast(window.SYLORA_T('toast.save_corrupt'), 'error');
+                return;
+            }
+        } else {
+            // Save antigo em texto (pré-encriptação) — parse local na mesma.
+            const clean = raw.replace(/\x00/g, '').trim();
+            try { data = JSON.parse(clean); }
+            catch (e) {
+                showToast(window.SYLORA_T('toast.save_corrupt'), 'error');
+                return;
+            }
         }
 
         const parsed = parseSafeSave(data);

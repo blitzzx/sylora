@@ -456,6 +456,9 @@ include ROOT . '/resources/views/partials/navbar.php';
           <div class="up-card-empty">
             <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="color:var(--faint)"><polygon points="5 3 19 12 5 21 5 3"/></svg>
             <p data-i18n="profile.no_save"><?= t('profile.no_save') ?></p>
+            <?php if ($isSelf): ?>
+              <a href="/jogar" class="up-no-save-cta" data-i18n="profile.no_save_cta"><?= t('profile.no_save_cta') ?></a>
+            <?php endif; ?>
           </div>
         <?php endif; ?>
       </div>
@@ -622,7 +625,11 @@ include ROOT . '/resources/views/partials/navbar.php';
             </div>
           <?php endforeach; ?>
           <?php if (empty($comments)): ?>
-            <p class="up-no-comments" data-i18n="profile.no_comments"><?= t('profile.no_comments') ?></p>
+            <?php if ($isSelf): ?>
+              <p class="up-no-comments" data-i18n="profile.no_comments_self"><?= t('profile.no_comments_self') ?></p>
+            <?php else: ?>
+              <p class="up-no-comments" data-i18n="profile.no_comments"><?= t('profile.no_comments') ?></p>
+            <?php endif; ?>
           <?php endif; ?>
         </div>
 

@@ -41,7 +41,9 @@ if ($method === 'GET') {
         exit;
     }
 
-    $output = $saveData . "\x00";
+    // Exporta no formato seguro "SYL2" (encriptado + assinado), tal como o
+    // jogo grava localmente. O jogo aceita-o diretamente ao carregar.
+    $output = SaveCrypto::encode($saveData);
     while (ob_get_level() > 0) ob_end_clean();
     header('Content-Type: application/octet-stream');
     header('Content-Disposition: attachment; filename="syloradata.sav"');
@@ -79,6 +81,34 @@ if ($method === 'POST') {
 
         recordActionAttempt('save_upload', (string) $userId, 1);
         echo json_encode($result);
+        exit;
+    }
+
+    if ($action === 'preview') {
+        // Decifra o save no servidor (a chave nunca chega ao browser) e
+        // devolve o JSON para o preview pré-upload. Não escreve nada na BD.
+        if (!isset($_FILES['savefile']) || $_FILES['savefile']['error'] !== UPLOAD_ERR_OK) {
+            jsonErr(400, 'Nenhum ficheiro recebido.');
+        }
+        if ($_FILES['savefile']['size'] > 2 * 1024 * 1024) {
+            jsonErr(400, 'Ficheiro demasiado grande (máx. 2 MB).');
+        }
+
+        $raw = file_get_contents($_FILES['savefile']['tmp_name']);
+        if (SaveCrypto::isEncrypted($raw)) {
+            $decoded = SaveCrypto::decode($raw);
+            if ($decoded === null) jsonErr(400, 'Save inválido ou adulterado.');
+            $content = trim(str_replace("\x00", '', $decoded));
+        } else {
+            $content = trim(str_replace("\x00", '', $raw));
+        }
+
+        $data = json_decode($content, true);
+        if (!$data || !isset($data['stats']) || !is_array($data['stats'])) {
+            jsonErr(400, 'Ficheiro corrompido ou não é um save da Sylora.');
+        }
+
+        echo json_encode(['success' => true, 'save' => $data]);
         exit;
     }
 

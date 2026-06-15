@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . '/../Repositories/SaveRepository.php';
+require_once __DIR__ . '/../Core/SaveCrypto.php';
 
 class SaveService
 {
@@ -32,8 +33,19 @@ class SaveService
             return ['error' => 'Slot inválido (1-3).', 'code' => 400];
         }
 
-        $content = trim(str_replace("\x00", '', $rawData));
-        $data    = json_decode($content, true);
+        // Novo formato seguro "SYL2" → decifra + verifica a assinatura.
+        // Formato antigo (texto puro) → aceite na mesma (migração suave).
+        if (SaveCrypto::isEncrypted($rawData)) {
+            $decoded = SaveCrypto::decode($rawData);
+            if ($decoded === null) {
+                return ['error' => 'Save inválido ou adulterado.', 'code' => 400];
+            }
+            $content = trim(str_replace("\x00", '', $decoded));
+        } else {
+            $content = trim(str_replace("\x00", '', $rawData));
+        }
+
+        $data = json_decode($content, true);
 
         if (!$data || !isset($data['stats']) || !is_array($data['stats'])) {
             return ['error' => 'Ficheiro corrompido ou não é um save da Sylora.', 'code' => 400];
