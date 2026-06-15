@@ -11,6 +11,26 @@ function sanitize(string $input): string
 }
 
 /**
+ * Formata um valor numérico de stat para display. Acima de 1.000.000
+ * usa notação científica (ex.: 1.5×10⁹) para não estourar a UI; abaixo
+ * disso mostra o número normal arredondado a $dec casas.
+ * Espelhado em JS (fmtStat) em jogar.php.
+ */
+function fmtStat(float|int|null $n, int $dec = 0): string
+{
+    $n = (float) ($n ?? 0);
+    if (abs($n) > 1000000) {
+        $exp  = (int) floor(log10(abs($n)));
+        $mant = round($n / (10 ** $exp), 2);
+        if (abs($mant) >= 10) { $mant /= 10; $exp++; }   // corrige bordas do log10
+        $mantStr = rtrim(rtrim(number_format($mant, 2, '.', ''), '0'), '.');
+        $sup = strtr((string) $exp, ['0'=>'⁰','1'=>'¹','2'=>'²','3'=>'³','4'=>'⁴','5'=>'⁵','6'=>'⁶','7'=>'⁷','8'=>'⁸','9'=>'⁹','-'=>'⁻']);
+        return $mantStr . '×10' . $sup;
+    }
+    return $dec > 0 ? number_format($n, $dec, '.', '') : (string) round($n);
+}
+
+/**
  * IP real do cliente. Atrás do proxy do Railway, REMOTE_ADDR é o IP do
  * proxy — o que tornaria o rate limiting global (5 falhas de qualquer
  * pessoa bloqueariam toda a gente). O proxy confiável acrescenta o IP

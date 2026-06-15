@@ -413,7 +413,7 @@ include ROOT . '/resources/views/partials/navbar.php';
           $xpPct = $bestSave['xp_req'] > 0 ? round(($bestSave['xp'] / $bestSave['xp_req']) * 100) : 0;
         ?>
           <div class="up-stat-level">
-            <span class="up-stat-number"><?php echo (int)$bestSave['level']; ?></span>
+            <span class="up-stat-number"><?php echo fmtStat($bestSave['level']); ?></span>
             <span class="up-stat-sub" data-i18n="profile.stat_level"><?= t('profile.stat_level') ?></span>
           </div>
 
@@ -422,7 +422,7 @@ include ROOT . '/resources/views/partials/navbar.php';
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c96b5a" stroke-width="2.5"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg>
               HP
             </span>
-            <span class="up-stat-val"><?php echo (int)$bestSave['hp']; ?> / <?php echo (int)$bestSave['hp_total']; ?></span>
+            <span class="up-stat-val"><?php echo fmtStat($bestSave['hp']); ?> / <?php echo fmtStat($bestSave['hp_total']); ?></span>
           </div>
           <div class="up-bar"><div class="up-bar-fill up-bar-hp" style="width:<?php echo $hpPct; ?>%"></div></div>
 
@@ -431,7 +431,7 @@ include ROOT . '/resources/views/partials/navbar.php';
               <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="#c9993a" stroke-width="2.5"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
               XP
             </span>
-            <span class="up-stat-val"><?php echo (int)$bestSave['xp']; ?> / <?php echo (int)$bestSave['xp_req']; ?></span>
+            <span class="up-stat-val"><?php echo fmtStat($bestSave['xp']); ?> / <?php echo fmtStat($bestSave['xp_req']); ?></span>
           </div>
           <div class="up-bar"><div class="up-bar-fill up-bar-xp" style="width:<?php echo $xpPct; ?>%"></div></div>
 
@@ -443,7 +443,7 @@ include ROOT . '/resources/views/partials/navbar.php';
           </div>
           <div class="up-stat-row">
             <span class="up-stat-label" data-i18n="profile.stat_damage"><?= t('profile.stat_damage') ?></span>
-            <span class="up-stat-val"><?php echo number_format($bestSave['damage'], 1); ?></span>
+            <span class="up-stat-val"><?php echo fmtStat($bestSave['damage'], 1); ?></span>
           </div>
           <?php if ($bestSave['last_saved']): ?>
             <div class="up-stat-row">

@@ -133,18 +133,18 @@ include ROOT . '/resources/views/partials/navbar.php';
                 <div class="save-stats">
                     <div class="save-stat">
                         <div class="save-stat-label" data-i18n="jogar.level"><?= t('jogar.level') ?></div>
-                        <div class="save-stat-value"><?= $save['level'] ?><small>lvl</small></div>
+                        <div class="save-stat-value"><?= fmtStat($save['level']) ?><small>lvl</small></div>
                     </div>
                     <div class="save-stat">
                         <div class="save-stat-label" data-i18n="jogar.damage"><?= t('jogar.damage') ?></div>
-                        <div class="save-stat-value"><?= round($save['damage'], 1) ?><small>dmg</small></div>
+                        <div class="save-stat-value"><?= fmtStat($save['damage'], 1) ?><small>dmg</small></div>
                     </div>
                 </div>
 
                 <div class="save-bar-wrap">
                     <div class="save-bar-label">
                         <span>HP</span>
-                        <span><?= round($save['hp']) ?> / <?= round($save['hp_total']) ?></span>
+                        <span><?= fmtStat($save['hp']) ?> / <?= fmtStat($save['hp_total']) ?></span>
                     </div>
                     <div class="save-bar">
                         <div class="save-bar-fill save-bar-fill-hp" style="width:<?= $hp_pct ?>%"></div>
@@ -154,7 +154,7 @@ include ROOT . '/resources/views/partials/navbar.php';
                 <div class="save-bar-wrap">
                     <div class="save-bar-label">
                         <span>XP</span>
-                        <span><?= round($save['xp']) ?> / <?= round($save['xp_req']) ?></span>
+                        <span><?= fmtStat($save['xp']) ?> / <?= fmtStat($save['xp_req']) ?></span>
                     </div>
                     <div class="save-bar">
                         <div class="save-bar-fill save-bar-fill-xp" style="width:<?= $xp_pct ?>%"></div>
@@ -317,6 +317,21 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         };
     }
 
+    // Espelho de fmtStat() em PHP (Functions.php): acima de 1.000.000 usa
+    // notação científica (ex.: 1.5×10⁹), senão número normal a `dec` casas.
+    function fmtStat(n, dec) {
+        n = Number(n) || 0;
+        dec = dec || 0;
+        if (Math.abs(n) > 1000000) {
+            let exp  = Math.floor(Math.log10(Math.abs(n)));
+            let mant = Math.round(n / Math.pow(10, exp) * 100) / 100;
+            if (Math.abs(mant) >= 10) { mant /= 10; exp++; }
+            const sup = String(exp).replace(/[-0-9]/g, c => '⁻⁰¹²³⁴⁵⁶⁷⁸⁹'['-0123456789'.indexOf(c)]);
+            return mant.toFixed(2).replace(/\.?0+$/, '') + '×10' + sup;
+        }
+        return dec > 0 ? n.toFixed(dec) : String(Math.round(n));
+    }
+
     function el(tag, className, text) {
         const node = document.createElement(tag);
         if (className) node.className = className;
@@ -364,12 +379,12 @@ window.SAVES_DATA = <?= json_encode(array_values(array_map(function ($s) {
         card.appendChild(tag);
 
         const stats = el('div', 'save-stats');
-        stats.appendChild(buildStatBox(window.SYLORA_T('jogar.level'), String(parsed.level), 'lvl'));
-        stats.appendChild(buildStatBox(window.SYLORA_T('jogar.damage'), String(Math.round(parsed.damage * 10) / 10), 'dmg'));
+        stats.appendChild(buildStatBox(window.SYLORA_T('jogar.level'), fmtStat(parsed.level), 'lvl'));
+        stats.appendChild(buildStatBox(window.SYLORA_T('jogar.damage'), fmtStat(parsed.damage, 1), 'dmg'));
         card.appendChild(stats);
 
-        card.appendChild(buildBar('HP', Math.round(parsed.hp), Math.round(parsed.hpTotal), hpPct, 'save-bar-fill-hp'));
-        card.appendChild(buildBar('XP', Math.round(parsed.xp), Math.round(parsed.xpReq), xpPct, 'save-bar-fill-xp'));
+        card.appendChild(buildBar('HP', fmtStat(parsed.hp), fmtStat(parsed.hpTotal), hpPct, 'save-bar-fill-hp'));
+        card.appendChild(buildBar('XP', fmtStat(parsed.xp), fmtStat(parsed.xpReq), xpPct, 'save-bar-fill-xp'));
 
         if (parsed.playerName) {
             const meta = el('div', 'save-meta');
