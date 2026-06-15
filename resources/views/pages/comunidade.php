@@ -96,44 +96,48 @@ include ROOT . '/resources/views/partials/navbar.php';
        class="cm-podium-card rank-<?= $rank ?>"
        data-username="<?= e(mb_strtolower($p['username'])) ?>">
 
-      <div class="cm-pod-medal">
-        <?php if ($rank === 1): ?>
-          <svg width="26" height="26" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-        <?php elseif ($rank === 2): ?>
-          <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-        <?php else: ?>
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
-        <?php endif; ?>
-      </div>
-
-      <div class="cm-pod-avatar">
-        <?php if (!empty($p['avatar'])): ?>
-          <img src="/avatar?id=<?= (int) $p['id'] ?>" alt="" loading="lazy">
-        <?php else: ?>
-          <?= e($ini) ?>
-        <?php endif; ?>
-      </div>
-
-      <div class="cm-pod-username"><?= e($p['username']) ?></div>
-
-      <?php if ($p['best_level'] !== null): ?>
-        <div class="cm-pod-level">Lv.&nbsp;<?= (int) $p['best_level'] ?></div>
-        <?php if ($p['xp_req'] > 0): ?>
-        <div class="cm-pod-xp-wrap">
-          <div class="cm-pod-xp-bar">
-            <div class="cm-pod-xp-fill" style="width:<?= $xpPct ?>%"></div>
-          </div>
-          <span class="cm-pod-xp-label"><?= $xpPct ?>%&nbsp;XP</span>
+      <div class="cm-pod-body">
+        <div class="cm-pod-medal">
+          <?php if ($rank === 1): ?>
+            <svg width="32" height="32" viewBox="0 0 24 24" fill="currentColor"><path d="M3 6l4.5 3.4L12 4l4.5 5.4L21 6l-1.7 11H4.7L3 6z"/></svg>
+          <?php elseif ($rank === 2): ?>
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          <?php else: ?>
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l2.4 7.4H22l-6.2 4.5 2.4 7.4L12 17l-6.2 4.3 2.4-7.4L2 9.4h7.6z"/></svg>
+          <?php endif; ?>
         </div>
-        <?php endif; ?>
-        <?php if (!empty($p['best_chapter'])): ?>
-          <div class="cm-pod-chapter"><?= e($p['best_chapter']) ?></div>
-        <?php endif; ?>
-      <?php else: ?>
-        <div class="cm-pod-nosave" data-i18n="community.no_save"><?= t('community.no_save') ?></div>
-      <?php endif; ?>
 
-      <div class="cm-pod-pos">#<?= $rank ?></div>
+        <div class="cm-pod-avatar">
+          <?php if (!empty($p['avatar'])): ?>
+            <img src="/avatar?id=<?= (int) $p['id'] ?>" alt="" loading="lazy">
+          <?php else: ?>
+            <?= e($ini) ?>
+          <?php endif; ?>
+        </div>
+
+        <div class="cm-pod-username"><?= e($p['username']) ?></div>
+
+        <?php if ($p['best_level'] !== null): ?>
+          <div class="cm-pod-level">Lv.&nbsp;<?= (int) $p['best_level'] ?></div>
+          <?php if ($p['xp_req'] > 0): ?>
+          <div class="cm-pod-xp-wrap">
+            <div class="cm-pod-xp-bar">
+              <div class="cm-pod-xp-fill" style="width:<?= $xpPct ?>%"></div>
+            </div>
+            <span class="cm-pod-xp-label"><?= $xpPct ?>%&nbsp;XP</span>
+          </div>
+          <?php endif; ?>
+          <?php if (!empty($p['best_chapter'])): ?>
+            <div class="cm-pod-chapter"><?= e($p['best_chapter']) ?></div>
+          <?php endif; ?>
+        <?php else: ?>
+          <div class="cm-pod-nosave" data-i18n="community.no_save"><?= t('community.no_save') ?></div>
+        <?php endif; ?>
+      </div>
+
+      <div class="cm-pod-base">
+        <span class="cm-pod-hash">#</span><span class="cm-pod-rank"><?= $rank ?></span>
+      </div>
     </a>
     <?php endforeach; ?>
   </div>
