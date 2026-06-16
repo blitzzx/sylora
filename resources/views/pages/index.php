@@ -9,32 +9,20 @@ include ROOT . '/resources/views/partials/navbar.php';
   <?php if ($isLoggedIn): ?>
   <section class="hero-logged">
     <div class="hero-logged-bg"></div>
+
     <div class="hero-logged-content container">
-      <div class="hero-logged-text">
-        <span class="overline-badge" data-i18n="home.welcome_back"><?= t('home.welcome_back') ?></span>
-        <h1><?php echo $username; ?></h1>
-        <p data-i18n="home.adventure_sub"><?= t('home.adventure_sub') ?></p>
-        <div class="hero-actions">
-          <a href="/jogar"    class="btn btn-primary btn-lg"  data-i18n="home.continue"><?= t('home.continue') ?></a>
-          <a href="/historia" class="btn btn-secondary btn-lg" data-i18n="home.view_story"><?= t('home.view_story') ?></a>
-        </div>
+
+      <div class="hero-runes" aria-hidden="true">⊕ ✦ ◈ ⟡ ✦</div>
+
+      <span class="overline-badge" data-i18n="home.welcome_back"><?= t('home.welcome_back') ?></span>
+      <h1 class="hero-logged-name"><?php echo $username; ?></h1>
+      <p class="hero-logged-sub" data-i18n="home.adventure_sub"><?= t('home.adventure_sub') ?></p>
+
+      <div class="hero-actions">
+        <a href="/jogar"    class="btn btn-primary btn-lg"  data-i18n="home.continue"><?= t('home.continue') ?></a>
+        <a href="/historia" class="btn btn-secondary btn-lg" data-i18n="home.view_story"><?= t('home.view_story') ?></a>
       </div>
-      <div class="hero-logged-clio">
-        <div class="clio-orb">
-          <div class="clio-orb-inner">
-            <svg viewBox="0 0 80 80" fill="none" xmlns="http://www.w3.org/2000/svg" class="clio-svg">
-              <circle cx="40" cy="40" r="32" stroke="rgba(201,153,58,0.4)" stroke-width="1"/>
-              <circle cx="40" cy="40" r="22" stroke="rgba(201,153,58,0.6)" stroke-width="1.5"/>
-              <path d="M40 8 L43 37 L40 40 L37 37 Z" fill="rgba(232,196,106,0.8)"/>
-              <path d="M72 40 L43 43 L40 40 L43 37 Z" fill="rgba(201,153,58,0.6)"/>
-              <path d="M40 72 L37 43 L40 40 L43 43 Z" fill="rgba(201,153,58,0.5)"/>
-              <path d="M8 40 L37 37 L40 40 L37 43 Z" fill="rgba(232,196,106,0.6)"/>
-              <circle cx="40" cy="40" r="5" fill="rgba(232,196,106,0.9)"/>
-            </svg>
-          </div>
-        </div>
-        <p class="clio-label" data-i18n="home.clio_waiting"><?= t('home.clio_waiting') ?></p>
-      </div>
+
     </div>
   </section>
 

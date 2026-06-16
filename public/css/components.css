@@ -1271,7 +1271,7 @@ input::placeholder {
   position: fixed;
   top: 100px;
   left: 16px;
-  z-index: 120;
+  z-index: 40;   /* acima da história (z-20), abaixo da navbar/menu (z-50) */
   display: flex;
   align-items: center;
   justify-content: center;

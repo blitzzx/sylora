@@ -46,6 +46,8 @@ include ROOT . '/resources/views/partials/navbar.php';
 <div class="cm-page">
 
   <div class="cm-hero">
+    <div class="cm-runes" aria-hidden="true">⊕ ✦ ◈ ⟡ ✦</div>
+    <p class="cm-overline" data-i18n="community.overline"><?= t('community.overline') ?></p>
     <h1 class="cm-title" data-i18n="community.title"><?= t('community.title') ?></h1>
     <div class="cm-stats-bar">
       <div class="cm-stat">
@@ -150,9 +152,9 @@ include ROOT . '/resources/views/partials/navbar.php';
       $xpPct  = ($p['xp_req'] > 0 && $p['xp'] !== null)
                 ? min(100, (int) round(($p['xp'] / $p['xp_req']) * 100))
                 : 0;
-      if      ($rank <= 3)  $tier = 'tier-top3';
-      elseif  ($rank <= 5)  $tier = 'tier-elite';
-      elseif  ($rank <= 10) $tier = 'tier-top10';
+      if      ($rank === 1) $tier = 'tier-gold';
+      elseif  ($rank === 2) $tier = 'tier-silver';
+      elseif  ($rank === 3) $tier = 'tier-bronze';
       else                  $tier = '';
       $delay = number_format(min($i * 0.035, 0.8), 3);
     ?>
@@ -163,11 +165,11 @@ include ROOT . '/resources/views/partials/navbar.php';
 
       <div class="cm-row-rank">
         <?php if ($rank === 1): ?>
-          <span class="cm-crown" aria-hidden="true">♛</span>
-        <?php elseif ($rank <= 3): ?>
-          <span class="cm-rnum cm-rnum-medal"><?= $rank ?></span>
-        <?php elseif ($rank <= 10): ?>
-          <span class="cm-rnum cm-rnum-top10"><?= $rank ?></span>
+          <span class="cm-medal cm-medal-1"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M3 6l4.5 3.4L12 4l4.5 5.4L21 6l-1.7 11H4.7L3 6z"/></svg></span>
+        <?php elseif ($rank === 2): ?>
+          <span class="cm-medal cm-medal-2">2</span>
+        <?php elseif ($rank === 3): ?>
+          <span class="cm-medal cm-medal-3">3</span>
         <?php else: ?>
           <span class="cm-rnum"><?= $rank ?></span>
         <?php endif; ?>

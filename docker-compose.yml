@@ -4,6 +4,8 @@ services:
     container_name: sylora-web
     ports:
       - "8080:80"
+    volumes:
+      - .:/var/www/html
     environment:
       APP_ENV: development
       SITE_URL: http://localhost:8080

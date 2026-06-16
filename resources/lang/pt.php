@@ -633,6 +633,7 @@
 
   // community page
   'community.title'          => 'Comunidade',
+  'community.overline'       => 'Sylora · Salão dos Heróis',
   'community.description'    => 'Vê os melhores jogadores de Sylora ordenados por nível.',
   'community.story_progress'     => 'progresso na história',
   'community.empty'              => 'Ainda não há aventureiros registados.',

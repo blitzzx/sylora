@@ -38,6 +38,9 @@ public/assets/avatars/
 .agents/
 skills-lock.json
 
+# Notas internas para o relatório (PAP) — não pertencem ao código do site
+public/assets/papfeats.md
+
 # IDEs
 .vscode/
 .idea/

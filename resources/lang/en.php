@@ -634,6 +634,7 @@
 
   // community page
   'community.title'          => 'Community',
+  'community.overline'       => 'Sylora · Hall of Heroes',
   'community.description'    => 'See the best Sylora players ranked by level.',
   'community.story_progress'     => 'story progress',
   'community.empty'              => 'No adventurers registered yet.',
