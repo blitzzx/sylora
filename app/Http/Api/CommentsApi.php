@@ -1,11 +1,5 @@
 <?php
-/**
- * Endpoint: GET | POST | DELETE /api/comments
- * Purpose:  List, create, and hide profile comments.
- * Auth:     GET — open; POST and DELETE — requires session
- * Input:    GET user_id, page | POST user_id, content, _csrf | DELETE comment_id, _csrf
- * Output:   JSON { comments, total, page, total_pages } | { success } | { error: string }
- */
+// /api/comments — listar, criar e ocultar comentários de perfil (GET aberto; POST/DELETE com sessão).
 
 require_once ROOT . '/app/Core/config.php';
 require_once ROOT . '/app/Services/CommentService.php';

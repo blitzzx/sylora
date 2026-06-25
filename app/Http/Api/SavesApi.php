@@ -1,11 +1,5 @@
 <?php
-/**
- * Endpoint: GET | POST /api/saves
- * Purpose:  Upload, download, and delete game save slots.
- * Auth:     Requires session
- * Input:    GET action=download, slot | POST action=upload (multipart) | POST action=delete, slot, _csrf
- * Output:   Binary .sav file (download) | JSON { success, message } | { error: string }
- */
+// /api/saves — upload, download e remoção de slots de save (sessão).
 
 require_once ROOT . '/app/Core/config.php';
 require_once ROOT . '/app/Services/SaveService.php';

@@ -1,11 +1,5 @@
 <?php
-/**
- * Endpoint: GET | POST /api/set_lang
- * Purpose:  Set the user's preferred language cookie.
- * Auth:     Open
- * Input:    GET/POST lang (en|pt|es)
- * Output:   JSON { ok, lang } (if XHR) | redirect to referer
- */
+// /api/set_lang — define o cookie de idioma preferido (en|pt|es).
 
 require_once ROOT . '/app/Core/config.php';
 

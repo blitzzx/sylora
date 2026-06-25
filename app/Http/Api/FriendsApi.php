@@ -1,11 +1,5 @@
 <?php
-/**
- * Endpoint: GET | POST | PUT | DELETE /api/friends
- * Purpose:  Manage friendship relations between users.
- * Auth:     Requires session
- * Input:    GET user_id | POST user_id, _csrf | PUT action, user_id, _csrf | DELETE user_id, _csrf
- * Output:   JSON { friends } | { status } | { success, status } | { error: string }
- */
+// /api/friends — gere as relações de amizade entre utilizadores (sessão).
 
 require_once ROOT . '/app/Core/config.php';
 require_once ROOT . '/app/Services/FriendService.php';

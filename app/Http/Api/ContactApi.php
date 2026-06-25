@@ -1,11 +1,5 @@
 <?php
-/**
- * Endpoint: POST /api/contact
- * Purpose:  Send a contact form message to the site owner via email.
- * Auth:     Open (CSRF required)
- * Input:    POST name, email, subject, message, _csrf, website (honeypot)
- * Output:   JSON { success, message } | { error: string }
- */
+// /api/contact — envia a mensagem do formulário de contacto por email (aberto, com CSRF + honeypot).
 
 require_once ROOT . '/app/Core/config.php';
 require_once ROOT . '/app/Core/Mailer.php';
