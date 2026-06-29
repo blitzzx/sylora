@@ -157,8 +157,7 @@ sylora/
 **Pré-requisito:** [Docker](https://www.docker.com/) instalado.
 
 ```bash
-# 1. Clona o repositório
-git clone https://github.com/Blitzzx/sylora.git
+# 1. Entra na pasta do projeto
 cd sylora
 
 # 2. Copia e preenche as variáveis de ambiente
@@ -182,7 +181,7 @@ Aventura disponível em **http://localhost:8080** ✦
 
 ## 🏛 &nbsp; Os Artífices &nbsp; 🏛
 
-Forjado por **[Márcio Sousa](https://github.com/Blitzzx)** e **Samuel Meixieira**
+Forjado por **Márcio Sousa** e **Samuel Meixieira**
 
 <br/>
 

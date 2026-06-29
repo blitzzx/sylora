@@ -174,14 +174,7 @@ include ROOT . '/resources/views/partials/navbar.php';
             <span class="boss-badge" data-i18n="home.island2_boss"><?= t('home.island2_boss') ?></span>
           </div>
         </div>
-        <?php if ($isLoggedIn): ?>
-          <a href="/jogar" class="island-cta" data-i18n="home.island_explore"><?= t('home.island_explore') ?></a>
-        <?php else: ?>
-          <a href="/register" class="island-cta island-cta-locked">
-            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
-            <span data-i18n="home.island_register"><?= t('home.island_register') ?></span>
-          </a>
-        <?php endif; ?>
+        <span class="island-cta island-cta-soon" data-i18n="home.island_soon"><?= t('home.island_soon') ?></span>
       </div>
 
       <div class="island-card island-zephyria" data-act="III">
