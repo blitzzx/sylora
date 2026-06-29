@@ -140,21 +140,6 @@ CREATE TABLE `users` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `email_verifications`
---
-
-CREATE TABLE `email_verifications` (
-  `id` int UNSIGNED NOT NULL,
-  `user_id` int UNSIGNED NOT NULL,
-  `selector` char(24) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `token_hash` char(64) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `expires_at` datetime NOT NULL,
-  `created_at` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-
--- --------------------------------------------------------
-
---
 -- Estrutura da tabela `pending_registrations`
 --
 
@@ -196,14 +181,6 @@ CREATE TABLE `user_sessions` (
 ALTER TABLE `pending_registrations`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `uq_pr_email` (`email`);
-
---
--- Índices para tabela `email_verifications`
---
-ALTER TABLE `email_verifications`
-  ADD PRIMARY KEY (`id`),
-  ADD UNIQUE KEY `uq_ev_selector` (`selector`),
-  ADD KEY `idx_ev_user` (`user_id`);
 
 --
 -- Índices para tabela `friendships`
@@ -282,12 +259,6 @@ ALTER TABLE `pending_registrations`
   MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
 
 --
--- AUTO_INCREMENT de tabela `email_verifications`
---
-ALTER TABLE `email_verifications`
-  MODIFY `id` int UNSIGNED NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de tabela `friendships`
 --
 ALTER TABLE `friendships`
@@ -338,12 +309,6 @@ ALTER TABLE `user_sessions`
 --
 -- Restrições para despejos de tabelas
 --
-
---
--- Limitadores para a tabela `email_verifications`
---
-ALTER TABLE `email_verifications`
-  ADD CONSTRAINT `fk_email_verifications_user` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
 -- Limitadores para a tabela `password_resets`
